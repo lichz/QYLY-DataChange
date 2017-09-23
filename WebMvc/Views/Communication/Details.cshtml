@@ -1,0 +1,46 @@
+﻿@model System.Data.DataTable
+@using RoadFlow.Data.Model
+@{
+    ViewBag.Title = "Detail";
+    Page.CheckApp = false;
+}
+
+
+<div style="padding: 30px;">
+    @{
+        PostModel postmodel = new RoadFlow.Platform.Post().GetPostModel(int.Parse(Request.QueryString["id"]));
+        
+        <table cellpadding="0" cellspacing="1" border="0" width="99%" class="formtable">
+        <tr>
+            <th style="width: 80px;">标题：</th>
+            <td style="width:40%">@postmodel.Title</td>
+            <th style="width: 80px;">类型：</th>
+            <td style="width:40%">@postmodel.Type</td>
+        </tr>
+        <tr>
+            <th style="width: 80px;">面积：</th>
+            <td style="width:40%">@postmodel.Acreage㎡</td>
+            <th style="width: 80px;">地点：</th>
+            <td style="width:40%">@postmodel.Adresse</td>
+        </tr>
+        <tr>
+            <th style="width: 80px;">联系电话：</th>
+            <td style="width:40%">@postmodel.Mobile</td>
+            <th style="width: 80px;">发布时间：</th>
+            <td style ="width:40%">@postmodel.AddTime</td>
+        </tr>
+        <tr>
+            <th>内容：</th>
+            <td colspan="3">@postmodel.Contents</td>
+        </tr>
+    </table>
+    }
+</div>
+
+<script type="text/javascript">
+    var appid = '@Request.QueryString["id"]';
+    var iframeid = '@Request.QueryString["tabid"]';
+    var dialog = top.mainDialog;
+    var query = '@Html.Raw(ViewBag.Query)';
+    var dataGrid;
+</script>

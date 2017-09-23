@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "Edit";
+}
+@model RoadFlow.Data.Model.QueryDesign
+
+
+<form method="post">
+    @Html.AntiForgeryToken()
+    <table cellpadding="0" cellspacing="1" border="0" width="100%" class="formtable">
+        <tr>
+            <th style="width:120px;">
+                数据连接:
+            </th>
+            <td><select class="myselect" id="ConnectionID" name="ConnectionID" onchange="db_change($(this).val())" style="width:200px"><option></option>@Html.Raw(ViewBag.Connopts)</select></td>
+            <th style="width:120px;">
+                数据表:
+            </th>
+            <td><select class="myselect" id="TableName" name="TableName" onchange="tb_change($(this).val(),@ViewBag.type)" style="width:200px"><option></option>@Html.Raw(ViewBag.Tableopts)</select></td>
+        </tr>
+    </table>
+    <div>
+        @{
+             var src ="";
+             if (ViewBag.type =="1")
+             {
+                src = "/QueryDesign/Content?appid="+ Request.QueryString["appid"]+"&id="+Request.QueryString["id"];
+             }else
+             {
+                src = "/QueryDesign/DisplayItem?appid=" + Request.QueryString["appid"] + "&id=" + Request.QueryString["id"];
+             }
+        }
+        <iframe id="Iframe" name="Iframe" frameborder="0" height="490" scrolling="auto" src="@src" style="width:100%;margin:0;padding:0;"></iframe>
+    </div>
+
+</form>
+<script type="text/javascript">
+    function db_change(connid) {
+        if(connid!=""){
+            $("#TableName option").remove();
+            $.ajax({
+                url: top.rootdir + "/QueryDesign/getTableOps?connid=" + connid , async: false, cache: false, success: function (result) {
+                    $("#TableName").append(result);
+                }
+            });
+        }
+    }
+    function tb_change(tableName,type) {
+        if (tableName != "")
+        {
+            if (type == "1")
+            {
+                $("#Iframe").prop("src", "/QueryDesign/Content?appid=@Request.QueryString["appid"]&id=@Request.QueryString["id"]&connid=" + $("#ConnectionID").val() + "&table=" + tableName);
+            } else {
+                $("#Iframe").prop("src", "/QueryDesign/DisplayItem?appid=@Request.QueryString["appid"]&id=@Request.QueryString["id"]&connid=" + $("#ConnectionID").val() + "&table=" + tableName);
+            }
+        }
+    }
+    $(function () {
+        @Html.Raw(ViewBag.Script)
+    });
+</script>

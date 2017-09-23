@@ -1,0 +1,122 @@
+﻿@model System.Data.DataTable
+@using RoadFlow.Data.Model
+@using RoadFlow.Utility;
+@{
+    ViewBag.Title = "Index";
+    Page.CheckApp = false;
+}
+<style>
+    .wait{cursor:wait;}
+    td a:link {
+	         color:blue;
+            text-decoration:underline;
+        }
+    .gridbody table tbody tr td {
+        text-align:center;
+    }
+</style>
+<form method="post">
+    @Html.AntiForgeryToken()
+    <div class="querybar">
+        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tr>
+                <td>
+                    统计期间：&nbsp;
+                    <input type="text" class="mycalendar" id="dataBegin" name="dataBegin" value="@ViewBag.dataBegin" />
+                    &nbsp;TO:&nbsp;&nbsp;
+                    <input type="text" class="mycalendar" id="dataEnd" name="dataEnd" value="@ViewBag.dataEnd" />
+                    <input type="submit" name="Search" value="&nbsp;&nbsp;查&nbsp;询&nbsp;&nbsp;" class="mybutton" />
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
+<table class="mygrid">
+    <thead>
+        <tr style="background-color: white;">
+            <th style="height: 1px;"></th>
+            <th style="height: 1px;"></th>
+            <th style="height: 1px;"></th>
+            <th style="height: 1px;"></th>
+            <th style="height: 1px;"></th>
+            <th style="height: 1px;"></th>
+            <th style="height: 1px;"></th>
+            <th style="height: 1px;"></th>
+            <th style="height: 1px;"></th>
+            <th style="height: 1px;"></th>
+            <th style="height: 1px;"></th>
+            <th style="height: 1px;"></th>
+            <th style="height: 1px;"></th>
+            <th style="height: 1px;"></th>
+            <th style="height: 1px;"></th>
+            <th style="height: 1px;"></th>
+        </tr>
+        <tr>
+            <th rowspan="2"  style="min-width:100px;text-align:center">单位名称</th>
+            <th colspan="3" style="text-align: center; border-bottom: 1px solid #ffffff">楼宇报送</th>
+            <th colspan="2" style="text-align: center; border-bottom: 1px solid #ffffff">楼宇更新</th>
+            <th colspan="2" style="text-align: center; border-bottom: 1px solid #ffffff">街道审核</th>
+            <th colspan="2" style="text-align: center; border-bottom: 1px solid #ffffff">商务局审核</th>
+            <th colspan="2" style="text-align: center; border-bottom: 1px solid #ffffff">企业诉求</th>
+            <th colspan="2" style="text-align: center; border-bottom: 1px solid #ffffff">通知公告</th>
+            <th colspan="2" style="text-align: center; border-bottom: 1px solid #ffffff">政策发布</th>
+        </tr>
+        <tr>
+            <th style="text-align: center;">填报楼宇数</th>
+            <th style="text-align: center;">已报送楼宇数</th>
+            <th style="text-align: center;">填报企业数</th>
+            <th style="text-align: center;">已填报数</th>
+            <th style="text-align: center;">已报送数</th>
+            <th style="text-align: center;">已审核数</th>
+            <th style="text-align: center;">未审核数</th>
+            <th style="text-align: center;">已审核数</th>
+            <th style="text-align: center;">未审核数</th>
+            <th style="text-align: center;">诉求数</th>
+            <th style="text-align: center;">回复数</th>
+            <th style="text-align: center;">发布数</th>
+            <th style="text-align: center;">已阅数</th>
+            <th style="text-align: center;">发布数</th>
+            <th style="text-align: center;">已阅数</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (System.Data.DataRow dr in Model.Rows) {
+            int col = 2;
+            <tr>
+                <td>@dr[col++]</td>
+                <td>@dr[col++]</td>
+                <td>@dr[col++]</td>
+                <td>@dr[col++]</td>
+                <td>@dr[col++]</td>
+                <td>@dr[col++]</td>
+                <td>@dr[col++]</td>
+                <td>@dr[col++]</td>
+                <td>@dr[col++]</td>
+                <td>@dr[col++]</td>
+                <td>@dr[col++]</td>
+                <td>@dr[col++]</td>
+                <td>@dr[col++]</td>
+                <td>@dr[col++]</td>
+                <td>@dr[col++]</td>
+                <td>@dr[col++]</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@Html.Raw(ViewBag.Pager)
+<br />
+<script type="text/javascript">
+
+    var dataGrid;
+    $(function () {
+        var dataGrid = new RoadUI.Grid({ table: $(".mygrid") });
+        //框架只计算了一行表头，所以手动剪掉了一行表头的高度
+        var height = $(".grid").height();
+        var bodyheight = $(".gridbody").height();
+        $(".grid").css("height", height - 30);
+        $(".gridbody").css("height", bodyheight - 30);
+        $("#dataBegin").val("@ViewBag.dataBegin");
+        $("#dataEnd").val("@ViewBag.dataEnd");
+    });
+</script>
+

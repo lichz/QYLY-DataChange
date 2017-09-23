@@ -1,0 +1,638 @@
+﻿@{
+    ViewBag.Title = "map";
+}
+<link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=72f51002473d365dcc093849d5da0f44"></script>
+<link rel="stylesheet" href="/Content/Resources/map-baidu/main.css?verstion=201607211658" />
+<script type="text/javascript" src="/Content/Resources/map-baidu/main.js?verstion=201607211658"></script>
+<link rel="stylesheet" href="/Content/Views/MapSearch/mapsearch.css?verstion=201607211658" />
+<script type="text/javascript" src="/Content/Resources/fancybox/jquery.fancybox.js?v=2.1.51000"></script>
+<link rel="stylesheet" type="text/css" href="/Content/Resources/fancybox/jquery.fancybox.css?v=2.1.5" media="screen" />
+<link rel="stylesheet" type="text/css" href="/Content/Resources/fancybox/helpers/jquery.fancybox-thumbs.css?v=1.0.7" />
+<script type="text/javascript" src="/Content/Resources/fancybox/helpers/jquery.fancybox-thumbs.js?v=1.0.7"></script>
+<form>
+    <div class="map" id="map"></div>
+    <div class="search">
+        <div class="searchDiv" id="Div1">
+            <div id="mainSearch">
+                <img id="Searchtj" class="tjSearch" src="~/Images/menu.png" />
+                <input type="text" class="txtSearch" id="txtName" />
+                <img id="SearchBtn" class="btnSearch" src="~/Images/zoom.png" />
+            </div>
+        </div>
+        <!--筛选条件 begin-->
+        <div class="filterDiv">
+            <ul class="filterDiv-nav">
+                <li class="botn-line select" data-num="1">所属分类<i class="icon-cater arrow"></i></li>
+                <li class="botn-line" data-num="2">商业面积<i class="icon-cater arrow"></i></li>
+                <li class="botn-line" data-num="3">商务面积<i class="icon-cater arrow"></i></li>
+                <li class="" data-num="4">其他<i class="icon-cater arrow"></i></li>
+            </ul>
+            <div class="filter-item" num="1" style="display:block;">
+                <div class="leftDiv">
+                    <ul>
+                        <li data-num="11">楼宇级别</li>
+                        <li data-num="12">所属街道</li>
+                        <li data-num="13">建设阶段</li>
+                        <li data-num="14">楼宇类型</li>
+                        <li data-num="15">统筹招商</li>
+                    </ul>
+                </div>
+                <div class="rightDiv">@Html.Raw(ViewBag.TypeFilter)</div>
+            </div>
+            <div class="filter-item" num="2">
+                <table>
+                    <tr>
+                        <td class="title">商业面积(m<sup>2</sup>):</td>
+                        <td>
+                            <table data-name="SY_ZMJ" num="21">
+                                <tr>
+                                    <td><a class="item" href="javascript:void(0)" data-value="-1">全部</a></td>
+                                    <td><a class="item" href="javascript:void(0)" data-value=",5000">5000以下</a></td>
+                                    <td><a class="item" href="javascript:void(0)" data-value="5000,10000">5000-10000</a></td>
+                                    <td><a class="item" href="javascript:void(0)" data-value="10000,">10000以上</a></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title">空置面积(m<sup>2</sup>):</td>
+                        <td>
+                            <table data-name="SY_KZ_ZMJ" num="22">
+                                <tr>
+                                    <td><a class="item" href="javascript:void(0)" data-value="-1">全部</a></td>
+                                    <td><a class="item" href="javascript:void(0)" data-value=",2500">2500以下</a></td>
+                                    <td><a class="item" href="javascript:void(0)" data-value="2500,5000">2500-5000</a></td>
+                                    <td><a class="item" href="javascript:void(0)" data-value="5000,">5000以上</a></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title">空置可售(m<sup>2</sup>):</td>
+                        <td>
+                            <table data-name="SY_KZ_KXSMJ" num="23">
+                                <tr>
+                                    <td><a class="item" href="javascript:void(0)" data-value="-1">全部</a></td>
+                                    <td><a class="item" href="javascript:void(0)" data-value=",1500">1500以下</a></td>
+                                    <td><a class="item" href="javascript:void(0)" data-value="1500,3000">1500-3000</a></td>
+                                    <td><a class="item" href="javascript:void(0)" data-value="3000,">3000以上</a></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title">空置可租(m<sup>2</sup>):</td>
+                        <td>
+                            <table data-name="SY_KZ_KZLMJ" num="24">
+                                <tr>
+                                    <td><a class="item" href="javascript:void(0)" data-value="-1">全部</a></td>
+                                    <td><a class="item" href="javascript:void(0)" data-value=",1500">1500以下</a></td>
+                                    <td><a class="item" href="javascript:void(0)" data-value="1500,3000">1500-3000</a></td>
+                                    <td><a class="item" href="javascript:void(0)" data-value="3000,">3000以上</a></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="filter-item" num="3">
+                <table>
+                    <tr>
+                        <td class="title">商务面积(m<sup>2</sup>):</td>
+                        <td>
+                            <table data-name="SW_ZMJ" num="31">
+                                <tr>
+                                    <td><a class="item" href="javascript:void(0)" data-value="-1">全部</a></td>
+                                    <td><a class="item" href="javascript:void(0)" data-value=",5000">5000以下</a></td>
+                                    <td><a class="item" href="javascript:void(0)" data-value="5000,10000">5000-10000</a></td>
+                                    <td><a class="item" href="javascript:void(0)" data-value="10000,">10000以上</a></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title">空置面积(m<sup>2</sup>):</td>
+                        <td>
+                            <table data-name="SW_KZ_ZMJ" num="32">
+                                <tr>
+                                    <td><a class="item" href="javascript:void(0)" data-value="-1">全部</a></td>
+                                    <td><a class="item" href="javascript:void(0)" data-value=",2500">2500以下</a></td>
+                                    <td><a class="item" href="javascript:void(0)" data-value="2500,5000">2500-5000</a></td>
+                                    <td><a class="item" href="javascript:void(0)" data-value="5000,">5000以上</a></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title">空置可售(m<sup>2</sup>):</td>
+                        <td>
+                            <table data-name="SW_KZ_KXSMJ" num="33">
+                                <tr>
+                                    <td><a class="item" href="javascript:void(0)" data-value="-1">全部</a></td>
+                                    <td><a class="item" href="javascript:void(0)" data-value=",1500">1500以下</a></td>
+                                    <td><a class="item" href="javascript:void(0)" data-value="1500,3000">1500-3000</a></td>
+                                    <td><a class="item" href="javascript:void(0)" data-value="3000,">3000以上</a></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="title">空置可租(m<sup>2</sup>):</td>
+                        <td>
+                            <table data-name="SW_KZ_KZLMJ" num="34">
+                                <tr>
+                                    <td><a class="item" href="javascript:void(0)" data-value="-1">全部</a></td>
+                                    <td><a class="item" href="javascript:void(0)" data-value=",1500">1500以下</a></td>
+                                    <td><a class="item" href="javascript:void(0)" data-value="1500,3000">1500-3000</a></td>
+                                    <td><a class="item" href="javascript:void(0)" data-value="3000,">3000以上</a></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="filter-item" num="4">
+                <table>
+                    <tr>
+                        <td class="title">竣工时间:</td>
+                        <td>
+                            <input id="CompletionBegin" name="CompletionBegin" class="Wdate" type="text" onfocus="WdatePicker({lang:'zh-cn'})" style="width:90px;" />-<input id="CompletionEnd" name="CompletionEnd" class="Wdate" type="text" onfocus="WdatePicker({lang:'zh-cn'})" style="width:90px;" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <!--筛选条件 end-->
+        <!--列表显示查询结果 begin-->
+        <div class="list"></div>
+        <!--列表显示查询结果 end-->
+        <div class="details" id="details">
+            <div class="title">金沙云亭</div>
+            <div class="nav select" data-num="1">基本情况</div>
+            <div class="nav" data-num="2">商业部分</div>
+            <div class="nav" data-num="3">商务部分</div>
+            <div class="nav" data-num="4">物业情况</div>
+            <div class="nav" data-num="5">入驻企业</div>
+            <div style="clear: both;"></div>
+            <div class="content"></div>
+        </div>
+    </div>
+    <div class="noResult">
+        没有找到楼宇信息！
+    </div>
+</form>
+
+<script>
+    //百度地图API功能
+    var map = new BMap.Map("map");  // 创建地图实例
+    var point = new BMap.Point(103.983973, 30.68976);  // 创建点坐标
+    var companyCurPage; //入驻企业当前页
+    var ep;//入驻企业数据
+
+    var markers = new Array();//标记
+    //var marker;
+    $(function () {
+        map.centerAndZoom(point, 13); // 初始化地图，设置中心点坐标和地图级别
+        map.setCurrentCity("青羊"); // 设置地图显示的城市 此项是必须设置的
+        map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
+        //回车处理事件
+        document.onkeydown = function (e) {
+            var ev = document.all ? window.event : e;
+            if (ev.keyCode == 13) {
+                $("#SearchBtn").click();
+            }
+        }
+    });
+
+    //查询添加坐标点
+    function SearchData(curPage) {
+        if (!curPage) {//当前数据页数
+            curPage = 1;
+        }
+        //筛选条件
+        var query = "{";
+        var name = $("#txtName").val();  //大厦名
+        if (name) {
+            query += "Name:\"" + name + "\",";
+        }
+        for (var i = 11; i < 16; i++) {//分类
+            var v = $("table[num=" + i + "] a.select").data("value");//筛选条件的值
+            var n = $("table[num=" + i + "]").data("name");//筛选条件的名称
+            if (v) {
+                query += n + ":\"" + v + "\",";
+            }
+        }
+        for (var i = 21; i < 25; i++) {//商业面积
+            var v = $("table[num=" + i + "] a.select").data("value");//筛选条件的值
+            var n = $("table[num=" + i + "]").data("name");//筛选条件的名称
+            if (v) {
+                query += n + ":\"" + v + "\",";
+            }
+        }
+        for (var i = 31; i < 35; i++) {//商务面积
+            var v = $("table[num=" + i + "] a.select").data("value");//筛选条件的值
+            var n = $("table[num=" + i + "]").data("name");//筛选条件的名称
+            if (v) {
+                query += n + ":\"" + v + "\",";
+            }
+        }
+        //竣工时间
+        var n = "JGSJ";
+        var v;
+        var begin = $("#CompletionBegin").val();
+        if (begin) {
+            if (!v) {//没定义
+                v = "";
+            }
+            v += begin + ",";
+        }
+        var end = $("#CompletionEnd").val();
+        if (end) {
+            if (!v) {//没定义
+                v = ",";
+            }
+            v += end;
+        }
+        if (v) {
+            query += n + ":\"" + v + "\",";
+        }
+        query += "}";
+        $.ajax({
+            url: top.rootdir + "/MapSearch/GetPoint/",
+            type: 'GET',
+            async: false,
+            cache: false,
+            data: {
+                query: query,
+                pageNumber: curPage
+            },
+            dataType: "json",
+            success: function (data) {
+                map.clearOverlays();//清空所有覆盖物
+                if (data != "") {
+                    var div = "";
+                    var point;
+                    markers.length = 0; //清空数组
+                    $.each(data.Dt, function (i, item) { //绘制坐标点
+                        div += buildListItem(item, i); //组合列表项
+                        var marker = baiduMap.createMarker(item.BDDW.split(","), i);
+                        bindEvent(marker, item); //给marker绑定事件
+                        markers.push(marker); //把标记添加的数组里。
+                        map.addOverlay(marker); //添加标注点
+                        point = new BMap.Point(item.BDDW.split(",")[0], item.BDDW.split(",")[1]); //为了取最后一个点，用于设置地图中心点
+                    });
+                    //div = listAddPaging(div, data.AllPages, curPage);
+                    showList(div);
+                    map.centerAndZoom(point, 13);
+                } else {
+                    noResult();
+                }
+            }
+        });
+    }
+    //列表显示坐标点对应大楼信息
+    function showList(div) {
+        var $listDiv = $(".list");
+        $listDiv.empty();//添加前清空
+        $listDiv.append(div);
+        listItemBindEvent();//显示之前绑定事件
+        $listDiv.show();
+    }
+    //组合列表项
+    function buildListItem(item, index) {
+        var div = "<div class=\"item\" data-id=\"" + item.ID + "\" data-index=\"" + index + "\">";
+        //div += "<div class=\"index\"><span class=\"no-" + (index + 1) + "\"></span></div>";
+        div += "<div class=\"index\"></div>";
+        div += "<div class=\"content\"><p class=\"title\">" + item.Name + "[" + item.LYDS + "]</p>";
+        div += "<span>" + item.LYXXDZ + "</span></div>";
+        if (item.XGT == null) {
+        } else {
+            if(item.XGT.split("|")[0]){
+                div += "<div class=\"image i"+index+"\">";
+                $.each(item.XGT.split("|"), function (i, v) {
+                    div += "<a class=\"fancybox\" href=\""+v+"\" data-fancybox-group=\"gallery\">";
+                    if (i == 0) {
+                        div += "<img src=\"" + v + "\" alt=\"图片加载失败\" />";
+                    } else {
+                        div += "<img src=\"" + v + "\" alt=\"图片加载失败\" style=\"display:none;\" />";
+                    }
+                    div += "</a>";
+                });
+                div += "</div>";
+            }
+        }
+        div += "<div style=\"clear:both;\"></div>";
+        div += "</div>";
+        return div;
+    }
+    //列表展示加上分页
+    function listAddPaging(div, allPages, curPage) {
+        if (allPages > 1) {
+            return div += baiduMap.getPaging(allPages, curPage);
+        } else {
+            return div;
+        }
+    }
+    //返回搜索结果
+    function returnList() {
+        hideDetails();
+        $(".list").show();
+    }
+    //列表下一页
+    function toPage(curPage) {
+        $(".map").hide().fadeIn(100);
+        SearchData(curPage);
+    }
+    //没有查询结果
+    function noResult() {
+        $(".noResult").show();
+        setTimeout(function () {
+            $(".noResult").fadeOut();
+        }, 2000);
+    }
+    //获取详情
+    function getDetails(id) {
+        $.ajax({
+            url: top.rootdir + "/MapSearch/GetDetails",
+            type: 'GET',
+            async: false,
+            cache: false,
+            data: {
+                id: id
+            },
+            dataType: "json",
+            success: function (data) {
+                if (data != "") {
+                    showDetails(data);
+                    //$(".details .content").append(data[0].Name);
+                } else {//没有点则清空所有覆盖物
+                    alert("未查询到相关信息！");
+                }
+            }
+        });
+    }
+    //显示详情内容
+    function showDetails(data) {
+        hideFilter();
+        hideList();
+        $(".details").hide();
+        //重置导航选中
+        $(".details .nav[data-num=1]").click();
+        $(".details .content").empty();
+        var info = data.info;
+        $(".details .title").html("<div style=\"width:265px;float:left;\">" + info.Name + "[" + info.LYDS + "]</div><div style=\"cursor: pointer;float:left;\" onclick=\"returnList()\">返回搜索结果</div>");
+        $(".details .content").append(buildContent(data));
+        $(".details").fadeIn();
+        //map.centerAndZoom(new BMap.Point(data[0].BDDW.split(",")[0], data[0].BDDW.split(",")[1]), 15);//设置地图中心点
+    }
+    //组合内容
+    function buildContent(data) {
+        var v = data.info;
+        var baseTab = "<table class=\"contentItem select\" num=\"1\">";
+        baseTab += "<tr><td style=\"text-align:right;\">建设阶段：</td><td>" + v.JSJDName + "</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">楼宇类型：</td><td>" + v.LYLXName + "</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">管理运营：</td><td>" + v.LYGLYYF + "</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">楼宇级别：</td><td>" + v.LYJBName + "</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">所属街道：</td><td>" + v.SSJDName + "</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">竣工时间：</td><td>" + v.JGSJ.replace(" 0:00:00", "").replace(" 00:00:00", "") + "</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">总建面积：</td><td>" + isZero(v.ZJZMJ) + "</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">详细地址：</td><td>" + v.LYXXDZ + "</td></tr>";
+        baseTab += "</table>";
+        baseTab += "<table class=\"contentItem\" num=\"2\">";
+        baseTab += "<tr><td style=\"text-align:right;\">总的面积：</td><td>" + isZero(v.SY_ZMJ) + "</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">已用面积：</td><td>" + isZero(v.SY_YSY_ZYMJ) + "</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">空置面积：</td><td>" + isZero(v.SY_KZ_ZMJ) + "</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">空置可租：</td><td>" + isZero(v.SY_KZ_KZLMJ) + "</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">空置可售：</td><td>" + isZero(v.SY_KZ_KXSMJ) + "</td></tr>";
+        if (v.SY_KZ_DCZDZMJ) {
+            baseTab += "<tr><td style=\"text-align:right;\">单层空置：</td><td>最大" + v.SY_KZ_DCZDZMJ + "(㎡)</td></tr>";
+        } else {
+            baseTab += "<tr><td style=\"text-align:right;\">单层空置：</td><td>0</td></tr>";
+        }
+        baseTab += "<tr><td style=\"text-align:right;\">商业租金：</td><td>" + isZero(v.SY_ZJName, "元/㎡/月") + "</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">销售均价：</td><td>" + isZero(v.SY_XSJJ, "元/㎡") + "</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">物管费用：</td><td>" + isZero(v.SY_WGF, "元/㎡·月") + "</td></tr>";
+        baseTab += "</table>";
+        baseTab += "<table class=\"contentItem\" num=\"3\">";
+        baseTab += "<tr><td style=\"text-align:right;\">总的面积：</td><td>" + isZero(v.SW_ZMJ) + "</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">已用面积：</td><td>" + isZero(v.SW_YSY_ZYMJ) + "</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">空置面积：</td><td>" + isZero(v.SW_KZ_ZMJ) + "</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">空置可租：</td><td>" + isZero(v.SW_KZ_KZLMJ) + "</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">空置可售：</td><td>" + isZero(v.SW_KZ_KXSMJ) + "</td></tr>";
+        if (v.SW_KZ_DCZDZMJ) {
+            baseTab += "<tr><td style=\"text-align:right;\">单层空置：</td><td>最大" + v.SW_KZ_DCZDZMJ + "(㎡)" + "</td></tr>";
+        } else {
+            baseTab += "<tr><td style=\"text-align:right;\">单层空置：</td><td>0</td></tr>";
+        }
+        baseTab += "<tr><td style=\"text-align:right;\">商业租金：</td><td>" + isZero(v.SW_ZJName, "元/㎡/月") + "</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">销售均价：</td><td>" + isZero(v.SW_XSJJ, "元/㎡") + "</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">物管费用：</td><td>" + isZero(v.SW_WGF, "元/㎡·月") + "</td></tr>";
+        baseTab += "</table>";
+        baseTab += "<table class=\"contentItem\" num=\"4\">";
+        baseTab += "<tr><td style=\"text-align:right;\">自持产权：</td><td>" + isZero(v.ZCCQMJ) + "</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">产权情况：</td><td>" + v.LYCQQKName + "</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">电梯数量：</td><td>" + v.DTS + "(部/每栋数)</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">车位数量：</td><td>" + v.CWS + "</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">招商方向：</td><td>" + v.ZSFX + "</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">中央空调：</td><td>" + v.ZYKTName + "</td></tr>";
+        var yy = v.TCZSName == "是" ? "愿意政府统招" : "不愿意政府统招"
+        baseTab += "<tr><td style=\"text-align:right;\">统招意愿：</td><td>" + yy + "</td></tr>";
+        baseTab += "<tr><td style=\"text-align:right;\">入驻优惠：</td><td>" + v.RZYH + "</td></tr>";
+        baseTab += "</table>";
+        baseTab += "<table class=\"contentItem\" num=\"5\">";
+        if (data.ep.length > 0) {
+            ep = data.ep;
+            baseTab += buildEp(1);
+        } else {
+            baseTab += "<tr><td style=\"text-align:right;\">企业入驻：</td><td>" + "无" + "</td></tr>";
+        }
+        baseTab += "</table>";
+        return baseTab;
+    }
+    //公用方法
+    function isZero(val, unit) {
+        if (val == 0) {
+            return "0";
+        } else {
+            if (unit) {
+                return val + "(" + unit + ")";
+            } else {
+                return val + "(㎡)";
+            }
+        }
+    }
+
+    //详情入驻企业分页
+    function epPaging(curPage) {
+        $(".contentItem[num=5]").empty();
+        var tab = buildEp(curPage);
+        $(".contentItem[num=5]").html(tab);
+    }
+    //组合入驻企业
+    function buildEp(curPage) {
+        companyCurPage = curPage;
+        var baseTab = "";
+        if (ep) {
+            var allPages = parseInt(ep.length / 8) + 1;
+            $.each(ep, function (i, v) {
+                if (8 * (companyCurPage - 1) <= i && i < 8 * companyCurPage) {
+                    //baseTab += "<tr><td style=\"width:24px;vertical-align: top;\">" + (i + 1) + "、</td><td>" + v.Name + "(" + v.Type + ")</td></tr>";
+                    baseTab += "<tr><td style=\"width:24px;vertical-align: top;\">" + (i + 1) + "、</td><td>" + v.Name +"</td></tr>";
+                }
+            });
+            if (allPages > 1) {
+                baseTab += "<tr><td colspan=\"2\">" + baiduMap.getPaging(allPages, companyCurPage, "epPaging") + "</td></tr>";
+            }
+        }
+        return baseTab;
+    }
+
+    //隐藏过滤菜单
+    function hideFilter() {
+        $(".filterDiv").hide();
+    }
+    //隐藏详情div
+    function hideDetails() {
+        $(".details").hide();
+    }
+    //隐藏搜索结果列表
+    function hideList() {
+        $(".list").hide();
+    }
+
+    //事件
+    //点击过滤菜单按钮，显示隐藏过滤菜单
+    $("#Searchtj").click(function () {
+        $(".filterDiv").toggle();
+        hideList();
+        hideDetails();
+    });
+    //点击查询按钮
+    $("#SearchBtn").click(function () {
+        //hideFilter();
+        hideDetails();
+        hideFilter();
+        SearchData();
+    });
+    //面积列表点击
+    $(".areaDiv a").click(function () {
+        $(".areaDiv a").removeClass("select");
+        $(this).addClass("select");
+    });
+    //商业总面积列表点击
+    $(".businessAreaDiv a").click(function () {
+        $(".businessAreaDiv a").removeClass("select");
+        $(this).addClass("select");
+    });
+    //详情导航点击
+    $(".details .nav").click(function () {
+        $(".details .nav").removeClass("select");
+        $(this).addClass("select");
+        var num = $(this).data("num");
+        $("table.contentItem").removeClass("select");
+        $("table.contentItem[num='" + num + "']").addClass("select");
+    });
+    //筛选大分类点击事件
+    $(".filterDiv-nav li").click(function () {
+        var num = $(this).data("num");
+        //大分类样式
+        $(".filterDiv-nav li").removeClass("select");
+        $(this).addClass("select");
+        //大分类对应内容显示
+        $(".filter-item").hide();
+        $(".filter-item[num=" + num + "]").show();
+    });
+    //筛选条件左侧导航鼠标滑动事件
+    $(".filterDiv .leftDiv li").hover(function () {
+        //所有状态还原
+        $(".filterDiv .leftDiv li").css({ "background-color": "transparent", "border": "1px solid #fff", "border-right": "1px solid #e0e0e0" });
+        $(".filterDiv .rightDiv table").hide();
+
+        var $this = $(this);
+        if ($this.data("num") == "1") {
+            $this.css({ "background-color": "#f6f6f6", "border-right": "1px solid #f6f6f6", "border-top": "1px solid #fff", "border-bottom": "1px solid #e0e0e0" });
+        } else if ($this.data("num") == "5") {
+            $this.css({ "background-color": "#f6f6f6", "border-right": "1px solid #f6f6f6", "border-top": "1px solid #e0e0e0", "border-bottom": "1px solid #fff" });
+        } else {
+            $this.css({ "background-color": "#f6f6f6", "border-right": "1px solid #f6f6f6", "border-top": "1px solid #e0e0e0", "border-bottom": "1px solid #e0e0e0" });
+        }
+        var num = $this.data("num");
+        $("table[num=" + num + "]").show();
+    });
+    //筛选条件点击事件
+    $(".item").click(function () {
+        var $curTab = $(this).closest("table");
+        $curTab.find(".item").removeClass("select");
+        $(this).addClass("select");
+    });
+    //地图marker绑定事件
+    function bindEvent(marker, item) {
+        marker.addEventListener("click", function () {
+            getDetails(item.ID);
+            //baiduMap.markerFocus(marker);
+            //setTimeout(function () { baiduMap.markerBlur(marker); }, 2000);
+        });
+        marker.addEventListener("mouseover", function () {
+            baiduMap.markerMouseover(marker);
+        });
+        marker.addEventListener("mouseout", function () {
+            baiduMap.markerMouseout(marker);
+        });
+    }
+    //列表项绑定事件
+    function listItemBindEvent() {
+        $(".list").find(".item").hover(function () {
+            $(this).css("background-color", "#f6f6f6");
+            var index = $(this).data("index");
+            baiduMap.markerIconBlue(markers[index]);
+            var position = $(this).find(".index").find("span").css("background-position");
+            //var y = parseInt(position.split(" ")[1].replace("px", "")) - 27;
+            //var y = "187px";
+            //var x = "225px";
+            //$(this).find(".index").find("span").css("background-position", x + " " + y);
+            //$(this).find(".index").find("span").css("background-position", position.split(" ")[0] + " " + y + "px");
+        }, function () {
+            $(this).css("background-color", "#fff");
+            var index = $(this).data("index");
+            baiduMap.markerIconRed(markers[index]);
+            //图片偏移
+            var position = $(this).find(".index").find("span").css("background-position");
+            //var y = "223px";
+            //var x = "225px";
+            //$(this).find(".index").find("span").css("background-position", x + " " + y);
+            //var y = parseInt(position.split(" ")[1].replace("px", "")) + 27;
+            //$(this).find(".index").find("span").css("background-position", position.split(" ")[0] + " " + y + "px");
+        });
+        $(".list .item .index").click(function () {
+            var $item = $(this).closest(".item");
+            var index = $item.data("index");
+            var id = $item.data("id");
+            var marker = markers[index];
+            getDetails(id);
+        });
+        $(".list .item .content").click(function () {
+            var $item = $(this).closest(".item");
+            var id = $item.data("id");
+            getDetails(id);
+        });
+        $(".list .item").each(function (i, v) {
+            var index = $(this).data("index");
+            $(".list .i"+index).find(".fancybox").fancybox({
+                prevEffect: 'none',
+                nextEffect: 'none',
+                closeBtn: false,
+                arrows: false,
+                nextClick: true,
+                helpers: {
+                    thumbs: {
+                        width: 50,
+                        height: 50
+                    }
+                }
+            });
+        });
+    }
+
+
+</script>

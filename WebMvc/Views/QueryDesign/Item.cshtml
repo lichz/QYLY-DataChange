@@ -1,0 +1,114 @@
+﻿@{
+    ViewBag.Title = "Item";
+}
+@model RoadFlow.Data.Model.QueryDesign
+@using RoadFlow.Utility
+@using RoadFlow.Platform
+
+<form  action="" method="post">
+    <table class="mygrid">
+        <thead>
+            <tr>
+                <th style="text-align:center"><input id="allCheck" type="checkbox" onclick="checkAll(this.checked);" style="vertical-align:middle;" /></th>
+                <th>中文名称</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var dis = Model.DisplayItem;
+                if(dis != null)
+                {
+                    List<RoadFlow.Data.Model.ColItem> its = dis.JsonConvertModel<List<RoadFlow.Data.Model.ColItem>>();
+                    //删除没有标题的字段项目
+                    its.RemoveAll(x=>x.value.IsNullOrEmpty());
+                    //权限控制报送企业查看到税收字段
+                    if (Request.QueryString["flag"] == "1") 
+                    {
+                        its.RemoveAll(x => x.id == "E_Tax");
+                    }
+                    //首页为主键列，不显示
+                    its.RemoveAt(0);
+                    //显示选择列表
+                    foreach (var element in its)
+                    {
+                        <tr>
+                            <td style="text-align:center"><input type="checkbox" id="@element.id" value="@element.value" checked="@element.chk"  name="checkbox_app" style="vertical-align:middle;" /></td>
+                            <td>@element.value</td>
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+    <div>
+        <input type="button" name="save" value="确定" class="mybutton" onclick="sure()" />
+        <input type="button" class="mybutton" value="取消" style="margin-left: 5px;" onclick=" new RoadUI.Window().close();" />
+    </div>
+</form>
+<script type="text/javascript">
+    var iframeid = '@Request.QueryString["tabid"]';
+    var id = '@ViewBag.id';
+    function checkAll(checked) {
+        if (checked) {
+            $("input[name='checkbox_app']").prop("checked", true);
+        } else {
+            $("input[name='checkbox_app']").prop("checked", false);
+        }
+    }
+    function sure() {
+        UpdtItem();
+    }
+
+    $(function () {
+        var dataGrid = new RoadUI.Grid({ table: $(".mygrid") });
+        //移除首列绑定的数据排序事件及图标
+        $(".gridheadsort").get(0).remove();
+        var $tds1 = $("thead tr th");
+        $(".gridheadtitle", $tds1.eq(0)).unbind();
+        dataGrid.oddColor();
+        dataGrid.resetWidth();
+        //是否全选。
+        if(isAllChecked()){
+            $("#allCheck").prop("checked",true);
+        }
+    });
+
+    function isAllChecked() {
+        var isChecked = true;
+        $("input[name='checkbox_app']").each(function () {
+            if (!$(this).prop("checked")) {
+                isChecked = false;
+            }
+        });
+        return isChecked;
+    }
+
+    // 更新设置
+    function UpdtItem() {
+        var $chkItem = $("input[name='checkbox_app']");
+        var ret = "";
+        for (i = 0; i < $chkItem.length; i++) {
+            if (ret == "") {
+                ret = "{'id':'" + $chkItem.get(i).id + "','value':'" + $chkItem.get(i).value + "','chk':'" + $chkItem.get(i).checked + "','heji':'false','sortid':'0'}";
+            } else {
+                ret = ret + ",{'id':'" + $chkItem.get(i).id + "','value':'" + $chkItem.get(i).value + "','chk':'" + $chkItem.get(i).checked + "','heji':'false','sortid':'0'}";
+            }
+        }
+        ret = "[" + ret + "]";
+        $.ajax({
+            type: 'POST',
+            url: top.rootdir + "/QueryDesign/UpdateItem",
+            data: { id: id, retdata: ret },
+            async: true,
+            cache: false,
+            success: function (txt) {
+                if (txt == 0) {
+                    alert("显示项目更新失败，可能存在配置错误，请与管理员联系。");
+                }
+                var parentWindow = parent[iframeid + '_iframe'];
+                parentWindow.document.forms[0].submit();
+                new RoadUI.Window().close();
+            }
+        });
+    }
+</script>

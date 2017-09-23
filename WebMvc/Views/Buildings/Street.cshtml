@@ -1,0 +1,220 @@
+﻿@model RoadFlow.Web.Model.BuildingIndexViewModel
+@using RoadFlow.Data.Model
+@using RoadFlow.Utility;
+
+@{
+    ViewBag.Title = "Index";
+    var KI = "ID";  //主键列标识
+}
+<style>
+    .wait{cursor:wait;}
+    td a:link {
+	         color:blue;
+            text-decoration:underline;
+        }
+</style>
+<form method="post">
+    @{
+        var list = Model.Dictionarys;
+    }
+    <div class="querybar">
+        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tr>
+                <td>
+                    楼栋名称：<input type="text" name="Name" id="Name" style="width:150px;" value="@Model.Name" />
+                    <input type="hidden" id="SSJD" name="SSJD" value="@Model.SSJD" />
+                    <input type="hidden" id="query" name="query" value="" />
+                    <input type="submit" name="Search" value="&nbsp;&nbsp;查&nbsp;询&nbsp;&nbsp;" class="mybutton" />
+                    <input type="button" name="Search" value="更多条件" class="mybutton" onclick="More('楼栋综合查询')" />
+                    <input type="button" name="Export" onclick="ExportExcel()" value="&nbsp;&nbsp;导&nbsp;出&nbsp;&nbsp;" class="mybutton" />
+                    @*<input type="button" name="EnterpriseExport" onclick="EnterpriseExportExcel()" value="&nbsp;&nbsp;企&nbsp;业&nbsp;导&nbsp;出&nbsp;&nbsp;" class="mybutton" />*@
+                    <span id="tp" style="color:red;white-space:nowrap;line-height:12px; display:none;width:100px;cursor:wait;">正在为您导出数据……</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
+
+<table class="mygrid">
+    <thead>
+        <tr>
+            <th id="SetDisplayItem" style="width:45px;" onclick="ShowItem('楼栋综合查询')" >@*<img style="margin-top:5px;" src="~/Images/ico/new_set.png" onclick="ShowItem('楼宇综合查询')" />*@ 筛选</th>
+            <th>编号</th>
+             @{
+                 if (Model.Display != null)
+                 {
+                    foreach (ColItem item in Model.Display) {
+                        if (item.value.Contains("面积")) {
+                            item.value += "(㎡)";
+                        }
+                        if (item.value == "国税税收" || item.value == "地税税收") {
+                            item.value += "(元)";
+                        }
+                        if (item.chk == true)
+                        {
+                            if (item.id == KI)
+                            {
+                                continue;
+                            }
+                           
+                            <th>@item.value</th>
+                        }
+                    }
+                }
+            }
+            <th style="width:100px;">操作</th>
+            </tr>
+    </thead>
+    <tbody>
+            @foreach (System.Data.DataRow dr in Model.List.Rows){
+                <tr>
+                    <td></td>
+                    <td><a href="javascript:void(0);" onclick="detail('@dr[KI]');">@dr["Num"]</a></td>
+                        @if (Model.Display != null)
+                        {
+                            foreach (ColItem item in Model.Display)
+                            {
+                                if (item.chk == true)
+                                {
+                                    if (item.id == KI)
+                                    {
+                                        continue;
+                                    }
+                                    var vl="";
+                                    //首先进行相关数据类型转换
+                                    if (list.FindAll(x => x.Code == item.id).Count > 0)
+                                    {
+                                        string temp =Convert.ToString(dr[item.id]);
+                                        var lt  = list.Find(x => Convert.ToString(x.ID) == temp);
+                                        vl = lt == null ? "" : lt.Title;
+                                    }
+                                    else
+                                    {
+                                        vl = dr[item.id].ToString();
+                                    }
+                                    <td>@vl</td>   //非首列赋值
+                                }
+
+                            }
+                        }
+                    <td>
+@{
+                string query2 = string.Format("flowid={0}&instanceid={1}&appid={2}","7921F62A-4170-4366-AC82-810C6EF65AC8", dr["ID"], Request.QueryString["appid"]);
+                RoadFlow.Platform.WorkFlowTask bworkFlowTask = new RoadFlow.Platform.WorkFlowTask();
+                var task = bworkFlowTask.GetTaskListByInstance((Guid)dr["ID"]).Where(p => p.Sort == 1).OrderBy(p=>p.SenderTime).FirstOrDefault();//获取该楼宇的第一个任务提交
+                            var  ed = Request.QueryString["Edit"];
+                        if (ed=="1")
+                        {
+                            @*<a href="javascript:void(0);" onclick="update('@dr[KI]');">编辑</a>*@
+                            <a href="javascript:void(0);" onclick="BindBuilding('@dr[KI]')">绑定楼盘</a>
+                        }
+}
+                    </td>
+                </tr>
+            }           
+            @{
+                System.Data.DataTable dt = (System.Data.DataTable)ViewBag.DataCount;
+                if(dt != null && dt.Rows.Count>0)
+                {
+                    System.Data.DataRow sdr = dt.Rows[0];
+                    <tr>
+                        <td></td>
+                        @{
+                            if(ViewBag.Display != null)
+                            {
+                                foreach (ColItem item in ViewBag.Display)
+                                {
+                                    //设为显示字段
+                                    if (item.chk == true)
+                                    {
+                                        //主键列必须，但是不显示，跳过
+                                        if (item.id == KI)
+                                        {
+                                            continue;
+                                        }
+                                        //显示合计内容
+                                        if (item.heji == true)
+                                        {
+                                            <td>@sdr[item.id]</td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                        }
+                                    }
+                                   
+                                }
+                            }
+                        }
+                       
+                    </tr>
+                }
+            }
+
+        </tbody>
+</table>
+@Html.Raw(Model.Pager)
+<br />
+<script type="text/javascript">
+    var appid = '@Request.QueryString["appid"]';
+    var iframeid = '@Request.QueryString["tabid"]';
+    var dataGrid;
+    $(function () {
+        var dataGrid = new RoadUI.Grid({ table: $(".mygrid") });
+        @*$("#State").val("@ViewBag.State");
+        $("#SSJD").val("@ViewBag.SSJD");*@
+        //移除首列绑定的数据排序事件及图标
+        //$(".gridheadsort").get(0).remove();
+        //var $tds1 = $("thead tr th");
+        //$(".gridheadtitle", $tds1.eq(0)).unbind();
+        //dataGrid.oddColor();
+        //dataGrid.resetWidth();
+    });
+
+    function update(id) {
+        var url = "/Buildings/update?id=" + id + '@Html.Raw(ViewBag.Query)';
+        top.openApp(url, 0, "编辑", 'tab_' + id + 1, 0, 0, false);
+        return false;
+    }
+
+    function detail(id) {
+        var url = "/Buildings/Detail?id=" + id + '@Html.Raw(ViewBag.Query)';
+        top.openApp(url, 0, "楼宇详细信息", 'tab_' + id, 0, 0, false);
+        return false;
+
+    }
+    //function update(id) {
+    //    var url = "/Enterprise/update?id=" +id;
+    //}
+    function ShowItem(id) {
+        top.mainDialog.open({ id: "window_" + appid.replaceAll('-', ''), title: "显示设置", top: 160, left: 225, width: 200, height: 300, url: top.rootdir + "/QueryDesign/Item" + window.location.search + "&id=" + id + "&queryID=query", openerid: iframeid });
+    }
+    //数据导出
+    function ExportExcel() {
+        var f = document.forms[0];
+        f.action = top.rootdir + "@Url.Action("Export")";
+        f.submit();
+        $("form").removeAttr("action");
+    }
+
+    //更多条件
+    function More(id) {
+        top.mainDialog.open({ id: "window_" + appid.replaceAll('-', ''), title: "更多条件", top: 128, left: 670, width: 380, height: 450, url: top.rootdir + "/QueryDesign/Search?id=" + id + "&queryID=query&appid=" + appid + "&&tabid=" + iframeid, openerid: iframeid });
+    }
+    //绑定楼盘
+    function BindBuilding(id) {
+        top.mainDialog.open({ id: "window_" + "@Guid.NewGuid()", title: "绑定楼盘", top: 228, left: 670, width: 300, height: 170, url: top.rootdir + "/Buildings/BindHouseID?buildingID=" + id + "&queryID=query" + '@Html.Raw(ViewBag.Query)', openerid: iframeid });
+    }
+
+    function animate() {
+        $("#tp").show().animate({ width: "120px" }, 1000);
+        $("#tp").show().animate({ width: "96px" }, 1000);
+        animate();
+    }
+
+    function openTask(url, title, id) {
+        top.openApp(url, 0, title, id, 0, 0, false);
+    }
+
+</script>
+

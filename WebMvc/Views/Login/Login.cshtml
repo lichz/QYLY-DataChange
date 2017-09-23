@@ -1,0 +1,82 @@
+﻿@{
+    ViewBag.Title = "Login";
+    Page.CheckApp = false;
+}
+
+<form method="post" id="form1">
+    <br />
+    <input type="hidden" id="Force" name="Force" value="0" />
+    <table cellpadding="0" cellspacing="1" border="0" style="margin: 0 auto; margin-top: 40px;">
+        <tr>
+            <td style="height: 45px; text-align: right; font-size: 14px; ">用户名：</td>
+            <td><input type="text" class="mytext" id="Account" name="Account" value="" maxlength="50" style="width: 240px; height: 26px;" /></td>
+        </tr>
+        <tr>
+            <td style="height: 45px; text-align: right; font-size: 14px;">密&nbsp;&nbsp;&nbsp;&nbsp;码：</td>
+            <td><input type="password" class="mytext" id="Password" name="Password" maxlength="50" style="width: 240px; height: 26px;" /></td>
+        </tr>
+        <tr id="novcode" style="display:none;">
+            <td style="height: 45px; text-align: right; font-size: 14px; ">验证码：</td>
+            <td>
+                <input type="text" class="mytext" id="VCode" name="VCode" maxlength="4" style="width: 80px; height: 26px;" />
+                <img alt="" src="VCode?@DateTime.Now.Ticks" onclick="cngimg();" style="vertical-align:middle;" id="VcodeImg" />
+            </td>
+        </tr>
+        <tr>
+            <td style="height:50px"></td>
+            <td><input type="submit" value="" style="width: 80px; background: url(../../Images/login/login_dl.png) no-repeat; background-size: contain; border: 0; height: 28px; float:left; margin-left:25px; " onclick="return checkForm();" />
+                <input type="button" value="" style="width: 80px; background: url(../../Images/login/cancel.png) no-repeat; background-size: contain; border: 0; height: 28px;float:right;margin-right:25px; " onclick="winclose();" />
+            </td>
+        </tr>
+        @if ("1" != Request.QueryString["session"])
+        {
+            <tr>
+                <td>&nbsp;</td>
+                <td style="text-align: left; vertical-align: bottom; height: 23px;"></td>
+            </tr>
+        }
+    </table>
+</form>
+<script type="text/javascript">
+    var isVcode = '1' == '@Session[ViewBag.IsVcodeSessionKey]';
+    var isSessionLost = "1" == '@Request.QueryString["session"]';
+    var msg = '@Request.Browser.Type';
+    $(window).load(function () {
+        if (msg.indexOf("IE", 0) >= 0) {
+            alert("你好！你使用的浏览器版本可能让系统无法正常使用，请更换成谷歌版内核浏览器。如：使用360浏览器极速模式或直接下载GOOGLE浏览器。");
+        }
+        if (isVcode) {
+            if (!isSessionLost) {
+            }
+            $("#novcode").show();
+        }
+        @Html.Raw(ViewBag.ErrMsg)
+        @Html.Raw(ViewBag.Forcescript)
+    });
+    function checkForm() {
+        var form1 = document.forms[0];
+        if ($.trim(form1.Account.value).length == 0) {
+            alert("帐号不能为空!");
+            form1.Account.focus();
+            return false;
+        }
+        if ($.trim(form1.Password.value).length == 0) {
+            alert("密码不能为空!");
+            form1.Password.focus();
+            return false;
+        }
+        if (isVcode && form1.VCode && $.trim(form1.VCode.value).length == 0) {
+            alert("验证码不能为空!");
+            form1.VCode.focus();
+            return false;
+        }
+        return true;
+    }
+    function cngimg() {
+        $('#VcodeImg').attr('src', 'VCode?' + new Date().toString());
+    }
+    function winclose() {
+        window.opener = null;
+        window.top.close();
+    }
+</script>

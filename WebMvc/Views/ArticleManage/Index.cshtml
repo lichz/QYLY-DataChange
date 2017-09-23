@@ -1,0 +1,85 @@
+﻿@model System.Data.DataTable
+@{
+    ViewBag.Title = "Index";
+}
+<style>
+    .wait {
+        cursor: wait;
+    }
+
+    td a:link {
+        color: blue;
+        text-decoration: underline;
+    }
+</style>
+<form method="post">
+    <div class="querybar">
+        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tr>
+                <td>
+                    标题：<input type="text" name="Name" id="Name" style="width:150px;" value="@ViewBag.Name" />
+                    类型：
+                    <select style="width:100px" id="typeID" name="typeID"  isflow="1" type1="flow_select">
+                        <option value=""></option>
+                        @foreach (System.Data.DataRow dr in (ViewBag.Type).Rows)
+                        {
+                            <option value="@dr["ID"]">@dr["Title"]</option>
+                        }
+                    </select>
+                    <input type="submit" name="Search" value="&nbsp;&nbsp;查&nbsp;询&nbsp;&nbsp;" class="mybutton" />
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
+<table class="mygrid">
+    <thead>
+        <tr>
+            <th>标题</th>
+            <th>类型</th>
+            <th>发布时间</th>
+            @*<th>状态</th>*@
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (System.Data.DataRow dr in Model.Rows)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(dr["Title"].ToString(), "Edit", new { id = dr["Id"], appid = Request["appid"] })
+                </td>
+                @{
+                    string typeID = dr["Type"].ToString();
+                    System.Data.DataTable dt = new RoadFlow.Platform.Dictionary().GetByID(typeID.ToGuid());
+                    foreach (System.Data.DataRow item in dt.Rows)
+                    {
+                        <td>@item["Title"]</td>
+                    }
+                }
+                <td>@(((DateTime)dr["PublishTime"]).ToString("yyyy-MM-dd"))</td>
+                <td>
+                    <a href="javascript:void(0)" onclick="del('@dr["Id"]')">删除</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>@Html.Raw(ViewBag.Pager)</div>
+<br />
+<script type="text/javascript">
+    var appid = '@Request.QueryString["appid"]';
+    var iframeid = '@Request.QueryString["tabid"]';
+    var dataGrid;
+    $(function () {
+        var dataGrid = new RoadUI.Grid({ table: $(".mygrid") });
+    });
+
+    function del(id) {
+        if (confirm("确认删除？")) {
+            location.href = "@Url.Action("Delete")?id=" + id + "&appid=" + appid;
+        }
+    }
+
+</script>
+

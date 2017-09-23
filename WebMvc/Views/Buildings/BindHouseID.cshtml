@@ -1,0 +1,49 @@
+﻿@model RoadFlow.Web.Model.BuildingBindHouseIDViewModel
+@{
+    ViewBag.Title = "Index";
+    Page.CheckApp = false;
+}
+@using (Html.BeginForm()) {
+    <table class="mygrid">
+        <tr>
+            <td>
+                楼宇名称：
+                @Html.DisplayFor(modelbuilding=>modelbuilding.Building.Name)
+                @*<input type="text" name="BuildingName" id="BuildingName" value="@Model.Building.Name" style="width:180px;" />*@
+                <input type="hidden" name="BuildingID" id="BuildingID" value="@Model.Building.ID" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                楼盘名称：
+                <select class="myselect" name="HouseID" id="ID" style="width:180px;">
+                    <option value=""></option>
+                    @foreach (var item in Model.Dictionary) {
+                        if (Model.Building.HouseID != null && Model.Building.HouseID == item.ID) {
+                            <option value="@item.ID" selected>@item.Title</option>
+                        } else {
+                            <option value="@item.ID">@item.Title</option>
+                        }
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="submit" name="save" value="确定保存" class="mybutton" />
+                <input type="button" class="mybutton" value="取消关闭" style="margin-left: 5px;" onclick=" new RoadUI.Window().close();" />
+            </td>
+        </tr>
+        @*<tr>
+                <td><input type="submit" value="保存" />&nbsp;&nbsp;&nbsp;<input type="button" style="margin-left: 5px;" value="取消" onclick=" new RoadUI.Window().close();" /></td>
+            </tr>*@
+    </table>
+}
+<script type="text/javascript">
+    var appid = '@Request.QueryString["appid"]';
+    var iframeid = '@Request.QueryString["tabid"]';
+    var query = '@Html.Raw(ViewBag.Query)';
+    $(function () {
+        @Html.Raw(ViewBag.Script)
+    });
+</script>

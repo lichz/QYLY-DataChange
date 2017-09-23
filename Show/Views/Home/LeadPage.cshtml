@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "青羊欢迎您。";
+}
+    <!-- nav start -->
+    <div class="nav_wrap2"></div>
+    <div class="clearfix w1200 m0a nav2 tc">
+        <ul class="nav_list2 clearfix di">
+            <li class="fl">
+                <a href="~/Home/Index">首页</a>
+            </li>
+            <li class="fl">
+                <a href="~/SpecialQY/Index">魅力青羊</a>
+            </li>
+            <li class="fl">
+                <a href="~/BuildingInformation/Index">楼宇资讯</a>
+            </li>
+            <li class="fl">
+                <a href="~/Buildings/Index">楼宇展示</a>
+            </li>
+            <li class="fl">
+                <a href="~/Rental/Index">楼宇租售</a>
+            </li>
+            <li class="fl">
+                <a href="~/Map/Map">楼宇地图</a>
+            </li>
+        </ul>
+    </div>
+    <!-- nav end -->
+    <!-- content start -->
+    <div class="content_s">
+        <img src="/Images/special.jpg">
+        <div class="link_box" style="display:none;">
+            <a href="@System.Configuration.ConfigurationManager.AppSettings["AreaDomain"]">
+                <img src="/Images/a_link.png">
+            </a>
+        </div>
+    </div>
+    <!-- content end -->
+    <!-- footer start-->
+    <div class="footer_wrap_s">
+        <p class="copyright2 tc">成都市青羊区商务局 Copyright ©2017 蜀ICP备150300000号</p>
+    </div>
+    <!-- footer end-->
+    <script type="text/javascript">
+        window.onresize = function () {
+            jstop();
+        }
+
+        function jstop() {
+            $('.link_box').fadeOut();
+            var myh = $('.content_s>img').height() * 0.75;
+            $('.link_box').css('top', myh + 'px');
+            $('.link_box').fadeIn();
+        };
+
+        $(function(){
+            window.setTimeout(jstop,100);
+        })
+    </script>    

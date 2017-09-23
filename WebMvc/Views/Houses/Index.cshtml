@@ -1,0 +1,49 @@
+﻿@model RoadFlow.Web.Model.HousesIndexViewModel
+@using WebMvc.Controllers;
+@{
+    ViewBag.Title = "Index";
+    Page.CheckApp = false;
+}
+<link type="text/css" rel="stylesheet" href="/Scripts/FlowRun/Forms/flowform.css">
+<div style="color:red;">@Html.ValidationSummary()</div>
+@using (Html.BeginForm()) {
+    <div style=" margin:10px;">
+        <table class="flowformtable" cellspacing="1" cellpadding="0" data-sort="sortDisabled">
+            <tr>
+                <td>所属结构：</td>
+                <td>@Model.Name</td>
+            </tr>
+            <tr>
+                <td>权限选择：</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="2">@Html.CheckBoxListFor(m => m.Check, "LPMC", System.Web.UI.WebControls.RepeatDirection.Vertical)</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    @Html.HiddenFor(m=>m.OrganizeID)
+                    @Html.HiddenFor(m => m.Type)
+                    <input type="submit" class="button1" value="保存" />
+                </td>
+            </tr>
+        </table>
+    </div>
+}
+<br />
+<script type="text/javascript">
+    var appid = '@Request.QueryString["appid"]';
+    var iframeid = '@Request.QueryString["tabid"]';
+    var dataGrid;
+    
+    $(function () {
+        @Html.Raw(ViewBag.Success)
+    });
+
+    //$(function () {
+    //    var dataGrid = new RoadUI.Grid({ table: $(".mygrid") });
+    //});
+
+
+</script>
+

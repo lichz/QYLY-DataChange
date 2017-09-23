@@ -1,0 +1,36 @@
+﻿@{
+	string FlowID = Request.QueryString["flowid"];
+	string StepID = Request.QueryString["stepid"];
+	string GroupID = Request.QueryString["groupid"];
+	string TaskID = Request.QueryString["taskid"];
+	string InstanceID = Request.QueryString["instanceid"];
+	string DisplayModel = Request.QueryString["display"] ?? "0";
+	string DBConnID = "54ae6b67-aa84-4467-980b-fe8661bf0f67";
+	string DBTable = "OA_Notice";
+	string DBTablePK = "ID";
+	string DBTableTitle = "Title";
+	RoadFlow.Platform.Dictionary BDictionary = new RoadFlow.Platform.Dictionary();
+	RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
+	RoadFlow.Platform.WorkFlowTask BWorkFlowTask = new RoadFlow.Platform.WorkFlowTask();
+	string fieldStatus = BWorkFlow.GetFieldStatus(FlowID, StepID);
+	LitJson.JsonData initData = BWorkFlow.GetFormData(DBConnID, DBTable, DBTablePK, InstanceID, fieldStatus);
+	string TaskTitle = BWorkFlow.GetFromFieldData(initData, DBTable, DBTableTitle);
+}
+<link href="~/Scripts/FlowRun/Forms/flowform.css" rel="stylesheet" type="text/css" />
+<script src="~/Scripts/FlowRun/Forms/common.js" type="text/javascript" ></script>
+<input type="hidden" id="Form_ValidateAlertType" name="Form_ValidateAlertType" value="1" />
+<input type="hidden" id="Form_TitleField" name="Form_TitleField" value="OA_Notice.Title" />
+<input type="hidden" id="Form_DBConnID" name="Form_DBConnID" value="54ae6b67-aa84-4467-980b-fe8661bf0f67" />
+<input type="hidden" id="Form_DBTable" name="Form_DBTable" value="OA_Notice" />
+<input type="hidden" id="Form_DBTablePk" name="Form_DBTablePk" value="ID" />
+<input type="hidden" id="Form_DBTableTitle" name="Form_DBTableTitle" value="Title" />
+<input type="hidden" id="Form_AutoSaveData" name="Form_AutoSaveData" value="1" />
+<script type="text/javascript">
+	var initData = @Html.Raw(BWorkFlow.GetFormDataJsonString(initData));
+	var fieldStatus = @Html.Raw(fieldStatus);
+	var displayModel = '@DisplayModel';
+	$(window).load(function (){
+		formrun.initData(initData, "OA_Notice", fieldStatus, displayModel);
+	});
+</script>
+<p style="text-align: center;"><span style="font-size: 36px;"><strong><br/></strong></span></p><p><span style="font-size: 36px;"><strong><br/></strong></span></p><p style="text-align: center;"><span style="font-size: 36px;"><strong>青羊区工商联文件处理卡</strong></span></p><p><span style="font-size: 36px;"></span></p><table class="flowformtable" cellpadding="0" cellspacing="1" data-sort="sortDisabled" align="left"><tbody><tr class="firstRow"><td width="226" valign="top" style="word-break: break-all;" align="center">来文单位文号<br/></td><td width="569" valign="top" align="left" style="word-break: break-all;"><input type="text" id="OA_Notice.FileNo" type1="flow_text" name="OA_Notice.FileNo" value="" style="width:500px" maxlength="200" valuetype="0" isflow="1" class="mytext" title=""/></td><td width="130" valign="top" style="word-break: break-all;" align="center">收文日期<br/></td><td width="666" valign="top" align="left"><input type="text" type1="flow_datetime" id="OA_Notice.GetDate" name="OA_Notice.GetDate" value="" style="width:150px" defaultvalue="" istime="0" daybefor="0" dayafter="0" currentmonth="0" isflow="1" class="mycalendar" title=""/></td></tr><tr><td width="226" valign="middle" style="word-break: break-all;" align="center">标题</td><td valign="middle" rowspan="1" colspan="3" width="171" align="left" style="word-break: break-all;"><textarea isflow="1" type1="flow_textarea" id="OA_Notice.Title" name="OA_Notice.Title" class="mytext" style="width:80%;height:50px" maxlength="500"></textarea></td></tr><tr><td valign="middle" align="center" colspan="1" rowspan="1" style="word-break: break-all;">文件</td><td valign="middle" align="left" colspan="3" rowspan="1" style="word-break: break-all;"><input type="text" type1="flow_files" id="OA_Notice.FileSrc" name="OA_Notice.FileSrc" value="" style="width:200px" filetype="" isflow="1" class="myfile" title=""/><input type="radio" name="OA_Notice.Type" id="OA_Notice.Type_0" value="1" style="vertical-align:middle;" isflow="1" type1="flow_radio"/><label for="OA_Notice.Type_0" style="vertical-align:middle;margin-right:3px;">党务</label><input type="radio" name="OA_Notice.Type" id="OA_Notice.Type_1" value="2" style="vertical-align:middle;" isflow="1" type1="flow_radio"/><label for="OA_Notice.Type_1" style="vertical-align:middle;margin-right:3px;">非党务</label></td></tr></tbody></table><p><span style="font-size: 36px;"></span><br/></p>

@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - 青羊楼宇经济信息网</title>
+    <link href="~/Content/base.css?version=@DateTime.Now.ToString("HHmmss")" rel="stylesheet" type="text/css" media="screen" />
+    <link href="~/Content/style.css?version=@DateTime.Now.ToString("HHmmss")" id="style_style" rel="stylesheet" type="text/css" media="screen" />
+    <script src="~/Scripts/jquery.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery.SuperSlide.js" type="text/javascript"></script>
+</head>
+<body>
+@if (!ViewContext.RouteData.Values["action"].ToString().Equals("LeadPage"))
+{
+         <!-- header start-->
+    <div class="header_wrap">
+        <div class="header w1200 m0a clearfix">
+            <a class="fl" href="~/Home/LeadPage">青羊楼宇经济信息网</a>
+            <a class="fr" href="@System.Configuration.ConfigurationManager.AppSettings["AreaDomain"]">登录系统</a>
+        </div>
+    </div>
+    <!-- header end -->
+    <!-- nav start -->
+    <div class="nav_wrap">
+        <div class="clearfix w1200 m0a">
+            <div class="fl mt30">
+                <a href="~/Home/Index"><img src="~/Images/logo.png"></a>
+            </div>
+            <ul class="nav_list fl clearfix">
+                <li class="fl">
+                    <a href="~/Home/Index">首页</a>
+                </li>
+                <li class="fl">
+                    <a href="~/SpecialQY/Index">魅力青羊</a>
+                </li>
+                <li class="fl">
+                    <a href="~/BuildingInformation/Index">楼宇资讯</a>
+                </li>
+                <li class="fl">
+                    <a href="~/Buildings/Index">楼宇展示</a>
+                </li>
+                <li class="fl">
+                    <a href="~/Rental/Index">楼宇租售</a>
+                </li>
+                <li class="fl">
+                    <a href="~/Map/Map">楼宇地图</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- nav end -->
+    @RenderBody()
+    <!-- footer start-->
+    <div class="footer_wrap">
+        <div class="f_link">
+            <ul class="f_link_ul w1200 m0a clearfix">
+                <li class="fl">
+                    <a href="javascript:;">友情链接</a>
+                </li>
+                <li class="fl">
+                    <a href="javascript:;">友情链接</a>
+                </li>
+                <li class="fl">
+                    <a href="javascript:;">友情链接</a>
+                </li>
+                <li class="fl">
+                    <a href="javascript:;">友情链接</a>
+                </li>
+                <li class="fl">
+                    <a href="javascript:;">友情链接</a>
+                </li>
+                <li class="fl">
+                    <a href="javascript:;">友情链接</a>
+                </li>
+                <li class="fl">
+                    <a href="javascript:;">友情链接</a>
+                </li>
+            </ul>
+        </div>
+        <div class="footer w1200 m0a">
+            <div class="tc dw">
+                <span class="zydw">主管单位：成都市青羊区商务局</span>
+                <span>技术支持：成都华保科技有限公司</span>
+            </div>
+            <p class="tc bah">备案号：蜀ICP备20170406555号</p>
+            <div class="tc bapic">
+                <a href="javascript:;">
+                    <img src="~/Images/beian_01.jpg">
+                </a>
+                <a href="javascript:;">
+                    <img src="~/Images/beian_01.jpg">
+                </a>
+                <a href="javascript:;">
+                    <img src="~/Images/beian_01.jpg">
+                </a>
+                <a href="javascript:;">
+                    <img src="~/Images/beian_01.jpg">
+                </a>
+                <a href="javascript:;">
+                    <img src="~/Images/beian_01.jpg">
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- footer end-->
+    <script src="~/Scripts/index.js" type="text/javascript"></script>
+}
+else
+{
+    @RenderBody()
+}
+</body>
+</html>

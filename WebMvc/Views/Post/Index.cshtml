@@ -1,0 +1,103 @@
+﻿@model System.Data.DataTable
+@using RoadFlow.Data.Model
+@using RoadFlow.Utility;
+@{
+    ViewBag.Title = "Index";
+}
+<style>
+    td a:link {
+        color: blue;
+        text-decoration: underline;
+    }
+</style>
+<form method="post">
+    @Html.AntiForgeryToken()
+    <div class="querybar">
+        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tr>
+                <td>
+                    标题：<input type="text" name="Name" id="Name" style="width:300px;" value="@ViewBag.name" />
+                    <input type="submit" name="Search" value="&nbsp;&nbsp;查&nbsp;询&nbsp;&nbsp;" class="mybutton" />
+                    <input type="button" name="Search" value="&nbsp;&nbsp;发&nbsp;布&nbsp;信&nbsp;息&nbsp;&nbsp;" class="mybutton" onclick="Edit(0)" />
+                </td>
+            </tr>
+        </table>
+    </div>
+    <table class="mygrid">
+        <thead>
+            <tr>
+                <th>标题</th>
+                <th>类型</th>
+                <th>面积</th>
+                <th>地点</th>
+                <th>发布时间</th>
+                <th>联系电话</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (System.Data.DataRow dr in Model.Rows)
+            {
+                <tr>
+                    <td><a href="javascript:void(0);" onclick="detail('@dr["ID"]');">@dr["Title"]</a></td>
+                    <td>@dr["Type"]</td>
+                    <td>@dr["Acreage"]㎡</td>
+                    <td>@dr["Adresse"]</td>
+                    <td>@dr["AddTime"]</td>
+                    <td>@dr["Mobile"]</td>
+                    <td>@(dr["IsValid"].ToString() == "0" ? "有效" : "过期")</td>
+                    <td>
+                        @if (dr["AddUserId"].ToString().ToUpper() == @RoadFlow.Platform.Users.CurrentUserID.ToString().ToUpper())
+                        {
+                            <a href="javascript:void(0);" onclick="Edit('@dr["ID"]');">编辑</a>
+                            <a href="javascript:void(0);" onclick="del('@dr["ID"]');">删除</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @Html.Raw(ViewBag.Pager)
+</form>
+
+<script type="text/javascript">
+    var appid = '@Request.QueryString["appid"]';
+    var iframeid = '@Request.QueryString["tabid"]';
+    var dialog = top.mainDialog;
+    var query = '@Html.Raw(ViewBag.Query)';
+    var dataGrid;
+    $(function () {
+        var dataGrid = new RoadUI.Grid({ table: $(".mygrid") });
+    });
+
+    function Edit(id) {
+        if (id != 0 ) {
+            dialog.open({ id: "window_" + appid.replaceAll('-', ''), title: "编辑", width: 800, height: 320, url: top.rootdir + "/Post/Edit?id=" + id, openerid: iframeid });
+        } else {
+            dialog.open({ id: "window_" + appid.replaceAll('-', ''), title: "添加", width: 800, height: 320, url: top.rootdir + "/Post/Edit?id=" + id, openerid: iframeid });
+        }
+    }
+
+    function detail(id) {
+        dialog.open({ id: "window_" + appid.replaceAll('-', ''), title: "详细", width: 800, height: 450, url: top.rootdir + "/Post/Details?id=" + id, openerid: iframeid });
+    }
+
+    function del(id) {
+        if (confirm("你确定删除吗？")) {
+            $.ajax({
+                url: top.rootdir + "/Post/Del?id=" + id,
+                async: true,
+                cache: false,
+                success: function (txt) {
+                    window.location = window.location;
+                },
+                error: function () {
+                    alert("删除失败。");
+                }
+            });
+
+        }
+    }
+
+</script>

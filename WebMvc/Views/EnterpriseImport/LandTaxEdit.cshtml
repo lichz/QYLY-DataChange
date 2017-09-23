@@ -1,0 +1,117 @@
+﻿@model RoadFlow.Data.Model.LandTax
+
+@{
+    ViewBag.Title = "LandTaxEdit";
+}
+<h2>地税更新</h2>
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>LandTax</legend>
+        @Html.HiddenFor(model => model.ID)
+        <div class="editor-label">
+            @Html.LabelFor(model => model.EnterpriseName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.EnterpriseName)
+            @Html.ValidationMessageFor(model => model.EnterpriseName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.YYS)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.YYS)
+            @Html.ValidationMessageFor(model => model.YYS)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.QYSDS)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.QYSDS)
+            @Html.ValidationMessageFor(model => model.QYSDS)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.GRSDS)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.GRSDS)
+            @Html.ValidationMessageFor(model => model.GRSDS)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.CJS)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.CJS)
+            @Html.ValidationMessageFor(model => model.CJS)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.FCS)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.FCS)
+            @Html.ValidationMessageFor(model => model.FCS)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.YHS)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.YHS)
+            @Html.ValidationMessageFor(model => model.YHS)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.TDSYS)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.TDSYS)
+            @Html.ValidationMessageFor(model => model.TDSYS)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.TDZZS)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.TDZZS)
+            @Html.ValidationMessageFor(model => model.TDZZS)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.GZS)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.GZS)
+            @Html.ValidationMessageFor(model => model.GZS)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.JYFJS)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.JYFJS)
+            @Html.ValidationMessageFor(model => model.JYFJS)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Area)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Area)
+            @Html.ValidationMessageFor(model => model.Area)
+        </div>
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "LandTax", new { appid = Request["appid"] })
+</div>

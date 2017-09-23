@@ -1,0 +1,85 @@
+﻿@model RoadFlow.Web.Model.SubmitBuildingModifyViewModel
+@{
+    ViewBag.Title = "Index";
+}
+@if (!string.IsNullOrWhiteSpace(Model.Message)) {
+    <div class="querybar">
+        <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+            <tr>
+                <td>
+                    @Model.Message
+                </td>
+            </tr>
+        </table>
+    </div>
+} else {
+<form method="post">
+    @Html.AntiForgeryToken()
+    <div class="querybar">
+        <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+            <tr>
+                <td>
+                    关键字：<input type="text" name="name" id="name" style="width:150px;" value="@Model.ParaName" />
+                    <input type="submit" name="Search" value="&nbsp;&nbsp;查&nbsp;询&nbsp;&nbsp;" class="mybutton" />
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
+<div style=" padding:10px; padding-top:0;">
+    <input class="button1" type="button" value="楼栋新增" style="margin:0;" title="楼栋新增" onclick="add()">
+</div>
+<table class="mygrid">
+    <thead>
+        <tr>
+            <th>楼盘名称</th>
+            <th>楼栋名称</th>
+            <th>楼栋</th>
+            <th>最近更新</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach (System.Data.DataRow dr in Model.List.Rows) {
+                <tr>
+                    <td>@(Model.HouseName.Rows.Find(dr["HouseID"])["Title"])</td>
+                    <td>@dr["Name"]</td>
+                    <td>@dr["LYDS"]</td>
+                    <td>@(((DateTime)dr["UpdateTime"]).ToString("yyyy-MM-dd HH:mm:ss"))</td>
+                    <td>
+                        @{
+                string houseID = dr["HouseID"].ToString();
+                string query = string.Format("flowid={0}&instanceid={1}&houseID={2}&toStreetID={3}&appid=" + Request["appid"], Model.EditFlowID, dr["ID"], houseID, Model.ToStreetID.ContainsKey(houseID) ? Model.ToStreetID[houseID] : "");
+                        }
+                        <a href="javascript:;" style="color: #0695ce;" onclick="modify('WorkFlowRun/Index?@Html.Raw(query)','@dr["Name"]')" )>楼栋更新</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@Html.Raw(Model.Pager)
+<br />
+<script type="text/javascript">
+    var appid = '@Request.QueryString["appid"]';
+    var iframeid = '@Request.QueryString["tabid"]';
+    var dataGrid;
+    $(function () {
+        var dataGrid = new RoadUI.Grid({ table: $(".mygrid") });
+    });
+
+    function add() {
+        var id = RoadUI.Core.newid();
+        var url = "@Url.Action("Index")?appid="+appid;
+        var name = "楼栋新增";
+        top.openApp(url, 0, name, id, 0, 0, false);
+    }
+
+    function modify(url, name) {
+        var id = RoadUI.Core.newid();
+        top.openApp(url, 0, name, id, 0, 0, false);
+        return false;
+    }
+</script>
+}

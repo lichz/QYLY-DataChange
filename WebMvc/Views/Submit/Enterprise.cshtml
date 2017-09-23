@@ -1,0 +1,63 @@
+﻿@model RoadFlow.Web.Model.SubmitEnterpriseViewModel
+@{
+    ViewBag.Title = "企业变更";
+}
+
+<form method="post">
+    @Html.AntiForgeryToken()
+    <div class="querybar">
+        <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+            <tr>
+                <td>
+                    楼栋名称：
+                    <input type="text" name="Name" id="Name" style="width:150px;" value="@Model.ParaName" />
+                    <input type="submit" name="Search" value="&nbsp;&nbsp;查&nbsp;询&nbsp;&nbsp;" class="mybutton" />
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
+<table class="mygrid">
+    <thead>
+        <tr>
+            <th>楼栋名称</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+      @{
+          foreach (System.Data.DataRow dr in Model.List.Rows) {
+              string houseID = dr["HouseID"].ToString();
+              object toStreetID = Model.ToStreetID.ContainsKey(houseID) ? Model.ToStreetID[houseID] : "";
+            <tr>
+                <td>@dr["Name"]</td>
+                <td>
+                    <a href="javascript:;" style="color: #0695ce;" onclick="modify('WorkFlowRun/Index?flowid=@Model.CreateFlowID&appid=@Request["appid"]&buildingID=@dr["ID"]&toStreetID=@toStreetID','企业入驻')">企业入驻</a>
+                </td>
+            </tr>
+          }
+        }
+    </tbody>
+</table>
+@Html.Raw(Model.Pager)
+<br />
+<script type="text/javascript">
+    var appid = '@Request.QueryString["appid"]';
+    var iframeid = '@Request.QueryString["tabid"]';
+    var dialog = top.mainDialog;
+    var dataGrid;
+    $(function () {
+        var dataGrid = new RoadUI.Grid({ table: $(".mygrid") });
+        dataGrid.oddColor();
+        dataGrid.resetWidth();
+    });
+
+    //变更
+    function modify(url, name) {
+        var id = RoadUI.Core.newid();
+        top.openApp(url, 0, name, id, 0, 0, false);
+        return false;
+    }
+   
+</script>
+

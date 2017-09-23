@@ -1,0 +1,111 @@
+﻿@{
+    ViewBag.Title = "MoreSearch";
+}
+
+@model RoadFlow.Data.Model.QueryDesign
+@using RoadFlow.Utility
+@using RoadFlow.Platform
+<style>
+    .nottop4{display:none;}
+     td a:link {
+	         color:blue;
+            text-decoration:underline;
+        }
+</style>
+<form action="" method="post" id="form1">
+    <table class="mygrid">
+        <tbody>
+            @{
+                var i = 1;
+                var trcss = "top4";
+            }
+            @foreach (var element in Model.SearchJson.JsonConvertModel<List<RoadFlow.Data.Model.Element>>())
+            {
+                if (i > 10)
+                {
+                    trcss = "nottop4";
+                }
+                <tr class="@trcss">
+                    <td style=" width:25%;text-align:right">@element.title:</td>
+                    <td>
+                        @{
+                            switch (element.type)
+                            {
+                                case "text":
+                                    <input type="text" style="width:258px" name="@element.name" />
+                                    break;
+                                case "select":
+                                    var options = "<option></option>";
+                                    if (element.customopts.Count > 0)
+                                    {
+                                        foreach (var op in element.customopts)
+                                        {
+                                            options += "<option value='" + op.value + "'>" + op.title + "</option>";
+                                        }
+                                    }
+                                    else if (!element.dictid.IsNullOrEmpty())
+                                    {
+                                        options += new RoadFlow.Platform.Dictionary().GetOptionsByID(element.dictid.ToGuid(),Dictionary.OptionValueField.ID);
+                                    }
+                                    else
+                                    {
+                                        var dic = new RoadFlow.Platform.DBConnection().GetOptionsFields(Model.ID, element.sql);
+                                        foreach (var op in dic)
+                                        {
+                                            options += "<option value='" + op.Key + "'>" + op.Value + "</option>"; ;
+                                        }
+                                    }
+                                    <select name="@element.name" style="width:263px">@Html.Raw(options)</select>
+                                    break;
+                                case "int":
+                                <input type="number" style="width:121px" name="@element.name" /> <span>-</span> <input type="number" style="width:121px" name="@element.name" />
+                                    break;
+                                case "date":
+                                <input type="text" class="mycalendar" name="@element.name" style="width:121px;"  /> <span>-</span> <input type="text" class="mycalendar" name="@element.name" style="width:121px;" />
+                                    break;
+                            }
+                        }
+                    </td>
+                </tr>
+                i++;
+            }
+            <tr id="more">
+                <td></td>
+                <td style="text-align:right;"><a href="javascript:void(0)" style="margin-right: 40px" onclick="More()">更多条件</a></td>
+            </tr>
+        </tbody>
+    </table>
+   
+    <div>
+        <input type="button" name="save" value="确定查询" class="mybutton" onclick="sure()" />
+        <input type="button" class="mybutton" value="取消关闭" style="margin-left: 5px;" onclick=" new RoadUI.Window().close();" />
+    </div>
+</form>
+
+<script type="text/javascript">
+    //var appid = '@Request.QueryString["appid"]';
+    var iframeid = '@Request.QueryString["tabid"]';
+    var queryID = '@Request.QueryString["queryID"]';
+    var dialog = top.mainDialog;
+    //var query = '@Html.Raw(ViewBag.Query)';
+    var dataGrid;
+    $(function () {
+        var dataGrid = new RoadUI.Grid({ table: $(".mygrid") });
+    });
+
+    function sure() {
+        var result = $("#form1").serializeArray();
+        result = JSON.stringify(result)
+        var parentWindow = parent[iframeid + '_iframe'];
+        $("[name='" + queryID + "']", parentWindow.document).val(result);
+        parentWindow.document.forms[0].submit();
+        new RoadUI.Window().close();
+    }
+    function More() {
+        $(".nottop4").toggle();
+    }
+</script>
+<style>
+    .gridpager{text-align:center!important}
+</style>
+

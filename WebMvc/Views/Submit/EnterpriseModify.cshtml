@@ -1,0 +1,105 @@
+﻿@model RoadFlow.Web.Model.SubmitEnterpriseModifyViewModel
+@{
+    ViewBag.Title = "企业变更";
+}
+@if (!string.IsNullOrWhiteSpace(Model.Message)) {
+    <div class="querybar">
+        <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+            <tr>
+                <td>
+                    @Model.Message
+                </td>
+            </tr>
+        </table>
+    </div>
+} else {
+<form method="post">
+    @Html.AntiForgeryToken()
+    <div class="querybar">
+        <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+            <tr>
+                <td>
+                    所属楼栋：
+                    <select id="buildingID" name="buildingID">
+                        <option value="">全部</option>
+                        @foreach (System.Data.DataRow item in Model.BuildingsName.Rows) {
+                            if (!string.IsNullOrWhiteSpace(Model.ParaBuildingID) && Model.ParaBuildingID == item["ID"].ToString()) {
+                                <option value="@item["ID"]" selected>@item["Name"]</option>
+                            } else {
+                                <option value="@item["ID"]">@item["Name"]</option>
+                            }
+                        }
+                    </select>
+                    企业名称：<input type="text" name="name" id="name" style="width:150px;" value="@Model.ParaName" />
+                    <input type="submit" name="Search" value="&nbsp;&nbsp;查&nbsp;询&nbsp;&nbsp;" class="mybutton" />
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
+<div style=" padding:10px; padding-top:0;">
+    <input class="button1" type="button" value="企业入驻" style="margin:0;" title="企业入驻" onclick="add()">
+</div>
+<table class="mygrid">
+    <thead>
+        <tr>
+            <th>企业名称</th>
+            <th>楼栋名称</th>
+            <th>最近更新</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+      @{
+          foreach (System.Data.DataRow dr in Model.List.Rows) {
+            <tr>
+                <td>@dr["Name"]</td>
+                <td>@(Model.BuildingsName.Rows.Find(dr["BuildingID"])["Name"])</td>
+                <td>@(((DateTime)dr["UpdateTime"]).ToString("yyyy-MM-dd HH:mm:ss"))</td>
+                <td>
+                    @{
+              string houseID = Model.BuildingsName.Rows.Find(dr["BuildingID"])["HouseID"].ToString();
+                object toStreetID = Model.ToStreetID.ContainsKey(houseID) ? Model.ToStreetID[houseID] : "";
+                string query = string.Format("flowid={0}&instanceid={1}&toStreetID={2}&appid=" + Request["appid"], Model.EditFlowID, dr["ID"],toStreetID);//更新参数
+                string query2 = string.Format("flowid={0}&instanceid={1}&toStreetID={2}&appid=" + Request["appid"], Model.DeleteFlowID, dr["ID"], toStreetID);//搬出参数
+                    }
+                    <a href="javascript:;" style="color: #0695ce;" onclick="modify('WorkFlowRun/Index?@Html.Raw(query)','@dr["Name"]')" )>企业更新</a>
+                    <a href="javascript:;" style="color: #0695ce;" onclick="modify('WorkFlowRun/Index?@Html.Raw(query2)','@dr["Name"]')" )>企业搬出</a>
+                </td>
+            </tr>
+          }
+          
+          }
+    </tbody>
+</table>
+@Html.Raw(Model.Pager)
+<br />
+<script type="text/javascript">
+    var appid = '@Request.QueryString["appid"]';
+    var iframeid = '@Request.QueryString["tabid"]';
+    var dialog = top.mainDialog;
+    var dataGrid;
+    $(function () {
+        var dataGrid = new RoadUI.Grid({ table: $(".mygrid") });
+        dataGrid.oddColor();
+        dataGrid.resetWidth();
+    });
+
+    //入驻
+    function add() {
+        var id = RoadUI.Core.newid();
+        var url = "@Url.Action("Enterprise")?appid="+appid;
+        var name = "企业入驻";
+        top.openApp(url, 0, name, id, 0, 0, false);
+    }
+
+    //变更
+    function modify(url, name) {
+        var id = RoadUI.Core.newid();
+        top.openApp(url, 0, name, id, 0, 0, false);
+        return false;
+    }
+   
+</script>
+
+}

@@ -1,0 +1,58 @@
+﻿@model RoadFlow.Data.Model.CentralTax
+
+@{
+    ViewBag.Title = "CentralTaxEdit";
+}
+
+<h2>CentralTaxEdit</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>CentralTax</legend>
+
+        @Html.HiddenFor(model => model.ID)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.EnterpriseName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.EnterpriseName)
+            @Html.ValidationMessageFor(model => model.EnterpriseName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ZZS)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ZZS)
+            @Html.ValidationMessageFor(model => model.ZZS)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.QYSDS)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.QYSDS)
+            @Html.ValidationMessageFor(model => model.QYSDS)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Area)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Area)
+            @Html.ValidationMessageFor(model => model.Area)
+        </div>
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "CentralTax",new{ appid=Request["appid"]})
+</div>

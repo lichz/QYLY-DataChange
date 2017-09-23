@@ -1,0 +1,151 @@
+﻿@model HomeMapViewModel
+@{
+    ViewBag.Title = "楼宇地图";
+}
+<style type="text/css">
+    body, html, #allmap {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        font-family: "微软雅黑";
+    }
+
+    #l-map {
+        height: 100%;
+        width: 78%;
+        float: left;
+        border-right: 2px solid #bcbcbc;
+    }
+
+    #r-result {
+        height: 100%;
+        width: 20%;
+        float: left;
+    }
+
+    #allmap {
+        height: 600px;
+        width: 100%;
+        min-width: 1200px;
+    }
+    select {
+        padding:3px;
+    }
+</style>
+<div class="map_cnt pr">
+    <div id="allmap"></div>
+    <div class="search_box clearfix">
+        @*<form action="#" method="post">*@
+        @*<div class="fl condition1 clearfix">
+                <label class="fl">所属功能区：</label>
+                <div class="fl diy_search pr">
+                    <span class="key_word1">--不限--</span>
+                    <ul class="key_list pa dn">
+                        <li class="mr">--不限--</li>
+                        <li>1区</li>
+                        <li>2区</li>
+                        <li>2区</li>
+                    </ul>
+                </div>
+            </div>*@
+        <div class="fl condition1 clearfix">
+            <label class="fl">所属街道办：</label>
+            <div class="fl diy_search pr">
+                <select name="ssjd" id="ssjd">
+                    <option value="">--不限--</option>
+                    @foreach (var item in Model.Street) {
+                        <option value="@item.ID">@item.Title</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="fl condition1 clearfix">
+            <label class="fl">建筑面积：</label>
+            <div class="fl diy_search pr">
+                <select name="zmj" id="zmj">
+                    <option value="">--不限--</option>
+                    <option value=",5000">5000以下</option>
+                    <option value="5000,10000">5000-10000</option>
+                    <option value="10000,">10000以上</option>
+                </select>
+            </div>
+        </div>
+        <div class="fl condition1 clearfix">
+            <label class="fl">楼宇名称：</label>
+            <div class="fl diy_search pr">
+                <input id="name" type="text" value="" />
+            </div>
+        </div>
+        <input class="submit01 fl" type="button" onclick="getList()" value="查询">
+        @*</form>*@
+    </div>
+</div>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=QOeopdIBagiv9lZ4Yzc4LGD1szoTntFG"></script>
+<script type="text/javascript">
+    // 百度地图API功能
+    var map = new BMap.Map("allmap");
+    map.centerAndZoom(new BMap.Point(104.027923463, 30.6799428454), 14);
+
+    //map.centerAndZoom(point, 15);
+    //// 编写自定义函数,创建标注
+    function addMarker(point, item) {
+        var marker = new BMap.Marker(point);
+        bindEvent(marker, item);
+        map.addOverlay(marker);
+    }
+
+    $(function () {
+        var top_left_control = new BMap.ScaleControl({ anchor: BMAP_ANCHOR_TOP_LEFT });// 左上角，添加比例尺
+        var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
+        map.addControl(top_left_control);
+        map.addControl(top_left_navigation);
+        getList();
+    });
+
+    //获取楼栋信息列表
+    function getList() {
+        var verstion = new Date().getTime();
+        var zmj = $("#zmj").val();
+        var ssjd = $("#ssjd").val();
+        var name = $("#name").val();
+        $.getJSON("@Url.Action("GetList")", { verstion: verstion,zmj:zmj,ssjd:ssjd,name:name }, function (result) {
+            if (result.success) {
+                map.clearOverlays();//清空所有覆盖物
+                for (var i = 0; i < result.list.length; i++) {
+                    var bddw = result.list[i].BDDW.split(',');
+                    var point = new BMap.Point(bddw[0], bddw[1]);
+                    addMarker(point, result.list[i]);
+                }
+            } else {
+                alert("查询失败。");
+            }
+        });
+    }
+
+    //地图marker绑定事件
+    function bindEvent(marker, item) {
+        marker.setTitle(item.Name);
+        marker.addEventListener("click", function () {
+            var url = "@Url.Action("Details", "Buildings")" + "/" + item.ID;
+            //location.href = "@Url.Action("Details", "Buildings")"+"/"+item.ID;
+            window.open(url);
+        });
+    }
+
+    // 随机向地图添加25个标注
+    // var bounds = map.getBounds();
+    // var sw = bounds.getSouthWest();
+    // var ne = bounds.getNorthEast();
+    // var lngSpan = Math.abs(sw.lng - ne.lng);
+    // var latSpan = Math.abs(ne.lat - sw.lat);
+    // for (var i = 0; i < 1; i ++) {
+    //     var point = new BMap.Point(sw.lng + lngSpan * (Math.random() * 0.7), ne.lat - latSpan * (Math.random() * 0.7));
+    //     addMarker(point);
+    // }
+    //向地图添加标注
+    //var data=[[104.23323045657012,30.71208839935201],[104.33323045657083,30.91208839935732],[104.33323045657033,30.51208839935732]];
+    //for(var i = 0; i < data.length; i ++){
+    //    var point = new BMap.Point(data[i][0], data[i][1]);
+    //    addMarker(point);
+    //}
+</script>

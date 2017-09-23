@@ -1,0 +1,146 @@
+﻿@model BuildingRentalViewModel
+@{
+    ViewBag.Title = "楼宇租售";
+}
+<!-- banner start -->
+<div class="d_banner">
+    <img src="~/Images/banner01.jpg" />
+</div>
+<!-- banner end -->
+<!-- content start -->
+<div class="rental_cnt w1200 m0a clearfix">
+    <div class="w1200 fr">
+        <div class="titbox clearfix">
+            <h4 class="fl">楼宇租售</h4>
+            <div class="fr mbx_nav">
+                你的当前位置：
+                <a href="~/Home/Index">首页 ></a>
+                <a class="now" href="javascript:;">楼宇租售</a>
+            </div>
+        </div>
+        <div class="search_box clearfix">
+            <div class="kind buildingType clearfix">
+                <label class="fl ">楼宇分类：</label>
+                <span class="fl on pr"><input class="pa" type="radio" name="buildingType" checked value="@Model.JSJD.FirstOrDefault(p=>p.Title== "已建成").ID,@Model.IsImportant.FirstOrDefault(p=>p.Title== "重点楼宇").ID" />已建重点</span>
+                <span class="fl pr"><input class="pa" type="radio" name="buildingType" value="@Model.JSJD.FirstOrDefault(p=>p.Title== "已建成").ID,@Model.IsImportant.FirstOrDefault(p=>p.Title== "其他楼宇").ID" />已建其他</span>
+                <span class="fl pr"><input class="pa" type="radio" name="buildingType" value="@Model.JSJD.FirstOrDefault(p=>p.Title== "在建").ID,@Model.IsImportant.FirstOrDefault(p=>p.Title== "重点楼宇").ID" />在建重点</span>
+                <span class="fl pr"><input class="pa" type="radio" name="buildingType" value="@Model.JSJD.FirstOrDefault(p=>p.Title== "在建").ID,@Model.IsImportant.FirstOrDefault(p=>p.Title== "其他楼宇").ID" />在建其他</span>
+            </div>
+            <div class="fl condition kind">
+                <label class="fl">租售分类：</label>
+                <span class="fl on pr"><input class="pa" type="radio" checked name="condition" value="-1" />全部</span>
+                <span class="fl pr"><input class="pa" type="radio" name="condition" value="出租" />出租</span>
+                <span class="fl pr"><input class="pa" type="radio" name="condition" value="出售" />出售</span>
+            </div>
+            <div class="fl condition1 clearfix">
+                <label class="fl">所属街道办：</label>
+                <div class="fl diy_search pr">
+                    <span class="key_word1">--不限--</span>
+                    <ul class="key_list pa dn">
+                        <li class="mr">--不限--</li>
+                        @foreach (var item in Model.SSJD)
+                        {
+                            <li value="@item.ID">@item.Title</li>
+                        }
+                    </ul>
+                    <select class="dn" name="SSJD" id="SSJD">
+                        <option value="">--不限--</option>
+                        @foreach (var item in Model.SSJD)
+                        {
+                            <option value="@item.ID">@item.Title</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="fl condition1 money clearfix">
+                <label class="fl">租售金额：</label>
+                <div class="fl diy_search pr">
+                    <span class="key_word1">--不限--</span>
+                    <ul class="key_list pa dn">
+                        <li class="mr">--不限--</li>
+                        <li value=",5000">5000以下</li>
+                        <li value="5000,10000">5000-10000</li>
+                        <li value="10000,">10000以上</li>
+                    </ul>
+                    <select class="dn" name="RentalMoney" id="RentalMoney">
+                        <option value="">--不限--</option>
+                        <option value=",5000">5000以下</option>
+                        <option value="5000,10000">5000-10000</option>
+                        <option value="10000,">10000以上</option>
+                    </select>
+                </div>
+            </div>
+            <div class="fl condition1 clearfix">
+                <label class="fl">建筑面积：</label>
+                <div class="fl diy_search pr">
+                    <span class="key_word1">--不限--</span>
+                    <ul class="key_list pa dn">
+                        <li class="mr">--不限--</li>
+                        <li value=",5000">5000以下</li>
+                        <li value="5000,10000">5000-10000</li>
+                        <li value="10000,">10000以上</li>
+                    </ul>
+                    <select class="dn" name="ZMJ" id="ZMJ">
+                        <option value="">--不限--</option>
+                        <option value=",5000">5000以下</option>
+                        <option value="5000,10000">5000-10000</option>
+                        <option value="10000,">10000以上</option>
+                    </select>
+                </div>
+            </div>
+            <div class="fl condition1 clearfix">
+                <label class="fl">楼宇名称：</label>
+                <div class="fl diy_search pr">
+                    <input type="text" name="Name" id="Name" />
+                </div>
+            </div>
+            <input class="submit01 fl" value="查询" type="button" onclick="getList(1)">
+        </div>
+        <div class="result">
+            共搜索出<span id="totalCount" class="result_count">0</span>个结果
+        </div>
+        <div class="result_wrap">
+            <ul class="result2_ul clearfix"></ul>
+            <div class="page"></div>
+        </div>
+    </div>
+</div>
+<!-- content end -->
+<script type="text/javascript">
+    $(function () {
+        bind();
+        $('.kind span').click(function () {
+            $(this).addClass('on').siblings().removeClass('on');
+        });
+        getList(1);
+    });
+    function getList(pageIndex) {
+        var buildingType = $(".buildingType .on input").val();
+        var isImportant = buildingType.split(',')[1];
+        var jsjd = buildingType.split(',')[0];
+        //var rentalType = $("input:[name='condition']:checked").val();
+        var rentalType = $(".condition .on input").val();
+        var ssjd = $("#SSJD").val();
+        var zmj = $("#ZMJ").val();
+        var rentalMoney = $("#RentalMoney").val();
+        var name = $("#Name").val();
+        var verstion = new Date().getTime();
+        $.getJSON("@Url.Action("GetJsonList")", { pageIndex: pageIndex, rentalType: rentalType, ssjd: ssjd, zmj: zmj, rentalMoney: rentalMoney, name: name, isImportant: isImportant, jsjd: jsjd, verstion: verstion }, function (result) {
+            if (result.success) {
+                $(".result2_ul").html(result.html);
+                $("#totalCount").html(result.totalCount);
+                $(".page").html(result.pager);
+                bind();
+            }
+        }
+    )
+    };
+    //翻页点击绑定,跳转绑定
+    function bind() {
+        $(".page a").click(function () {
+            var index = $(this).data("val");
+            getList(index);
+        });
+    }
+
+</script>

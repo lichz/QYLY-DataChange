@@ -1,0 +1,126 @@
+﻿@{
+    ViewBag.Title = "楼宇资讯";
+}
+@model BuildingInformationViewModel
+<!-- banner start -->
+<div class="d_banner">
+    <img src="~/Images/banner01.jpg" />
+</div>
+<!-- banner end -->
+<!-- content start -->
+<div class="show_cnt w1200 m0a clearfix">
+    <div class="asd_nav fl">
+        <h4><img src="~/Images/news_tit.png"></h4>
+        <ul class="first_nav">
+            <li>
+                <ul class="senc_nav">
+                    @foreach (var item in Model.ArticleType)
+                    {
+                        if (item.Title==Model.TypeName)
+                        {
+                            <li class="on"><a href="javascript:;" data-val="@item.ID">@item.Title</a></li>
+                        }
+                        else
+                        {
+                            <li><a href="javascript:;" data-val="@item.ID">@item.Title</a></li>
+                        }
+                    }
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="floor_cnt fr">
+        <div class="titbox clearfix">
+            <h4 id="title" class="fl">@Model.TypeName</h4>
+            <div class="fr mbx_nav">
+                你的当前位置：
+                <a href="~/Home/Index">首页 ></a>
+                <a href="~/BuildingInformation/Index">楼宇资讯 ></a>
+                <a href="javascript:;" id="typeName" class="now">@Model.TypeName</a>
+            </div>
+        </div>
+        <div class="news_wrap">
+            <ul class="news_ul">
+                @{
+                    IQueryable<ArticleModel> list = Model.FirstArticles;
+                    if (list.Count() == 0)
+                    {
+                        <span>暂无数据</span>
+                    }
+                    else
+                    {
+                        foreach (var item in list)
+                        {
+                            <li>
+                                <a class="clearfix" href="@Url.Action("Details", new { id=item.Id,typeID=item.Type})">
+                                    <div class="fl date_box">
+                                        <span class="date">@(((DateTime)item.PublishTime).ToString("MM-dd"))</span>
+                                        <span class="year">@(((DateTime)item.PublishTime).ToString("yyyy"))</span>
+                                    </div>
+                                    <div class="fl">
+                                        <h3 class="tit">@item.Title</h3>
+                                        <p class="cnt">@item.BriefIntroduction</p>
+                                    </div>
+                                </a>
+                            </li>
+                        }
+                    }
+                }
+            </ul>
+            <div class="page">
+              @Html.Raw(Model.Pager)
+            </div>
+        </div>
+    </div>
+</div>
+<!-- content end -->
+<script type="text/javascript">
+    var count = 1;
+    $(function () {
+        bind();
+        //类型点击
+        $(".senc_nav li").on("click", function () {
+            //导航高亮
+            var $this = $(this);
+            var $thisa = $(this).find("a");
+            $(".senc_nav li").removeClass("on");
+            $this.addClass("on");
+            //右侧title改变
+            var text = $thisa.text();
+            $("#title").text(text);
+            $("#typeName").text(text);
+            //获取类型ID
+            var typeID = $thisa.data("val");
+            getList(1, typeID);
+
+        });
+    });
+  
+    //获取列表
+    function getList(pageIndex, typeID) {
+        var verstion = new Date().getTime();
+        $.getJSON("@Url.Action("GetList")", { pageIndex: pageIndex, typeID: typeID, verstion: verstion }, function (result) {
+            if (result.success) {
+                if (result.isNull) {
+                    $(".news_ul").html(result.html);
+                    $(".page").hide();
+                }
+                else {
+                    $(".news_ul").html(result.html);
+                    $(".page").html(result.pager);
+                    bind();
+                }
+            }    
+        }
+    )};
+    //翻页点击绑定,跳转绑定
+    function bind() {
+        $(".page a").click(function () {
+            var index = $(this).data("val");
+            var typeID = $(".senc_nav .on a").data("val");
+            getList(index, typeID);
+        });
+    }
+
+</script>
+   

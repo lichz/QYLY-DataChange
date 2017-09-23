@@ -1,0 +1,340 @@
+﻿@model RoadFlow.Web.Model.BuildingDetailViewModel
+@using RoadFlow.Data.Model
+@{
+    ViewBag.Title = "detail";
+    Page.CheckApp = false;
+}
+<style>
+    .gridbody {
+        height: auto !important;
+    }
+</style>
+<table cellpadding="0" cellspacing="1" border="0" width="99%" class="formtable" style="margin-top:5px">
+    <tr>
+        <th style="color:red;font-size:16px;font-weight:600;">楼宇基本情况:</th>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+        <th style="width: 180px;">所属楼盘：</th>
+        <td>@Model.BuildingsAndBuildingMonthInfo.HouseName</td>
+        <th style="width: 180px;">楼栋编号：</th>
+        <td>@(Model.BuildingsAndBuildingMonthInfo.Num)</td>
+    </tr>
+    <tr>
+        <th style="width: 180px;">楼栋名称：</th>
+        <td>@Model.BuildingsAndBuildingMonthInfo.Name</td>
+        <th style="width: 180px;">重点楼宇：</th>
+        <td>@(Model.BuildingsAndBuildingMonthInfo.IsImportant == null ? "未设置" : Model.Dictionarys.Find(d => d.ID == Model.BuildingsAndBuildingMonthInfo.IsImportant).Title)</td>
+    </tr>
+    <tr>
+        @*<th>楼宇名称：</th><td>@Model.BuildingsAndBuildingMonthInfo.Name</td>*@
+        <th>报送楼栋：</th>
+        <td>@Model.BuildingsAndBuildingMonthInfo.LYDS</td>
+        <th>楼宇级别：</th>
+        <td>@(Model.Dictionarys.Find(d => d.ID == Model.BuildingsAndBuildingMonthInfo.LYJB).Title) </td>
+    </tr>
+    <tr>
+        <th>楼宇详细地址：</th>
+        <td>@Model.BuildingsAndBuildingMonthInfo.LYXXDZ</td>
+        <th>楼宇管理运营方：</th>
+        <td>@Model.BuildingsAndBuildingMonthInfo.LYGLYYF</td>
+    </tr>
+    <tr>
+        <th>主要业主（以“，”分隔，不超过5个）：</th>
+        <td colspan="3">@Model.BuildingsAndBuildingMonthInfo.Owner</td>
+    </tr>
+    <tr>
+        <th>楼宇类型：</th>
+        <td>@(Model.Dictionarys.Find(d => d.ID == Model.BuildingsAndBuildingMonthInfo.LYLX).Title)</td>
+        <th>所属街道：</th>
+        <td>@(Model.Dictionarys.Find(d => d.ID == Model.BuildingsAndBuildingMonthInfo.SSJD).Title)</td>
+    </tr>
+    <tr>
+        <th>建设阶段：</th>
+        <td>@(Model.Dictionarys.Find(d => d.ID == Model.BuildingsAndBuildingMonthInfo.JSJD).Title)</td>
+        <th>竣工时间：</th>
+        <td>@(Model.BuildingsAndBuildingMonthInfo.JGSJ == null ? "" : Model.BuildingsAndBuildingMonthInfo.JGSJ.Value.ToString("yyyy-MM-dd"))</td>
+    </tr>
+    <tr>
+        <th>单层面积(㎡)：</th>
+        <td>@(Model.BuildingsAndBuildingMonthInfo.MonolayerArea)</td>
+        <th>总建筑面积(㎡)：</th>
+        <td>@Model.BuildingsAndBuildingMonthInfo.ZJZMJ</td>
+    </tr>
+    <tr>
+        <th>室内净高：</th>
+        <td>@Model.BuildingsAndBuildingMonthInfo.CeilingHeight</td>
+        <th>楼层总数：</th>
+        <td>@Model.BuildingsAndBuildingMonthInfo.NumberOfFloors</td>
+    </tr>
+    <tr>
+        <th>地上楼层数：</th>
+        <td>@(Model.BuildingsAndBuildingMonthInfo.GroundFloorNumber)</td>
+        <th>地下楼层数：</th>
+        <td>@Model.BuildingsAndBuildingMonthInfo.UndergroundFloorNumber</td>
+    </tr>
+    <tr>
+        <th style="color:red;font-size:16px;font-weight:600;">商业部分情况(最新):</th>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+        <th>总面积(㎡)：</th>
+        <td>@Model.BuildingsAndBuildingMonthInfo.SY_ZMJ</td>
+        <th>已用面积（㎡）：</th>
+        <td>
+            @Model.BuildingsAndBuildingMonthInfo.SY_YSY_ZMJ
+        </td>
+    </tr>
+    <tr>
+        <th>已自用面积(㎡)：</th>
+        <td>@Model.BuildingsAndBuildingMonthInfo.SY_YSY_ZYMJ</td>
+        <th>空置面积（㎡）：</th>
+        <td>
+            @Model.BuildingsAndBuildingMonthInfo.SY_KZ_ZMJ
+        </td>
+    </tr>
+    <tr>
+        <th>空置可供租赁面积（㎡）：</th>
+        <td>@Model.BuildingsAndBuildingMonthInfo.SY_KZ_KZLMJ</td>
+        <th>空置可供销售面积(㎡)：</th>
+        <td>
+            @Model.BuildingsAndBuildingMonthInfo.SY_KZ_KXSMJ
+        </td>
+    </tr>
+    <tr>
+        <th>单层空置最大面积(㎡)：</th>
+        <td>@Model.BuildingsAndBuildingMonthInfo.SY_KZ_DCZDZMJ</td>
+        <th>租金（元/㎡/月）：</th>
+        <td>@(Model.BuildingsAndBuildingMonthInfo.SY_ZJ == null ? "" : Model.Dictionarys.Find(d => d.ID == Model.BuildingsAndBuildingMonthInfo.SY_ZJ).Title)</td>
+    </tr>
+    <tr>
+        <th>销售均价（元/㎡）：</th>
+        <td>@Model.BuildingsAndBuildingMonthInfo.SY_XSJJ</td>
+        <th>物管费（元/㎡·月）：</th>
+        <td>@Model.BuildingsAndBuildingMonthInfo.SY_WGF</td>
+    </tr>
+    <tr>
+        <th style="color:red;font-size:16px;font-weight:600;">商务部分情况(最新):</th>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+        <th>总面积(㎡)：</th>
+        <td>@Model.BuildingsAndBuildingMonthInfo.SW_ZMJ</td>
+        <th>已用面积(㎡)：</th>
+        <td>
+            @Model.BuildingsAndBuildingMonthInfo.SW_YSY_ZMJ
+        </td>
+    </tr>
+    <tr>
+        <th>已自用面积(㎡)：</th>
+        <td>@Model.BuildingsAndBuildingMonthInfo.SW_YSY_ZYMJ</td>
+        <th>空置面积(㎡)：</th>
+        <td>
+            @Model.BuildingsAndBuildingMonthInfo.SW_KZ_ZMJ
+        </td>
+    </tr>
+    <tr>
+        <th>空置可供租赁面积(㎡)：</th>
+        <td>@Model.BuildingsAndBuildingMonthInfo.SW_KZ_KZLMJ</td>
+        <th>空置可供销售面积(㎡)：</th>
+        <td>
+            @Model.BuildingsAndBuildingMonthInfo.SW_KZ_KXSMJ
+        </td>
+    </tr>
+    <tr>
+        <th>单层空置最大面积(㎡)：</th>
+        <td>@Model.BuildingsAndBuildingMonthInfo.SW_KZ_DCZDZMJ</td>
+        <th>租金（元/㎡/月）</th>
+        <td>
+            @(Model.BuildingsAndBuildingMonthInfo.SW_ZJ == null ? "" : Model.Dictionarys.Find(d => d.ID == Model.BuildingsAndBuildingMonthInfo.SW_ZJ).Title)
+        </td>
+    </tr>
+    <tr>
+        <th>销售均价（元/㎡）：</th>
+        <td>
+            @Model.BuildingsAndBuildingMonthInfo.SW_XSJJ
+        </td>
+        <th>物管费（元/㎡·月）：</th>
+        <td>
+            @Model.BuildingsAndBuildingMonthInfo.SW_WGF
+        </td>
+    </tr>
+    <tr>
+        <th style="color:red;font-size:16px;font-weight:600;">物业及招商情况:</th>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+        <th>物业法人(㎡)：</th>
+        <td>@Model.BuildingsAndBuildingMonthInfo.PropertyAsALegalPerson</td>
+        <th>物业资质（一级/二级资质等）：</th>
+        <td>
+            @Model.BuildingsAndBuildingMonthInfo.PropertyQualifications
+        </td>
+    </tr>
+    <tr>
+        <th>推广形式(出租/出售/租售)：</th>
+        <td>@Model.BuildingsAndBuildingMonthInfo.PromotionForm</td>
+        <th>楼宇系统（如门禁、监控）：</th>
+        <td>
+            @Model.BuildingsAndBuildingMonthInfo.BuildingSystem
+        </td>
+    </tr>
+    <tr>
+        <th>自持产权面积(㎡)：</th>
+        <td> @Model.BuildingsAndBuildingMonthInfo.ZCCQMJ</td>
+        <th>楼宇产权情况：</th>
+        <td>
+            @(Model.Dictionarys.Find(d => d.ID == Model.BuildingsAndBuildingMonthInfo.LYCQQK).Title)
+        </td>
+    </tr>
+    <tr>
+        <th>电梯（部/每栋数）：</th>
+        <td> @Model.BuildingsAndBuildingMonthInfo.DTS</td>
+        <th>车位数（个）	</th>
+        <td>
+            @Model.BuildingsAndBuildingMonthInfo.CWS
+        </td>
+    </tr>
+    <tr>
+        <th>地下停车位：</th>
+        <td> @Model.BuildingsAndBuildingMonthInfo.GroundFloorParkingSpace</td>
+        <th>地上停车位：</th>
+        <td>
+            @Model.BuildingsAndBuildingMonthInfo.UndergroundFloorParkingSpace
+        </td>
+    </tr>
+    <tr>
+        <th>月停车费：</th>
+        <td> @Model.BuildingsAndBuildingMonthInfo.MonthParking</td>
+        <th>小时停车费：</th>
+        <td>
+            @Model.BuildingsAndBuildingMonthInfo.HourParking
+        </td>
+    </tr>
+    <tr>
+        <th>招商方向：</th>
+        <td>@Model.BuildingsAndBuildingMonthInfo.ZSFX</td>
+        <th>招商电话：</th>
+        <td>
+            @Model.BuildingsAndBuildingMonthInfo.ChinaMerchantsTel
+        </td>
+    </tr>
+    <tr>
+        <th>中央空调：</th>
+        <td>
+            @(Model.Dictionarys.Find(d => d.ID == Model.BuildingsAndBuildingMonthInfo.ZYKT).Title)
+        </td>
+        <th>空调及新风系统：</th>
+        <td> @Model.BuildingsAndBuildingMonthInfo.AirConditionAndFreshAirSystem</td>
+    </tr>
+    <tr>
+        <th>是否愿意政府统筹招商：</th>
+        <td>
+            @(Model.Dictionarys.Find(d => d.ID == Model.BuildingsAndBuildingMonthInfo.TCZS).Title)
+        </td>
+        <th>入驻优惠：</th>
+        <td>@Model.BuildingsAndBuildingMonthInfo.RZYH </td>
+    </tr>
+    <tr>
+        <th>百度定位：</th>
+        <td colspan="3"><input name="ditu" type="text" value="@Model.BuildingsAndBuildingMonthInfo.BDDW" style="width:250px" onclick="show(this)" /> </td>
+    </tr>
+    <tr>
+        <th>效果图、现状图：</th>
+        <td colspan="3">
+            @{
+                foreach (string path in Model.BuildingsAndBuildingMonthInfo.XGT.ToString().Split('|'))
+                {
+                    <a href="@path" target="_blank">@path</a><br />
+                }
+            }
+        </td>
+    </tr>
+    <tr><th>备注：</th><td colspan="3">@Model.BuildingsAndBuildingMonthInfo.Note </td></tr>
+    <tr><th>交通情况：</th><td colspan="3">@Model.BuildingsAndBuildingMonthInfo.Traffic </td></tr>
+    <tr>
+        <th style="color:red;font-size:16px;font-weight:600;">入驻企业情况:</th>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+        <td colspan="4">
+            <table class="mygrid" @*style="width:1500px;"*@>
+                <thead>
+                    <tr>
+                        @{
+                            var eplist = new RoadFlow.Platform.TableAttribute().GetTableAttr("EnterpriseAndEnterpriseTax");
+                            eplist.RemoveAll(p => p.Value == "ID" || p.Value == "Status" || p.Value == "State");
+                            foreach (var item in eplist)
+                            {
+                                if (!item.Name.IsNullOrEmpty())
+                                {
+                                    if (item.Value == "Name")
+                                    {
+                                        <th style="width:250px; text-align:left;">@item.Name</th>
+                                    }
+                                    else if (item.Value == "ZCD")
+                                    {
+                                        <th style="width:150px;  text-align:left;">@item.Name</th>
+                                    }
+                                    else
+                                    {
+                                        <th style=" text-align:left;">@item.Name</th>
+                                    }
+                                }
+                            }
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (System.Data.DataRow dr in Model.Enterprises.Rows)
+                    {
+                        <tr>
+                            @{
+                                foreach (var item in eplist)
+                                {
+
+                                    if (!item.Name.IsNullOrEmpty())
+                                    {
+                                        if (dr[item.Value].ToString().IsGuid())
+                                        {
+                                            <td>@(Model.Dictionarys.Find(d => d.ID == (Guid)dr[item.Value]).Title)</td>
+                                        }
+                                        else
+                                        {
+                                            if (item.Value == "Tax" && !(dr[item.Value] is DBNull))
+                                            {//税收特殊处理
+                                                <td>@dr[item.Value] (@dr["TaxArea"])</td>
+                                            }
+                                            else
+                                            {
+                                                <td>@dr[item.Value]</td>
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        </tr>
+                                }
+                </tbody>
+            </table>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    $(function () {
+        var dataGrid = new RoadUI.Grid({ table: $(".mygrid") });
+    });
+    //地图显示
+    function show(obj) {
+        new RoadUI.Window().open(
+               {
+                   title: "地图取点",
+                   width: 600,
+                   height: 465,
+                   ismodal: true,
+                   url: top.rootdir + "/Scripts/QueryDesign/map.aspx?tabid\x3d" + RoadUI.Core.query("tabid") + "&name=" + obj.name,
+                   openerid: RoadUI.Core.query("tabid"),
+                   resize: !1
+               })
+    }
+</script>

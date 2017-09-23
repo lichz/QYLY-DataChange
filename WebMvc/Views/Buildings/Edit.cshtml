@@ -1,0 +1,484 @@
+﻿@model RoadFlow.Web.Model.BuildingEditViewModel
+@{
+    ViewBag.Title = "Edit";
+}
+<div style="padding:10px;">
+    @using (Html.BeginForm()) {
+        <div class="toolbar" style="margin-top:0; border-top:none 0; position:fixed; top:0; left:0; right:0; margin-left:auto; z-index:999; width:100%; margin-right:auto; height:26px;">
+            <div>
+                <a href="#" onclick="btnSave()" title="当前任务处理后可先保存，下次再提交任务">
+                    <span style="background:url(/Images/ico/save.gif) no-repeat left center;">保存</span>
+                </a>
+            </div>
+        </div>
+        @Html.AntiForgeryToken()
+        <div style="height:26px;"></div>
+        <span style=" color:red;">@Html.ValidationSummary(true)</span>
+        <table class="mygrid" uetable="null" data-sort="sortDisabled" cellpadding="0" cellspacing="1">
+            <tbody>
+                <tr class="firstRow">
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" valign="top" width="174" height="4">
+                        <span style="color: rgb(255, 0, 0); font-size: 20px;"><em><strong>楼宇基本情况：</strong></em></span><br />
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="3" width="938" height="4">
+                    </td>
+                </tr>
+                <tr class="firstRow">
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" valign="top" width="174" height="4">
+                        楼栋编号：
+                    </td>
+                    <td style="word-break: break-all;" rowspan="1" width="938" height="4">
+                        @Html.LabelForModel(Model.EditModel.Num)
+                        @Html.Hidden("modelID", Model.EditModel.ID)
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="154">
+                        重点楼宇：
+                    </td>
+                    <td rowspan="1" align="left" valign="middle" width="381" style="word-break: break-all;">
+                        @Html.DropDownList("Buildings.IsImportant", Model.IsImportantList,"未选择")
+                        @*<input type="text" id="Buildings.IsImportant" type1="flow_text" name="Buildings.IsImportant" value="@Model.EditModel.IsImportant" style="width:300px" valuetype="0" isflow="1" class="mytext" title="" />*@
+                    </td>
+                </tr>
+                <tr>
+                    <td style="word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="174">
+                        楼宇名称：
+                    </td>
+                    <td rowspan="1" colspan="1" align="left" valign="middle" width="361">
+                        <input type="text" id="Buildings.Name" type1="flow_text" name="Buildings.Name" value="@Model.EditModel.Name" defaultvalue="" valuetype="0" style="width:300px;" />
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="154">
+                        室内净高(m)：
+                    </td>
+                    <td rowspan="1" align="left" valign="middle" width="381" style="word-break: break-all;">
+                        <input type="text" id="Buildings.CeilingHeight" type1="flow_text" name="Buildings.CeilingHeight" value="@Model.EditModel.CeilingHeight" style="width:300px" valuetype="0" isflow="1" class="mytext" title="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="word-break: break-all;" class="setcolor" align="left" valign="middle" width="174">
+                        楼盘名称：<br />
+                    </td>
+                    <td style="word-break: break-all;" align="left" valign="middle" width="361">
+                        <input type="text" type1="flow_label" value="@(Model.EditModel.HouseID==null ? " " : new RoadFlow.Platform.DictionaryBLL().GetByID(Model.EditModel.HouseID.Value).Title)"  style="width:300px;" />
+                    </td>
+                    <td style="-ms-word-break: break-all;" class="setcolor" align="left" valign="middle" width="154">
+                        报送楼栋：
+                    </td>
+                    <td style="word-break: break-all;" align="left" valign="middle" width="381">
+                        <input type="text" id="Buildings.LYDS" type1="flow_text" name="Buildings.LYDS" value="@Model.EditModel.LYDS" style="width:300px" valuetype="0" isflow="1" class="mytext" title="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="-ms-word-break: break-all;" class="setcolor" align="left" valign="middle" width="174">
+                        楼宇级别：<br />
+                    </td>
+                    <td style="word-break: break-all;" align="left" valign="middle" width="361">
+                        @Html.DropDownList("Buildings.LYJB", Model.LYJBList)
+                    </td>
+                    <td style="-ms-word-break: break-all;" class="setcolor" align="left" valign="middle" width="154">
+                        楼宇详细地址：
+                    </td>
+                    <td style="-ms-word-break: break-all;" align="left" valign="middle" width="381">
+                        <input id="Buildings.LYXXDZ" type1="flow_text" name="Buildings.LYXXDZ" value="@Model.EditModel.LYXXDZ" style="width:300px" maxlength="200" valuetype="0" type="text" isflow="1" class="mytext" title="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="174">
+                        楼宇管理运营方：
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" align="left" valign="middle" width="361">
+                        <input id="Buildings.LYGLYYF" type1="flow_text" name="Buildings.LYGLYYF" value="@Model.EditModel.LYGLYYF" style="width:300px" maxlength="50" valuetype="0" type="text" isflow="1" class="mytext" title="" />
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" class="setcolor" align="left" valign="middle" width="154">
+                        所属街道：
+                    </td>
+                    <td style="word-break: break-all;" rowspan="1" align="left" valign="middle" width="381">
+                        @Html.DropDownList("Buildings.SSJD", Model.SSJDList)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="174">主要业主（以“，”分隔，不超过5个）：</td>
+                    <td colspan="3">
+                        <input id="Buildings.LYXXDZ" type1="flow_text" name="Buildings.LYXXDZ" value="@Model.EditModel.Owner" style="width:600px" maxlength="200" valuetype="0" type="text" isflow="1" class="mytext" title="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="174">
+                        建设阶段：
+                    </td>
+                    <td style="word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="361">
+                        @Html.DropDownList("Buildings.JSJD", Model.JSJDList)
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="154">
+                        竣工时间：
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="381">
+                        <input type1="flow_datetime" id="Buildings.JGSJ" name="Buildings.JGSJ" value="@Model.EditModel.JGSJ" style="width:300px" defaultvalue="" istime="0" daybefor="0" dayafter="0" currentmonth="0" type="text" isflow="1" class="mycalendar" title="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="174">
+                        楼宇类型：
+                    </td>
+                    <td style="word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="361">
+                        @Html.DropDownList("Buildings.LYLX", Model.LYLXList)
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="154">
+                        楼层总数：
+                    </td>
+                    <td style="word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="381">
+                        <input type="text" id="Buildings.NumberOfFloors" type1="flow_text" name="Buildings.NumberOfFloors" value="@Model.EditModel.NumberOfFloors" style="width:300px" valuetype="3" isflow="1" class="mytext" title="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="174">
+                        地上楼层数：
+                    </td>
+                    <td rowspan="1" colspan="1" align="left" valign="middle" width="361">
+                        <input type="text" id="Buildings.GroundFloorNumber" type1="flow_text" name="Buildings.GroundFloorNumber" value="@Model.EditModel.GroundFloorNumber" style="width:300px" valuetype="3" isflow="1" class="mytext" title="" />
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="154">
+                        地下楼层数：
+                    </td>
+                    <td rowspan="1" colspan="1" align="left" valign="middle" width="381">
+                        <input type="text" id="Buildings.UndergroundFloorNumber" type1="flow_text" name="Buildings.UndergroundFloorNumber" value="@Model.EditModel.UndergroundFloorNumber" style="width:300px" valuetype="3" isflow="1" class="mytext" title="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="174">
+                        总建筑面积(㎡)：
+                    </td>
+                    <td rowspan="1" colspan="1" align="left" valign="middle" width="361">
+                        <input id="Buildings.ZJZMJ" type1="flow_text" name="Buildings.ZJZMJ" value="@Model.EditModel.ZJZMJ" style="width:300px" valuetype="4" type="text" isflow="1" class="mytext" title="" onchange="onchange_910f1ba8660ac589a27bc6da6ad50555 (this);" />
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="154">
+                        单层面积(㎡)：
+                    </td>
+                    <td rowspan="1" colspan="1" align="left" valign="middle" width="381">
+                        <input type="text" id="Buildings.MonolayerArea" type1="flow_text" name="Buildings.MonolayerArea" value="@Model.EditModel.MonolayerArea" style="width:300px" valuetype="4" isflow="1" class="mytext" title="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="174">
+                        <span style="color: rgb(255, 0, 0); font-size: 20px;"><em><strong>商业部分情况：</strong></em></span><br />
+                    </td>
+                    <td style="word-break: break-all;" rowspan="1" colspan="3" width="938">
+                        <p>
+                            商业：指用于以零售商品经营活动为主要功能部分<br />
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="174" height="32">
+                        总面积(㎡)：
+                    </td>
+                    <td style="word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="361" height="32">
+                        <input id="Buildings.SY_ZMJ" type1="flow_text" name="Buildings.SY_ZMJ" value="@Model.EditModel.SY_ZMJ" style="width:300px" valuetype="4" type="text" isflow="1" class="mytext" title="" onchange="onchange_5d461971c13d16a2ca855dc3d43967f3 (this);" />
+                    </td>
+                    <td width="202"  style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor">已用面积(㎡)：</td>
+                    <td width="333"  style="-ms-word-break: break-all;" rowspan="1" colspan="1">
+                        <input type="text" id="BuildingMonth.SY_YSY_ZMJ" type1="flow_text" name="BuildingMonth.SY_YSY_ZMJ" value="@Model.EditModel.SY_YSY_ZMJ" style=" width:300px" valuetype="4" isflow="1" class="mytext" title="" onchange="        onchange_ca8dfa67dc41fdf876ace13e8abdad8c(this);" />
+                    </td>
+                </tr>
+                <tr>
+                    <td width="176" align="left" valign="middle" style="-ms-word-break: break-all;" colspan="1" class="setcolor">已自用面积(㎡)：</td>
+                    <td width="320" align="left" valign="middle" style="-ms-word-break: break-all;" colspan="1">
+                        <input type="text" id="BuildingMonth.SY_YSY_ZYMJ" type1="flow_text" name="BuildingMonth.SY_YSY_ZYMJ" value="@Model.EditModel.SY_YSY_ZYMJ" style="width:300px" valuetype="4" isflow="1" class="mytext" title="" />
+                    </td>
+                    <td width="202" style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor">空置面积(㎡)：</td>
+                    <td width="333" style="-ms-word-break: break-all;" rowspan="1" colspan="1">
+                        <input type="text" id="BuildingMonth.SY_KZ_ZMJ" type1="flow_text" name="BuildingMonth.SY_KZ_ZMJ" value="@Model.EditModel.SY_KZ_ZMJ" style=" width:300px" valuetype="4" isflow="1" class="mytext" title="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td width="176" align="left" valign="middle" style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor">空置可租赁面积(㎡)：</td>
+                    <td width="320" align="left" valign="middle" style="-ms-word-break: break-all;" rowspan="1" colspan="1">
+                        <input type="text" id="BuildingMonth.SY_KZ_KZLMJ" type1="flow_text" name="BuildingMonth.SY_KZ_KZLMJ" value="@Model.EditModel.SY_KZ_KZLMJ" style="width:300px" valuetype="4" isflow="1" class="mytext" title="" />
+                    </td>
+                    <td width="202" align="left" valign="middle" style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor">空置可销售面积(㎡)：</td>
+                    <td width="333" align="left" valign="middle" style="-ms-word-break: break-all;" rowspan="1" colspan="1">
+                        <input type="text" id="BuildingMonth.SY_KZ_KXSMJ" type1="flow_text" name="BuildingMonth.SY_KZ_KXSMJ" value="@Model.EditModel.SY_KZ_KXSMJ" style=" width:300px" valuetype="4" isflow="1" class="mytext" title="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td width="176" align="left" valign="middle" style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor">单层空置最大面积(㎡)：</td>
+                    <td width="320" align="left" valign="middle" rowspan="1" colspan="1">
+                        <input type="text" id="BuildingMonth.SY_KZ_DCZDZMJ" type1="flow_text" name="BuildingMonth.SY_KZ_DCZDZMJ" value="@Model.EditModel.SY_KZ_DCZDZMJ" style="width:300px" valuetype="4" isflow="1" class="mytext" title="" />
+                    </td>
+                    <td width="202" align="left" valign="middle" style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor">租金(元/㎡/月):</td>
+                    <td width="333" align="left" valign="middle" style="-ms-word-break: break-all;" rowspan="1" colspan="1">
+                        @Html.DropDownList("BuildingMonth.SY_ZJ", Model.SY_ZJList)
+                    </td>
+                <tr>
+                    <td width="176" align="left" valign="middle" style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor">销售均价(元/㎡)：</td>
+                    <td width="320" align="left" valign="middle" rowspan="1" colspan="1"><input name="BuildingMonth.SY_XSJJ" id="BuildingMonth.SY_XSJJ" style="width: 300px;" type="text" value="@Model.EditModel.SY_XSJJ" valuetype="4" type1="flow_text" isflow="1" class="mytext" title="" /></td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="154" height="32">
+                        物管费(元/㎡·月)：
+                    </td>
+                    <td rowspan="1" colspan="1" align="left" valign="middle" width="381" height="32">
+                        <input name="Buildings.SY_WGF" id="Buildings.SY_WGF" style="width: 300px;" value="@Model.EditModel.SY_WGF" valuetype="4" type1="flow_text" type="text" isflow="1" class="mytext" title="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="174">
+                        <span style="color: rgb(255, 0, 0); font-size: 20px;"><em><strong>商务部分情况：</strong></em></span>
+                    </td>
+                    <td style="word-break: break-all;" rowspan="1" colspan="3" width="938">
+                        商务：指用于商务办公部分
+                    </td>
+                </tr>
+                <tr>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="174">
+                        总面积(㎡)：
+                    </td>
+                    <td rowspan="1" colspan="1" align="left" valign="middle" width="361">
+                        <input id="Buildings.SW_ZMJ" type1="flow_text" name="Buildings.SW_ZMJ" value="@Model.EditModel.SW_ZMJ" style="width:300px" valuetype="4" type="text" isflow="1" class="mytext" title="" onchange="onchange_d303609f891ba2003adcce888840b2ee (this);" />
+                    </td>
+                    <td width="202" style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor">已用面积(㎡)：</td>
+                    <td width="333" style="-ms-word-break: break-all;" rowspan="1" colspan="1">
+                        <input type="text" id="BuildingMonth.SW_YSY_ZMJ" type1="flow_text" name="BuildingMonth.SW_YSY_ZMJ" value="@Model.EditModel.SW_YSY_ZMJ" style=" width:300px" valuetype="4" isflow="1" class="mytext" title="" onchange="        onchange_ca8dfa67dc41fdf876ace13e8abdad8c(this);" />
+                    </td>
+                </tr>
+                <tr>
+                    <td width="176" align="left" valign="middle" style="-ms-word-break: break-all;" colspan="1" class="setcolor">已自用面积(㎡)：</td>
+                    <td width="320" align="left" valign="middle" style="-ms-word-break: break-all;" colspan="1">
+                        <input type="text" id="BuildingMonth.SW_YSY_ZYMJ" type1="flow_text" name="BuildingMonth.SW_YSY_ZYMJ" value="@Model.EditModel.SW_YSY_ZYMJ" style="width:300px" valuetype="4" isflow="1" class="mytext" title="" />
+                    </td>
+                    <td width="202" style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor">空置面积(㎡)：</td>
+                    <td width="333" style="-ms-word-break: break-all;" rowspan="1" colspan="1">
+                        <input type="text" id="BuildingMonth.SW_KZ_ZMJ" type1="flow_text" name="BuildingMonth.SW_KZ_ZMJ" value="@Model.EditModel.SW_KZ_ZMJ" style=" width:300px" valuetype="4" isflow="1" class="mytext" title="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td width="176" align="left" valign="middle" style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor">空置可租赁面积(㎡)：</td>
+                    <td width="320" align="left" valign="middle" style="-ms-word-break: break-all;" rowspan="1" colspan="1">
+                        <input type="text" id="BuildingMonth.SW_KZ_KZLMJ" type1="flow_text" name="BuildingMonth.SW_KZ_KZLMJ" value="@Model.EditModel.SW_KZ_KZLMJ" style="width:300px" valuetype="4" isflow="1" class="mytext" title="" />
+                    </td>
+                    <td width="202" align="left" valign="middle" style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor">空置可销售面积(㎡)：</td>
+                    <td width="333" align="left" valign="middle" style="-ms-word-break: break-all;" rowspan="1" colspan="1">
+                        <input type="text" id="BuildingMonth.SW_KZ_KXSMJ" type1="flow_text" name="BuildingMonth.SW_KZ_KXSMJ" value="@Model.EditModel.SW_KZ_KXSMJ" style=" width:300px" valuetype="4" isflow="1" class="mytext" title="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td width="176" align="left" valign="middle" style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor">单层空置最大面积(㎡)：</td>
+                    <td width="320" align="left" valign="middle" rowspan="1" colspan="1">
+                        <input type="text" id="BuildingMonth.SW_KZ_DCZDZMJ" type1="flow_text" name="BuildingMonth.SW_KZ_DCZDZMJ" value="@Model.EditModel.SW_KZ_DCZDZMJ" style="width:300px" valuetype="4" isflow="1" class="mytext" title="" />
+                    </td>
+                    <td width="202" align="left" valign="middle" style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor">租金(元/㎡/月):</td>
+                    <td width="333" align="left" valign="middle" style="-ms-word-break: break-all;" rowspan="1" colspan="1">
+                        @Html.DropDownList("BuildingMonth.SW_ZJ", Model.SW_ZJList)
+                    </td>
+                <tr>
+                    <td width="176" align="left" valign="middle" style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor">销售均价(元/㎡)：</td>
+                    <td width="320" align="left" valign="middle" rowspan="1" colspan="1"><input name="BuildingMonth.SW_XSJJ" id="BuildingMonth.SW_XSJJ" style="width: 300px;" type="text" value="@Model.EditModel.SW_XSJJ" valuetype="4" type1="flow_text" isflow="1" class="mytext" title="" /></td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="154" height="32">
+                        物管费(元/㎡·月)：
+                    </td>
+                    <td rowspan="1" colspan="1" align="left" valign="middle" width="381" height="32">
+                        <input name="Buildings.SW_WGF" id="Buildings.SW_WGF" style="width: 300px;" value="@Model.EditModel.SW_WGF" valuetype="4" type1="flow_text" type="text" isflow="1" class="mytext" title="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="174">
+                        <span style="color: rgb(255, 0, 0); font-size: 20px;"><em><strong><span style="font-size: 20px;">物业租售情况<strong style="color: rgb(255, 0, 0); font-size: 20px; font-style: italic;">：</strong></span></strong></em></span>
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="3" width="938"></td>
+                </tr>
+                <tr>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="174">
+                        物业法人：
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="361">
+                        <input type="text" id="Buildings.PropertyAsALegalPerson" type1="flow_text" name="Buildings.PropertyAsALegalPerson" value="@Model.EditModel.PropertyAsALegalPerson" style="width:300px" valuetype="0" isflow="1" class="mytext" title="" />
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="154">
+                        物业资质（一级/二级资质等）：
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="381">
+                        <input type="text" id="Buildings.PropertyQualifications" type1="flow_text" name="Buildings.PropertyQualifications" value="@Model.EditModel.PropertyQualifications" style="width:300px" valuetype="0" isflow="1" class="mytext" title="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="174">
+                        推广形式（出租/出售/租售）：
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="361">
+                        <input type="text" id="Buildings.PromotionForm" type1="flow_text" name="Buildings.PromotionForm" value="@Model.EditModel.PromotionForm" style="width:300px" valuetype="0" isflow="1" class="mytext" title="" />
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="154">
+                        楼宇系统（如门禁、监控）：
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="381">
+                        <input type="text" id="Buildings.BuildingSystem" type1="flow_text" name="Buildings.BuildingSystem" value="@Model.EditModel.BuildingSystem" style="width:300px" valuetype="0" isflow="1" class="mytext" title="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="174">
+                        自持产权面积(㎡)：
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="361">
+                        <input name="Buildings.ZCCQMJ" id="Buildings.ZCCQMJ" style="width: 300px;" value="@Model.EditModel.ZCCQMJ" valuetype="4" type1="flow_text" type="text" isflow="1" class="mytext" title="" />
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="154">
+                        楼宇产权情况：
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="381">
+                        @Html.DropDownList("Buildings.LYCQQK", Model.LYCQQKList)
+                        @*<select class="myselect" id="Buildings.LYCQQK" name="Buildings.LYCQQK" style="width:304px" isflow="1" type1="flow_select">@Html.Raw(BDictionary.GetOptionsByID(&quot;f257d4e8-6764-4b58-94bc-213a20afba27&quot;.ToGuid(), RoadFlow.Platform.Dictionary.OptionValueField.ID, &quot;&quot;))</select>*@
+                    </td>
+                </tr>
+                <tr>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="174">
+                        电梯(部/每栋数)：
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="361">
+                        <input name="Buildings.DTS" id="Buildings.DTS" style="width: 300px;" value="@Model.EditModel.DTS" valuetype="3" type1="flow_text" type="text" isflow="1" class="mytext" title="" />
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="154">
+                        车位数(个)：
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="381">
+                        <input name="Buildings.CWS" id="Buildings.CWS" style="width: 300px;" value="@Model.EditModel.CWS" valuetype="3" type1="flow_text" type="text" isflow="1" class="mytext" title="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="174">
+                        地下停车位：
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="361">
+                        <input type="text" id="Buildings.UndergroundFloorParkingSpace" type1="flow_text" name="Buildings.UndergroundFloorParkingSpace" value="@Model.EditModel.UndergroundFloorParkingSpace" style="width:300px" valuetype="0" isflow="1" class="mytext" title="" />
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="154">
+                        地上停车位：
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="381">
+                        <input type="text" id="Buildings.GroundFloorParkingSpace" type1="flow_text" name="Buildings.GroundFloorParkingSpace" value="@Model.EditModel.GroundFloorParkingSpace" style="width:300px" valuetype="0" isflow="1" class="mytext" title="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="174">
+                        月停车费：
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="361">
+                        <input type="text" id="Buildings.MonthParking" type1="flow_text" name="Buildings.MonthParking" value="@Model.EditModel.MonthParking" style="width:300px" valuetype="0" isflow="1" class="mytext" title="" />
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="154">
+                        小时停车费：
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="381">
+                        <input type="text" id="Buildings.HourParking" type1="flow_text" name="Buildings.HourParking" value="@Model.EditModel.HourParking" style="width:300px" valuetype="0" isflow="1" class="mytext" title="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="174">
+                        招商方向：
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="361">
+                        <input name="Buildings.ZSFX" id="Buildings.ZSFX" style="width: 300px;" value="@Model.EditModel.ZSFX" valuetype="0" type1="flow_text" type="text" isflow="1" class="mytext" title="" />
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="154">
+                        招商电话：
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="381">
+                        <input type="text" id="Buildings.ChinaMerchantsTel" type1="flow_text" name="Buildings.ChinaMerchantsTel" value="@Model.EditModel.ChinaMerchantsTel" style="width:300px" valuetype="0" isflow="1" class="mytext" title="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="174">
+                        中央空调：
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="361">
+                        @Html.DropDownList("Buildings.ZYKT", Model.ZYKTList)
+                        @*<select class="myselect" id="Buildings.ZYKT" name="Buildings.ZYKT" style="width:304px" isflow="1" type1="flow_select">@Html.Raw(BDictionary.GetOptionsByID(&quot;415dfd95-705f-424e-82db-5fe0c2ed76fc&quot;.ToGuid(), RoadFlow.Platform.Dictionary.OptionValueField.ID, &quot;&quot;))</select>*@
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="154">
+                        空调及新风系统：
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="381">
+                        <input type="text" id="Buildings.AirConditionAndFreshAirSystem" type1="flow_text" name="Buildings.AirConditionAndFreshAirSystem" value="@Model.EditModel.AirConditionAndFreshAirSystem" style="width:300px" valuetype="0" isflow="1" class="mytext" title="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="174">
+                        是否愿意政府统筹招商：
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="361">
+                        @Html.DropDownList("Buildings.TCZS", Model.TCZSList)
+                        @*<select class="myselect" id="Buildings.TCZS" name="Buildings.TCZS" style="width:304px" isflow="1" type1="flow_select">@Html.Raw(BDictionary.GetOptionsByID(&quot;11ffc42a-4a7b-4e56-8b6c-dbea7c43b0aa&quot;.ToGuid(), RoadFlow.Platform.Dictionary.OptionValueField.ID, &quot;&quot;))</select>*@
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="154">
+                        入驻优惠：
+                    </td>
+                    <td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="381">
+                        <input name="Buildings.RZYH" id="Buildings.RZYH" style="width: 300px;" value="@Model.EditModel.RZYH" valuetype="0" type1="flow_text" type="text" isflow="1" class="mytext" title="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="174">
+                        百度定位：
+                    </td>
+                    <td style="word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="361">
+                        <input type="text" id="Buildings.BDDW" type1="flow_text" name="Buildings.BDDW" value="@Model.EditModel.BDDW" valuetype="0" style="white-space: normal; width: 300px;" isflow="1" class="mytext" onfocus="onfocus_0c3c61d374006634e5b021aabbdb4b8d(this)" />
+                        <script type="text/javascript">
+                            function onfocus_0c3c61d374006634e5b021aabbdb4b8d(srcObj) {
+                                new RoadUI.Window().open(
+                                   {
+                                       title: "地图取点",
+                                       width: 600, height: 465, ismodal: true,
+                                       url: top.rootdir + "/Scripts/QueryDesign/map.aspx?tabid=" + '@Request["tabid"]' + "&name=" + $(srcObj).prop('name'),
+                                       openerid: "", resize: !1
+                                   })
+                            }
+                        </script>
+                    </td>
+                    <td style="word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="154"></td>
+                    <td style="word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="381"></td>
+                </tr>
+                <tr>
+                    <td rowspan="1" colspan="1" class="setcolor" style="word-break: break-all;" align="left" valign="middle" width="174">
+                        效果图、现状图：
+                    </td>
+                    <td rowspan="1" colspan="3" style="word-break: break-all;" align="left" valign="middle" width="938">
+                        <input type1="flow_files" id="Buildings.XGT" name="Buildings.XGT" value="@(Model.EditModel.XGT)" width1="260px" isflow="1" class="myfile" filetype="*.jpg;*.png" style="white-space: normal; width: 260px;" type="text" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="174">
+                        交通情况（地铁和公交）：
+                    </td>
+                    <td style="word-break: break-all;" rowspan="1" colspan="3" valign="top" width="938">
+                        <textarea name="Buildings.Traffic" maxlength="500" style="width:95%; height: 60px;">@Model.EditModel.Traffic</textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="174">
+                        楼宇介绍：
+                    </td>
+                    <td style="word-break: break-all;" rowspan="1" colspan="3" valign="top" width="938">
+                        <textarea name="Buildings.Note" maxlength="500" style="width:95%; height: 60px;">@Model.EditModel.Note</textarea>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    }
+</div>
+<script type="text/javascript">
+    var appid = '@Request.QueryString["appid"]';
+    var iframeid = '@Request.QueryString["tabid"]';
+    var dataGrid;
+
+    $(function () {
+        var dataGrid = new RoadUI.Grid({ table: $(".mygrid") });
+        $(".gridbody").css("height","auto");
+    });
+
+    function btnSave() {
+        $("form").submit();
+    }
+</script>
+@if (ViewBag.Success != null && (bool)ViewBag.Success) {
+    <script>
+        $(function () {
+            alert("更新成功！");
+        });
+    </script>
+}

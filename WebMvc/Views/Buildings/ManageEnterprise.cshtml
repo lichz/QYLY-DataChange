@@ -1,0 +1,273 @@
+﻿@model RoadFlow.Web.Model.BuildingManageEnterpriseViewModel
+@{
+    Page.CheckApp = false;
+}
+<style>
+    .gridbody {
+        height: auto !important;
+    }
+    .mygrid {
+        table-layout: fixed;
+    }
+    .mygrid th {
+        text-align: left;
+    padding-left: 2px;
+    height: 28px;
+    border-spacing: 0;
+    border: 1px solid #f9f9f9;
+    border-top: none 0;
+    border-bottom: none 0;
+    background-color:#cee7fd;
+    }
+    .mygrid td{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding-left:2px;
+    }
+</style>
+<table cellpadding="0" cellspacing="1" border="0" style="margin-top:5px;width:98%;">
+    <tr>
+        <th style="width: 100px; text-align:left;">所属楼栋：</th>
+        <td colspan="3">@Model.Building.Name</td>
+    </tr>
+    <tr>
+        <td colspan="4">
+            <table class="mygrid" cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+                <thead>
+                    <tr>
+                        @{
+                            var eplist = new RoadFlow.Platform.TableAttribute().GetTableAttr("Enterprise");
+                            eplist.RemoveAll(p => p.Value == "ID" || p.Value == "Status" || p.Value == "State");
+                            foreach (var item in eplist)
+                            {
+                                if (!item.Name.IsNullOrEmpty())
+                                {
+                                    if (item.Value == "Name")
+                                    {
+                            <th style="width:250px;">@item.Name</th>
+                                    }
+                                    else if (item.Value == "ZCD")
+                                    {
+                            <th style="width:150px;">@item.Name</th>
+                                    }
+                                    else if (item.Value == "Type")
+                                    {
+                            <th style="width:250px;">@item.Name</th>
+                                    }
+                                    else
+                                    {
+                            <th>@item.Name</th>
+                                    }
+                                }
+                            }
+                        }
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (System.Data.DataRow dr in Model.Enterprises.Rows)
+                    {
+                        <tr class="@dr["ID"]">
+                            @{
+                        foreach (var item in eplist)
+                        {
+                            if (!item.Name.IsNullOrEmpty())
+                            {
+                                if (dr[item.Value].ToString().IsGuid())
+                                {
+                                <td>@(Model.Dictionarys.Find(d => d.ID == (Guid)dr[item.Value]).Title)</td>
+                                }
+                                else
+                                {
+                                <td class="@item.Value">@dr[item.Value]</td>
+                                }
+                            }
+                        }
+                            }
+                            <td>
+                                <input class="button1" type="button" value="编辑" onclick="edit('@dr["ID"]',this)" />
+                                <input class="button1" type="button" value="删除" onclick="del('@dr["ID"]',this)" />
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td colspan="9">
+                            <input class="button1" type="button" value="添加" onclick="create(this)" />
+                            <div style="display:none;" id="enterpriseType">
+                                <select class="type">
+                                    @foreach (var item in Model.Dictionarys)
+                                    {
+                                        <option value="@item.ID">@item.Title</option>
+                                    }
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    var appid = '@Request.QueryString["appid"]';
+    var iframeid = '@Request.QueryString["tabid"]';
+
+    //添加
+    function create(dom) {
+        var tr = "<tr><td><input type=\"text\" class=\"Name\" /></td><td><input type=\"text\" class=\"ZCD\" /></td><td><input type=\"text\" class=\"TYSHXYDM\" /></td><td><input type=\"text\" class=\"CSJJD\" /></td><td>{type}</td><td><input type=\"text\" class=\"inTotalArea\" /></td><td><input type=\"text\" class=\"rentArea\" /></td><td><input type=\"text\" class=\"personalUseArea\" /></td><td><input class=\"button1\" type=\"button\" value=\"保存\" onclick=\"createPost(this)\" /><input class=\"button1\" type=\"button\" value=\"取消\" onclick=\"createCancel(this)\" style=\"margin-left:5px;\" /></td></tr>";
+        tr = tr.replace("{type}", $("#enterpriseType").html());
+        $(dom).parent().parent().before(tr);
+    }
+
+    var editbutton = "<input class=\"button1\" type=\"button\" value=\"编辑\" onclick=\"edit('{0}',this)\" />";
+    var deletebutton = "<input class=\"button1\" type=\"button\" value=\"删除\" onclick=\"del('{0}',this)\"  style=\"margin-left:5px;\"/>";
+    //提交
+    function createPost(dom) {
+        var buildingID = "@Request["buildingID"]";
+        var personalUseArea = $(dom).parent().parent().find(".personalUseArea").val();
+        var rentArea = $(dom).parent().parent().find(".rentArea").val();
+        var inTotalArea = $(dom).parent().parent().find(".inTotalArea").val();
+        var type = $(dom).parent().parent().find(".type").val();
+        var typeTitle = $(dom).parent().parent().find(".type").find("option:selected").text();
+        var CSJJD = $(dom).parent().parent().find(".CSJJD").val();
+        var TYSHXYDM = $(dom).parent().parent().find(".TYSHXYDM").val();
+        var ZCD = $(dom).parent().parent().find(".ZCD").val();
+        var Name = $(dom).parent().parent().find(".Name").val();
+        var version = new Date().getTime();
+        $.getJSON("@Url.Action("ManageCreateEnterprise")", { version: version, buildingID: buildingID, personalUseArea: personalUseArea, rentArea: rentArea, inTotalArea: inTotalArea, type: type, CSJJD: encodeURI(CSJJD), TYSHXYDM: TYSHXYDM, ZCD: encodeURI(ZCD), Name: encodeURI(Name) }, function (result) {
+            if (result.success) {
+                var button = editbutton.replace("{0}", result.id) + deletebutton.replace("{0}", result.id);
+                var trhtml = "<td class=\"Name\">{name}</td>" +
+                             "<td class=\"ZCD\">{ZCD}</td>" +
+                             "<td class=\"TYSHXYDM\">{TYSHXYDM}</td>" +
+                             "<td class=\"CSJJD\">{CSJJD}</td>" +
+                             "<td class=\"type\">{type}</td>" +
+                             "<td class=\"InTotalArea\">{inTotalArea}</td>" +
+                             "<td class=\"RentArea\">{rentArea}</td>" +
+                             "<td class=\"PersonalUseArea\">{personalUseArea}</td>" +
+                             "<td>" + button + "</td>";
+                trhtml = trhtml.replace("{name}", Name).replace("{ZCD}", ZCD).replace("{TYSHXYDM}", TYSHXYDM).replace("{CSJJD}", CSJJD).replace("{type}", typeTitle).replace("{inTotalArea}", inTotalArea).replace("{rentArea}", rentArea).replace("{personalUseArea}", personalUseArea);
+                $(dom).parent().parent().addClass(result.id);
+                $(dom).parent().parent().html(trhtml);
+                alert("保存成功。");
+            }
+            else {
+                alert(result.errorMessage);
+            }
+        });
+    }
+
+    //取消
+    function createCancel(dom) {
+        $(dom).parent().parent().remove();
+    }
+
+    //编辑
+    function edit(id) {
+        top.mainDialog.open({ id: "window_" + "@Guid.NewGuid()", title: "企业编辑", top: 128, left: 670, width: 380, height: 250, url: "@Url.Action("EditEnterprise")" + "?enterpriseID=" + id + "&appid=" + appid + "&&tabid=" + iframeid, openerid: iframeid });
+        return false;
+    }
+
+    ////编辑
+    //function edit(id,dom)
+    //{
+    //    $tr = $(dom).parent().parent();
+    //    var personalUseArea = $tr.find(".PersonalUseArea").html();
+    //    var rentArea = $tr.find(".RentArea").html();
+    //    var inTotalArea = $tr.find(".InTotalArea").html();
+    //    var type = $tr.find(".type").html();
+    //    var CSJJD = $tr.find(".CSJJD").html();
+    //    var TYSHXYDM = $tr.find(".TYSHXYDM").html();
+    //    var ZCD = $tr.find(".ZCD").html();
+    //    //tr = tr.replace("{type}", $("#enterpriseType").html());
+    //    if (personalUseArea.indexOf('<input') > 0)
+    //    {
+    //        return;
+    //    }
+    //    var text = "<input type=\"text\" value=\"{0}\" class=\"{1}\" />";
+    //    $tr.find(".PersonalUseArea").html(text.replace("{0}", personalUseArea).replace("{1}","PersonalUseAreaVal"));
+    //    $tr.find(".RentArea").html(text.replace("{0}", rentArea).replace("{1}", "RentAreaVal"));
+    //    $tr.find(".InTotalArea").html(text.replace("{0}", inTotalArea).replace("{1}", "InTotalAreaVal"));
+    //    $tr.find(".type").html(text.replace("{0}", type).replace("{1}", "typeVal"));
+    //    $tr.find(".CSJJD").html(text.replace("{0}", CSJJD).replace("{1}", "CSJJDVal"));
+    //    $tr.find(".TYSHXYDM").html(text.replace("{0}", TYSHXYDM).replace("{1}","TYSHXYDMVal"));
+    //    $tr.find(".ZCD").html(text.replace("{0}", ZCD).replace("{1}", "ZCDVal"));
+    //    var button = "<input class=\"button1\" type=\"button\" value=\"保存\" onclick=\"editPost('" + id + "',this)\" /><input class=\"button1\" type=\"button\" value=\"取消\" onclick=\"editCancel('" + id + "',this)\" style=\"margin-left:5px;\" />";
+    //    $(dom).parent().html(button);
+    //}
+
+
+    //var editbutton = "<input class=\"button1\" type=\"button\" value=\"编辑\" onclick=\"edit('{0}',this)\" />";
+    //var deletebutton = "<input class=\"button1\" type=\"button\" value=\"删除\" onclick=\"del('{0}',this)\"  style=\"margin-left:5px;\"/>";
+    //提交
+    @*function editPost(id,dom)
+    {
+        $tr = $(dom).parent().parent();
+
+        var personalUseArea = $tr.find(".PersonalUseAreaVal").val();
+        var rentArea = $tr.find(".RentAreaVal").val();
+        var inTotalArea = $tr.find(".InTotalAreaVal").val();
+        var type = $(dom).parent().parent().find(".type").val();
+        var typeTitle = $(dom).parent().parent().find(".type").find("option:selected").text();
+        var CSJJD = $tr.find(".CSJJDVal").val();
+        var TYSHXYDM = $tr.find(".TYSHXYDMVal").val();
+        var ZCD = $tr.find(".ZCDVal").val();
+        var version = new Date().getTime();
+        $.getJSON("@Url.Action("ManageEditEnterprise")", { version: version, enterpriseID: id, personalUseArea: personalUseArea, rentArea: rentArea, inTotalArea: inTotalArea,type:type, CSJJD: encodeURI(CSJJD), TYSHXYDM: TYSHXYDM, ZCD: encodeURI(ZCD) }, function (result)
+        {
+            $tr.find(".PersonalUseArea").html(personalUseArea);
+            $tr.find(".RentArea").html(rentArea);
+            $tr.find(".InTotalArea").html(inTotalArea);
+            $tr.find(".type").html(typeTitle);
+            $tr.find(".CSJJD").html(CSJJD);
+            $tr.find(".TYSHXYDM").html(TYSHXYDM);
+            $tr.find(".ZCD").html(ZCD);
+            if(result.success)
+            {
+                alert("保存成功。");
+            }
+            else{
+                alert(result.errorMessage);
+            }
+            editbutton = editbutton.replace("{0}",id);
+            deletebutton = deletebutton.replace("{0}",id);
+            $(dom).parent().html(editbutton+deletebutton);
+        });
+    }*@
+
+    //取消
+    //function editCancel(id,dom)
+    //{
+    //    $tr = $(dom).parent().parent();
+    //    var personalUseArea = $tr.find(".PersonalUseAreaVal").val();
+    //    var rentArea = $tr.find(".RentAreaVal").val();
+    //    var inTotalArea = $tr.find(".InTotalAreaVal").val();
+    //    var CSJJD = $tr.find(".CSJJDVal").val();
+    //    var TYSHXYDM = $tr.find(".TYSHXYDMVal").val();
+    //    var ZCD = $tr.find(".ZCDVal").val();
+    //    $tr.find(".PersonalUseArea").html(personalUseArea);
+    //    $tr.find(".RentArea").html(rentArea);
+    //    $tr.find(".InTotalArea").html(inTotalArea);
+    //    $tr.find(".CSJJD").html(CSJJD);
+    //    $tr.find(".TYSHXYDM").html(TYSHXYDM);
+    //    $tr.find(".ZCD").html(ZCD);
+    //    editbutton = editbutton.replace("{0}",id);
+    //    deletebutton = deletebutton.replace("{0}",id);
+    //    $(dom).parent().html(editbutton+deletebutton);
+    //}
+
+    function del(id, dom) {
+        if (confirm("确定删除本条数据吗？")) {
+            $.getJSON("@Url.Action("ManageDeleteEnterprise")", { enterpriseID: id }, function (result) {
+                if (result.success) {
+                    $(dom).parent().parent().remove();
+                }
+                else {
+                    alert(result.errorMessage);
+                }
+            });
+        }
+    }
+</script>

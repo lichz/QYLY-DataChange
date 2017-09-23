@@ -1,0 +1,70 @@
+﻿@model RoadFlow.Data.Model.EnterpriseInfo
+@{
+    ViewBag.Title = "Edit";
+}
+<br/>
+<form method="post">
+    <table class="formtable" style="width:40%; margin-left:20px;">
+        <tr>
+            <th style="color:red;font-size:16px;font-weight:600; text-align:center;" colspan="2">企业信息</th>
+        </tr>
+        <tr>
+            <th>企业名称</th>
+            <td><input type="text" name="Name" value="@Model.Name" /></td>
+        </tr>
+        <tr>
+            <th>统一社会信用代码</th>
+            <td><input type="text" name="TYSHXYDM" value="@Model.TYSHXYDM" /></td>
+        </tr>
+        <tr>
+            <th>注册地</th>
+            <td><input type="text" name="ZCD" value="@Model.ZCD" /></td>
+        </tr>
+        <tr>
+            <th>注册资本</th>
+            <td><input type="text" name="ZCZB" value="@Model.ZCZB" /></td>
+        </tr>
+        <tr>
+            <th>经营范围</th>
+            <td><input type="text" name="JYFW" value="@Model.JYFW" /></td>
+        </tr>
+        <tr>
+            <th>法人</th>
+            <td><input type="text" name="ArtificialPerson" value="@Model.ArtificialPerson" /></td>
+        </tr>
+        <tr>
+            <th>法人电话</th>
+            <td><input type="text" name="ArtificialPersonPhone" value="@Model.ArtificialPersonPhone" /></td>
+        </tr>
+        <tr>
+            <th>成立日期</th>
+            <td><input type="text" name="CLRQ" value="@Model.CLRQ" /></td>
+        </tr>
+        <tr>
+            <th>企业联系电话</th>
+            <td><input type="text" name="QYLXDH" value="@Model.QYLXDH" /></td>
+        </tr>
+        <tr>
+            <th>企业通讯地址</th>
+            <td><input type="text" name="QYTXDZ" value="@Model.QYTXDZ" /></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                @Html.Hidden("keyId", Model.ID)
+                @Html.Hidden("appid", Request["appid"])
+                <input type="submit" name="save" value="保存" class="mybutton" />
+                <input type="button" id="close" name="close" value="返回" class="mybutton" style=" margin-left:10px;" />
+            </td>
+        </tr>
+    </table>
+</form>
+<script type="text/javascript">
+    var appid = '@Request.QueryString["appid"]';
+    var iframeid = '@Request.QueryString["tabid"]';
+    $(function () {
+        $("#close").click(function () {
+            location.href = '@Url.Action("Index")?appid=' + appid + "&tabid" + iframeid;
+        });
+    });
+</script>

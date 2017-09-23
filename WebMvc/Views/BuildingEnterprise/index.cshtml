@@ -1,0 +1,130 @@
+﻿@model RoadFlow.Web.Model.BuildingEnterpriseIndexViewModel
+@using RoadFlow.Data.Model
+@using RoadFlow.Utility;
+@{
+    ViewBag.Title = "Index";
+    var edit = Request.QueryString["Edit"];
+}
+<form method="post">
+    @Html.AntiForgeryToken()
+    <div class="querybar">
+        <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+            <tr>
+                <td>
+                    企业名称：<input type="text" name="Name" id="Name" style="width:150px;" value="@Model.ParaName" />
+                    <input type="hidden" id="query" name="query" value="" />
+                    <input type="submit" name="Search" value="&nbsp;&nbsp;查&nbsp;询&nbsp;&nbsp;" class="mybutton" />
+                    <input type="button" name="EnterpriseExport" onclick="EnterpriseExportExcel()" value="&nbsp;&nbsp;企&nbsp;业&nbsp;导&nbsp;出&nbsp;&nbsp;" class="mybutton" />
+                    <span id="tp" style="color:red;white-space:nowrap;line-height:12px; display:none;width:100px;cursor:wait;">正在为您导出数据……</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
+<table class="mygrid">
+    <thead>
+        <tr>
+            <th>企业名称</th>
+            <th>所属楼栋</th>
+            <th>企业注册地</th>
+            <th>统一社会信用代码</th>
+            <th>税收解缴地</th>
+            <th>企业类型</th>
+            <th>入驻面积</th>
+            <th>租用面积</th>
+            <th>自购面积</th>
+            @*<th>国税</th>
+                <th>地税</th>*@
+            <th>税收</th>
+            @{
+
+                if (edit == "1")
+                {
+                    <th style="width:180px;">操作</th>
+                }
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (System.Data.DataRow dr in Model.List.Rows)
+        {
+            <tr>
+                <td>@dr["Name"]</td>
+                <td>@dr["BuildingName"]</td>
+                <td>@dr["ZCD"]</td>
+                <td>@dr["TYSHXYDM"]</td>
+                <td>@dr["CSJJD"]</td>
+                <td>@(dr["Type"] is DBNull ? "" : Model.Dictionary.Find(p => p.ID == (Guid?)dr["Type"]).Title) </td>
+                <td>@dr["InTotalArea"]</td>
+                <td>@dr["RentArea"]</td>
+                <td>@dr["PersonalUseArea"]</td>
+                @*<td>@dr["NationalTax"]</td>
+                    <td>@dr["LandTax"]</td>*@
+                <td>@dr["Tax"]</td>
+                @if (edit == "1")
+                {
+                    <td>
+                        @*<input type="button" class="button1" value="税收添加" onclick="addTax('@dr["ID"]')" />*@
+                        <input type="button" class="button1" value="编辑" onclick="edit('@dr["ID"]')" />
+                        <input type="button" class="button1" value="删除" onclick="del('@dr["ID"]')" style="margin-left:5px;" />
+                        <input type="button" class="button1" value="税收管理" onclick="manageTax('@dr["ID"]')" style="margin-left:5px;" />
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+@Html.Raw(Model.Pager)
+<br />
+<script type="text/javascript">
+    var appid = '@Request.QueryString["appid"]';
+    var iframeid = '@Request.QueryString["tabid"]';
+    var dataGrid;
+    $(function () {
+        var dataGrid = new RoadUI.Grid({ table: $(".mygrid") });
+    });
+
+    //添加税收
+    @*function addTax(id)
+    {
+        top.mainDialog.open({ id: "window_" + "@Guid.NewGuid()", title: "税收添加", top: 128, left: 670, width: 380, height: 250, url: "@Url.Action("TaxCreate")" + "?enterpriseID=" + id + "&appid=" + appid + "&&tabid=" + iframeid, openerid: iframeid });
+        return false;
+    }*@
+
+    //编辑
+    function edit(id) {
+        top.mainDialog.open({ id: "window_" + "@Guid.NewGuid()", title: "企业编辑", top: 128, left: 670, width: 380, height: 250, url: "@Url.Action("Edit")" + "?enterpriseID=" + id + "&appid=" + appid + "&&tabid=" + iframeid, openerid: iframeid });
+        return false;
+    }
+
+    //删除
+    function del(id) {
+        if (confirm("确定删除本条数据吗？")) {
+            $.post("@Url.Action("Delete")", { enterpriseID: id }, function (result) {
+                if (result.success) {
+                    alert("删除成功。");
+                    location.href = location.href;
+                }
+                else {
+                    alert("删除失败。");
+                }
+
+            });
+        }
+    }
+
+    //税收管理
+    function manageTax(id) {
+        top.mainDialog.open({ id: "window_" + "@Guid.NewGuid()", title: "税收管理", top: 128, left: 670, width: 380, height: 250, url: "@Url.Action("TaxManage")" + "?enterpriseID=" + id + "&appid=" + appid + "&&tabid=" + iframeid, openerid: iframeid });
+        return false;
+    }
+
+    //企业数据导出
+    function EnterpriseExportExcel() {
+        var f = document.forms[0];
+        f.action = top.rootdir + "@Url.Action("Export")";
+        f.submit();
+        $("form").removeAttr("action");
+    }
+
+</script>

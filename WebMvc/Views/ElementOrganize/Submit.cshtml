@@ -1,0 +1,43 @@
+﻿@model RoadFlow.Web.Model.ElementOrganizeIndexViewModel
+@{
+    ViewBag.Title = "Index";
+}
+<table class="mygrid">
+    <thead>
+        <tr>
+            <th>报送单位名称</th>
+            <th>已有楼盘权限</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (System.Data.DataRow dr in Model.List.Rows) {
+            <tr>
+                <td>@dr["Name"]</td>
+                <td>@(Model.Permission[(Guid)dr["ID"]])</td>
+                <td>
+                    <a class="editlink" href="javascript:;" onclick="update('@Url.Action("Index", "Houses", new { appid = Request["appid"],type=RoadFlow.Data.Model.ElementOrganizeType.BuildingModify,id=dr["ID"] })', '@dr["Name"]', '@dr["ID"]')">权限设置</a>
+                    @*<input class="button1" type="button" value="权限设置" onclick="update('@Url.Action("Index", "Houses", new { appid = Request["appid"],type=RoadFlow.Data.Model.ElementOrganizeType.EnterpriseTax,id=dr["ID"] })','@dr["Name"]','@dr["ID"]')" />*@
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+<script type="text/javascript">
+    var dialog = top.mainDialog;
+    var appid = '@Request.QueryString["appid"]';
+    var iframeid = '@Request.QueryString["tabid"]';
+    var dataGrid;
+    $(function () {
+        var dataGrid = new RoadUI.Grid({ table: $(".mygrid") });
+    });
+
+    function update(url, name, id) {
+        var wid = RoadUI.Core.newid();
+        dialog.open({ id: "window_" + wid, title: name, width: 400, height: 460, url: top.rootdir + url, openerid: iframeid });
+        return false;
+    }
+
+</script>
+

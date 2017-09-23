@@ -1,0 +1,68 @@
+﻿@model RoadFlow.Data.Model.ArticleModel
+@using RoadFlow.Data.Model
+@using RoadFlow.Utility;
+@{ViewBag.Title = "Send"; Page.CheckApp = false;}
+<link type="text/css" rel="stylesheet" href="/Scripts/FlowRun/Forms/flowform.css">
+<form method="post" action="@Url.Action("Index")">
+    <p>&nbsp;</p>
+    <table class="flowformtable" cellspacing="1" cellpadding="0" data-sort="sortDisabled" style="">
+        <tbody>
+            <tr>
+                <td style="vertical-align:top; width:60px;">文章标题：</td>
+                <td>
+                    <input style="width:400px" type="text" name="Title" id="Title" validate="empty" />
+                </td>
+            </tr>
+            <tr>
+                <td>发布时间：</td>
+                <td>
+                    <input class="mycalendar" isflow="1" type1="flow_datetime" id="PublishTime" name="PublishTime" style="width:150px" istime="1" daybefor="0" dayafter="0" currentmonth="0" type="text" validate="empty">
+                </td>
+            </tr>
+            <tr>
+                <td>文章类型：</td>
+                <td>
+                    <select style="width:100px" id="Type" name="Type" isflow="1" type1="flow_select">
+                        <option value=""></option>
+                        @foreach (System.Data.DataRow dr in (ViewBag.Type).Rows)
+                        {
+                            <option value="@dr["ID"]">@dr["Title"]</option>
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>文章简介：</td>
+                <td>
+                    <textarea cols="100" rows="2" name="BriefIntroduction" id="BriefIntroduction"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>文章内容：</td>
+                <td>
+                    <div id="editorDiv" style="width:1100px;height:400px;">
+                        <script id="editor" name="Content" type="text/plain" validate="empty" style="width:98%; height:300px;">
+                        </script>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input class="button2" type="submit" value="保存" style="margin:0;" title="保存">
+                    <input class="button2" type="button" value="取消" style="margin-left:20px;" title="取消" onclick="new RoadUI.Window().close();">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+<script type="text/javascript" charset="utf-8" src="~/Scripts/Ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="~/Scripts/Ueditor/ueditor.all.min.js"> </script>
+<script type="text/javascript">
+    var ue = UE.getEditor('editor');
+    var validate = new RoadUI.Validate();
+    $(function () {
+        @Html.Raw(ViewBag.Script)
+    });
+</script>
+

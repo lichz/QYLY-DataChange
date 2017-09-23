@@ -1,0 +1,96 @@
+﻿@model RoadFlow.Web.Model.BuildingEditEnterpriseViewModel
+@{
+    ViewBag.Title = "EditEnterprise";
+}
+<style>
+    input[type=text] {
+        width:250px;
+    }
+</style>
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    <table class="mygrid" cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+        <tr>
+            <td style="color:red">@Html.ValidationSummary(true)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(model => model.Enterprise.Name)</td>
+            <td>
+                @Html.EditorFor(model => model.Enterprise.Name)
+                @Html.ValidationMessageFor(model => model.Enterprise.Name)
+            </td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(model => model.Enterprise.TYSHXYDM)</td>
+            <td>
+                @Html.EditorFor(model => model.Enterprise.TYSHXYDM)
+                @Html.ValidationMessageFor(model => model.Enterprise.TYSHXYDM)
+            </td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(model => model.Enterprise.CSJJD)</td>
+            <td>
+                @Html.EditorFor(model => model.Enterprise.CSJJD)
+                @Html.ValidationMessageFor(model => model.Enterprise.CSJJD)
+            </td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(model => model.Enterprise.Type)</td>
+            <td>
+                <select class="type" name="Enterprise.Type">
+                    @foreach (var item in Model.Dictionarys)
+                    {
+                        if (item.ID == Model.Enterprise.Type)
+                        {
+                            <option value="@item.ID" selected>@item.Title</option>
+                        }
+                        else
+                        {
+                            <option value="@item.ID">@item.Title</option>
+                        }
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(model => model.Enterprise.ZCD)</td>
+            <td>
+                @Html.EditorFor(model => model.Enterprise.ZCD)
+                @Html.ValidationMessageFor(model => model.Enterprise.ZCD)
+            </td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(model => model.Enterprise.InTotalArea)</td>
+            <td>
+                <input type="number" name="Enterprise.InTotalArea" value="@Model.Enterprise.InTotalArea" />
+            </td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(model => model.Enterprise.RentArea)</td>
+            <td>
+                <input type="number" name="Enterprise.RentArea" value="@Model.Enterprise.RentArea" />
+            </td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(model => model.Enterprise.PersonalUseArea)</td>
+            <td>
+                <input type="number" name="Enterprise.PersonalUseArea" value="@Model.Enterprise.PersonalUseArea" />
+            </td>
+        </tr>
+        <tr>
+            <td><input type="hidden" name="modelID" value="@Model.Enterprise.ID" /></td>
+            <td>
+                <input class="button1" type="submit" value="保存" style="margin:0;" title="保存">
+            </td>
+        </tr>
+    </table>
+    }
+@if (ViewBag.Success != null && (bool)ViewBag.Success)
+{
+    <script>
+                $(function () {
+                    alert("更新成功！");
+                    new RoadUI.Window().reloadOpener(); new RoadUI.Window().close();
+                });
+    </script>
+}

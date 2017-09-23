@@ -1,0 +1,192 @@
+﻿@{
+	string FlowID = Request.QueryString["flowid"];
+	string StepID = Request.QueryString["stepid"];
+	string GroupID = Request.QueryString["groupid"];
+	string TaskID = Request.QueryString["taskid"];
+	string InstanceID = Request.QueryString["instanceid"];
+	string DisplayModel = Request.QueryString["display"] ?? "0";
+	string DBConnID = "06075250-30dc-4d32-bf97-e922cb30fac8";
+	string DBTable = "Buildings";
+	string DBTablePK = "ID";
+	string DBTableTitle = "Name";
+	RoadFlow.Platform.Dictionary BDictionary = new RoadFlow.Platform.Dictionary();
+	RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
+	RoadFlow.Platform.WorkFlowTask BWorkFlowTask = new RoadFlow.Platform.WorkFlowTask();
+	string fieldStatus = BWorkFlow.GetFieldStatus(FlowID, StepID);
+	LitJson.JsonData initData = BWorkFlow.GetFormData(DBConnID, DBTable, DBTablePK, InstanceID, fieldStatus);
+	string TaskTitle = BWorkFlow.GetFromFieldData(initData, DBTable, DBTableTitle);
+}
+<link href="~/Scripts/FlowRun/Forms/flowform.css" rel="stylesheet" type="text/css" />
+<script src="~/Scripts/FlowRun/Forms/common.js" type="text/javascript" ></script>
+<input type="hidden" id="Form_ValidateAlertType" name="Form_ValidateAlertType" value="2" />
+<input type="hidden" id="Form_TitleField" name="Form_TitleField" value="Buildings.Name" />
+<input type="hidden" id="Form_DBConnID" name="Form_DBConnID" value="06075250-30dc-4d32-bf97-e922cb30fac8" />
+<input type="hidden" id="Form_DBTable" name="Form_DBTable" value="Buildings" />
+<input type="hidden" id="Form_DBTablePk" name="Form_DBTablePk" value="ID" />
+<input type="hidden" id="Form_DBTableTitle" name="Form_DBTableTitle" value="Name" />
+<input type="hidden" id="Form_AutoSaveData" name="Form_AutoSaveData" value="1" />
+<script type="text/javascript">
+	var initData = @Html.Raw(BWorkFlow.GetFormDataJsonString(initData));
+	var fieldStatus = @Html.Raw(fieldStatus);
+	var displayModel = '@DisplayModel';
+	$(window).load(function (){
+		formrun.initData(initData, "Buildings", fieldStatus, displayModel);
+	});
+</script>
+<p style="text-align: center;"><br/></p><table class="flowformtable" uetable="null" data-sort="sortDisabled" cellpadding="0" cellspacing="1"><tbody><tr class="firstRow"><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" valign="top" width="169"><span style="color: rgb(255, 0, 0); font-size: 20px;"><em><strong>楼宇基本情况：</strong></em></span><br/></td><td style="-ms-word-break: break-all;" rowspan="1" colspan="3" width="893"><br/></td></tr><tr><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="176">楼宇编号：</td><td rowspan="1" colspan="1" align="left" valign="middle" width="320"><input title="" class="mytext" isflow="1" id="Buildings.Num" type1="flow_text" name="Buildings.Num" value="" style="width:300px" valuetype="0" type="text"/></td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="197">报送时间：</td><td rowspan="1" colspan="1" align="left" valign="middle" width="333"><input title="" class="mycalendar" isflow="1" type1="flow_datetime" id="Buildings.AddTime" name="Buildings.AddTime" value="" style="width:300px" defaultvalue="" istime="0" daybefor="0" dayafter="0" currentmonth="0" type="text"/></td></tr><tr><td style="-ms-word-break: break-all;" class="setcolor" align="left" valign="middle" width="176">楼宇名称：<br/></td><td style="-ms-word-break: break-all;" align="left" valign="middle" width="320"><input title="" class="mytext" isflow="1" id="Buildings.Name" type1="flow_text" name="Buildings.Name" value="" style="width:300px" maxlength="50" valuetype="0" type="text"/></td><td style="-ms-word-break: break-all;" class="setcolor" align="left" valign="middle" width="202">报送楼栋：</td><td style="word-break: break-all;" align="left" valign="middle" width="333"><select onchange="onchange_0a8bb394737d34e83d03faee936c64b3 (this);" class="myselect" id="Buildings.LYDS" name="Buildings.LYDS" style="width:304px" isflow="1" type1="flow_select"><option value=""></option>@Html.Raw(BDictionary.GetOptionsByID("30fded6e-6cc8-4c2a-a8a5-f4d8dd5f4a2a".ToGuid(), RoadFlow.Platform.Dictionary.OptionValueField.ID, ""))</select><script type="text/javascript">function onchange_0a8bb394737d34e83d03faee936c64b3(srcObj){var name = document.getElementById("Buildings.Name").value;
+var lyds = document.getElementById("Buildings.LYDS").value;
+if(name =="")
+{
+ alert("请先填报楼宇名称，再选择报送楼栋。");
+ document.getElementById("Buildings.LYDS").value="";
+}else
+{
+        $.ajax({
+            url: top.rootdir + "/Enterprise/CheckData",
+            type: 'POST',
+            async:false,
+            cache:false,
+            data: {
+                Name:name,
+                lyds: lyds
+            },
+            success: function (data) {
+                if (data>0) {
+		    alert("该楼栋信息已经填报过了，请选择其他要报送的楼栋。");
+		    document.getElementById("Buildings.LYDS").value="";
+                }
+            }
+        });
+}}</script></td></tr><tr><td style="-ms-word-break: break-all;" class="setcolor" align="left" valign="middle" width="176">楼宇级别：<br/></td><td style="word-break: break-all;" align="left" valign="middle" width="320"><select class="myselect" id="Buildings.LYJB" name="Buildings.LYJB" style="width:304px" isflow="1" type1="flow_select" title="超甲级写字楼：办公部分需超过50000平方米;甲级写字楼：办公部分应超过20000平方米">@Html.Raw(BDictionary.GetOptionsByID("1fa7171e-261e-4349-8c4f-28900593c8c8".ToGuid(), RoadFlow.Platform.Dictionary.OptionValueField.ID, ""))</select></td><td style="-ms-word-break: break-all;" class="setcolor" align="left" valign="middle" width="202">楼宇详细地址：</td><td style="-ms-word-break: break-all;" align="left" valign="middle" width="333"><input title="" class="mytext" isflow="1" id="Buildings.LYXXDZ" type1="flow_text" name="Buildings.LYXXDZ" value="" style="width:300px" maxlength="200" valuetype="0" type="text"/></td></tr><tr><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="176">楼宇管理运营方：</td><td style="-ms-word-break: break-all;" rowspan="1" align="left" valign="middle" width="320"><input title="" class="mytext" isflow="1" id="Buildings.LYGLYYF" type1="flow_text" name="Buildings.LYGLYYF" value="" style="width:300px" maxlength="50" valuetype="0" type="text"/></td><td style="-ms-word-break: break-all;" rowspan="1" class="setcolor" align="left" valign="middle" width="202">所属街道：</td><td style="word-break: break-all;" rowspan="1" align="left" valign="middle" width="333"><select class="myselect" id="Buildings.SSJD" name="Buildings.SSJD" style="width:304px" isflow="1" type1="flow_select">@Html.Raw(BDictionary.GetOptionsByID("f0535995-e324-405e-9a4b-8aa682d012d8".ToGuid(), RoadFlow.Platform.Dictionary.OptionValueField.ID, ""))</select></td></tr><tr><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="176">建设阶段：</td><td style="word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="320"><select class="myselect" id="Buildings.JSJD" name="Buildings.JSJD" style="width:304px" isflow="1" type1="flow_select">@Html.Raw(BDictionary.GetOptionsByID("6cdd56fb-b672-4441-a935-01e2ef0ccf68".ToGuid(), RoadFlow.Platform.Dictionary.OptionValueField.ID, ""))</select></td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="202">竣工时间：</td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="333"><input title="" class="mycalendar" isflow="1" type1="flow_datetime" id="Buildings.JGSJ" name="Buildings.JGSJ" value="" style="width:300px" defaultvalue="" istime="0" daybefor="0" dayafter="0" currentmonth="0" type="text"/></td></tr><tr><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="176">楼宇类型：</td><td style="word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="320"><select class="myselect" id="Buildings.LYLX" name="Buildings.LYLX" style="width:304px" isflow="1" type1="flow_select">@Html.Raw(BDictionary.GetOptionsByID("b298ac85-bb6c-44f8-94d6-0953b4c1dd31".ToGuid(), RoadFlow.Platform.Dictionary.OptionValueField.ID, ""))</select></td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="202">总建筑面积(㎡)：</td><td rowspan="1" colspan="1" align="left" valign="middle" width="333"><input onchange="onchange_910f1ba8660ac589a27bc6da6ad50555 (this);" title="" class="mytext" isflow="1" id="Buildings.ZJZMJ" type1="flow_text" name="Buildings.ZJZMJ" value="" style="width:300px" valuetype="4" type="text"/><script type="text/javascript">function onchange_910f1ba8660ac589a27bc6da6ad50555(srcObj){var ZJZMJ = document.getElementById("Buildings.ZJZMJ").value;
+var SY_ZMJ = document.getElementById("Buildings.SY_ZMJ").value;
+var SW_ZMJ = document.getElementById("Buildings.SW_ZMJ").value;
+var  A1 = ZJZMJ ==""?0:Number(ZJZMJ);
+var A2 = SY_ZMJ ==""?0:Number(SY_ZMJ);
+var  A3 =SW_ZMJ ==""?0:Number(SW_ZMJ);
+if(A1<A2+A3)
+{
+     alert("楼宇总面积小于商业总面积加商务总面积之和。");
+   document.getElementById("Buildings.ZJZMJ").value="";
+}}</script></td></tr><tr><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="17"><span style="color: rgb(255, 0, 0); font-size: 20px;"><em><strong>商业部分情况：</strong></em></span><br/></td><td style="word-break: break-all;" rowspan="1" colspan="3" width="893"><p>商业：指用于以零售商品经营活动为主要功能部分<br/></p></td></tr><tr><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="176">总面积(㎡)：</td><td style="word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="320"><p><input onchange="onchange_5d461971c13d16a2ca855dc3d43967f3 (this);" title="" class="mytext" isflow="1" id="Buildings.SY_ZMJ" type1="flow_text" name="Buildings.SY_ZMJ" value="" style="width:300px" valuetype="4" type="text"/><script type="text/javascript">function onchange_5d461971c13d16a2ca855dc3d43967f3(srcObj){var ZJZMJ = document.getElementById("Buildings.ZJZMJ").value;
+var SY_ZMJ = document.getElementById("Buildings.SY_ZMJ").value;
+var SW_ZMJ = document.getElementById("Buildings.SW_ZMJ").value;
+var  A1 = ZJZMJ ==""?0:Number(ZJZMJ);
+var A2 = SY_ZMJ ==""?0:Number(SY_ZMJ);
+var  A3 =SW_ZMJ ==""?0:Number(SW_ZMJ);
+if(A1<A2+A3)
+{
+     alert("楼宇总面积小于商业总面积加商务总面积之和。");
+   document.getElementById("Buildings.SY_ZMJ").value="";
+}}</script></p></td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" valign="top" width="202">已用面积(㎡)：</td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" valign="top" width="333"><input onchange="onchange_ca8dfa67dc41fdf876ace13e8abdad8c (this);" title="" class="mytext" isflow="1" id="Buildings.SY_YSY_ZMJ" type1="flow_text" name="Buildings.SY_YSY_ZMJ" value="" style="width:300px" valuetype="4" type="text"/><script type="text/javascript">function onchange_ca8dfa67dc41fdf876ace13e8abdad8c(srcObj){var B1= document.getElementById("Buildings.SY_ZMJ").value;
+var B2= document.getElementById("Buildings.SY_YSY_ZMJ").value;
+var B3= document.getElementById("Buildings.SY_KZ_ZMJ").value;
+var A1 = B1==""?0:Number(B1);
+var A2 = B2==""?0:Number(B2);
+var A3 =B3==""?0:Number(B3);
+if(A1<A2+A3)
+{
+     alert("楼宇商业总面积小于商业已用面积加商业空置面积之和。");
+   document.getElementById("Buildings.SY_YSY_ZMJ").value="";
+}}</script></td></tr><tr><td style="-ms-word-break: break-all;" colspan="1" class="setcolor" align="left" valign="middle" width="176">已自用面积(㎡)：</td><td style="-ms-word-break: break-all;" colspan="1" align="left" valign="middle" width="320"><input onchange="onchange_6fc7adb066780923027000bd7c99e812 (this);" title="" class="mytext" isflow="1" id="Buildings.SY_YSY_ZYMJ" type1="flow_text" name="Buildings.SY_YSY_ZYMJ" value="" style="width:300px" valuetype="4" type="text"/><script type="text/javascript">function onchange_6fc7adb066780923027000bd7c99e812(srcObj){var B2= document.getElementById("Buildings.SY_YSY_ZMJ").value;
+var B3= document.getElementById("Buildings.SY_YSY_ZYMJ").value;
+var A2 = B2==""?0:Number(B2);
+var A3 =B3==""?0:Number(B3);
+if(A2<A3)
+{
+     alert("商业已自用面积大于商业已用面积。");
+   document.getElementById("Buildings.SY_YSY_ZYMJ").value="";
+}}</script></td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" valign="top" width="202">空置面积(㎡)：</td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" valign="top" width="333"><input onchange="onchange_26fe7ee4a5e8123354d5adf7211f5817 (this);" title="" class="mytext" isflow="1" id="Buildings.SY_KZ_ZMJ" type1="flow_text" name="Buildings.SY_KZ_ZMJ" value="" style="width:300px" valuetype="4" type="text"/><script type="text/javascript">function onchange_26fe7ee4a5e8123354d5adf7211f5817(srcObj){var B1= document.getElementById("Buildings.SY_ZMJ").value;
+var B2= document.getElementById("Buildings.SY_YSY_ZMJ").value;
+var B3= document.getElementById("Buildings.SY_KZ_ZMJ").value;
+var A1 = B1==""?0:Number(B1);
+var A2 = B2==""?0:Number(B2);
+var A3 =B3==""?0:Number(B3);
+if(A1<A2+A3)
+{
+     alert("楼宇商业总面积小于商业已用面积加商业空置面积之和。");
+   document.getElementById("Buildings.SY_KZ_ZMJ").value="";
+}}</script></td></tr><tr><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="176">空置可租赁面积(㎡)：</td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="320"><input onchange="onchange_6a327ba256f44b45aa84ab5af3acd5d3 (this);" title="" class="mytext" isflow="1" id="Buildings.SY_KZ_KZLMJ" type1="flow_text" name="Buildings.SY_KZ_KZLMJ" value="" style="width:300px" valuetype="4" type="text"/><script type="text/javascript">function onchange_6a327ba256f44b45aa84ab5af3acd5d3(srcObj){var B1= document.getElementById("Buildings.SY_KZ_ZMJ").value;
+var B2= document.getElementById("Buildings.SY_KZ_KZLMJ").value;
+var B3= document.getElementById("Buildings.SY_KZ_KXSMJ").value;
+var A1 = B1==""?0:Number(B1);
+var A2 = B2==""?0:Number(B2);
+var A3 =B3==""?0:Number(B3);
+if(A1<A2+A3)
+{
+     alert("商务空置面积小于商务空置可租赁面积加商务空置可销售面积之和。");
+   document.getElementById("Buildings.SY_KZ_KZLMJ").value="";
+}}</script></td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="202">空置可销售面积(㎡)：</td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="333"><input onchange="onchange_64362522f162d002935b80ebae8c2f01 (this);" title="" class="mytext" isflow="1" id="Buildings.SY_KZ_KXSMJ" type1="flow_text" name="Buildings.SY_KZ_KXSMJ" value="" style="width:300px" valuetype="4" type="text"/><script type="text/javascript">function onchange_64362522f162d002935b80ebae8c2f01(srcObj){var B1= document.getElementById("Buildings.SY_KZ_ZMJ").value;
+var B2= document.getElementById("Buildings.SY_KZ_KZLMJ").value;
+var B3= document.getElementById("Buildings.SY_KZ_KXSMJ").value;
+var A1 = B1==""?0:Number(B1);
+var A2 = B2==""?0:Number(B2);
+var A3 =B3==""?0:Number(B3);
+if(A1<A2+A3)
+{
+     alert("商务空置面积小于商务空置可租赁面积加商务空置可销售面积之和。");
+   document.getElementById("Buildings.SY_KZ_KXSMJ").value="";
+}}</script></td></tr><tr><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="176">单层空置最大面积(㎡)：</td><td rowspan="1" colspan="1" align="left" valign="middle" width="320"><input title="" class="mytext" isflow="1" id="Buildings.SY_DC_ZDKZMJ" type1="flow_text" name="Buildings.SY_DC_ZDKZMJ" value="" style="width:300px" valuetype="4" type="text"/></td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="202">租金(元/㎡/月):</td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="333"><select class="myselect" id="Buildings.SY_ZJ" name="Buildings.SY_ZJ" style="width:304px" isflow="1" type1="flow_select">@Html.Raw(BDictionary.GetOptionsByID("f80c2107-3c0a-490a-9960-ed381781bf41".ToGuid(), RoadFlow.Platform.Dictionary.OptionValueField.ID, ""))</select></td></tr><tr><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="176">销售均价(元/㎡)：</td><td rowspan="1" colspan="1" align="left" valign="middle" width="320"><input title="" class="mytext" isflow="1" name="Buildings.SY_XSJJ" id="Buildings.SY_XSJJ" style="width: 300px;" value="" valuetype="4" type1="flow_text" type="text"/></td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="202">物管费(元/㎡·月)：</td><td rowspan="1" colspan="1" align="left" valign="middle" width="333"><input title="" class="mytext" isflow="1" name="Buildings.SY_WGF" id="Buildings.SY_WGF" style="width: 300px;" value="" valuetype="4" type1="flow_text" type="text"/></td></tr><tr><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="17"><span style="color: rgb(255, 0, 0); font-size: 20px;"><em><strong>商务部分情况：</strong></em></span></td><td style="word-break: break-all;" rowspan="1" colspan="3" width="893">商务：指用于商务办公部分</td></tr><tr><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="176">总面积(㎡)：</td><td rowspan="1" colspan="1" align="left" valign="middle" width="320"><input onchange="onchange_d303609f891ba2003adcce888840b2ee (this);" title="" class="mytext" isflow="1" id="Buildings.SW_ZMJ" type1="flow_text" name="Buildings.SW_ZMJ" value="" style="width:300px" valuetype="4" type="text"/><script type="text/javascript">function onchange_d303609f891ba2003adcce888840b2ee(srcObj){var ZJZMJ = document.getElementById("Buildings.ZJZMJ").value;
+var SY_ZMJ = document.getElementById("Buildings.SY_ZMJ").value;
+var SW_ZMJ = document.getElementById("Buildings.SW_ZMJ").value;
+var  A1 = ZJZMJ ==""?0:Number(ZJZMJ) ;
+var A2 = SY_ZMJ ==""?0:Number(SY_ZMJ);
+var  A3 =SW_ZMJ ==""?0:Number(SW_ZMJ);
+if(A1<A2+A3)
+{
+     alert("楼宇总面积小于商业总面积加商务总面积之和。");
+   document.getElementById("Buildings.SW_ZMJ").value="";
+}}</script></td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="202">已用面积(㎡)：</td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="333"><input onchange="onchange_41ac9258c5641b7d329a98098007efea (this);" title="" class="mytext" isflow="1" id="Buildings.SW_YSY_ZMJ" type1="flow_text" name="Buildings.SW_YSY_ZMJ" value="" style="width:300px" valuetype="4" type="text"/><script type="text/javascript">function onchange_41ac9258c5641b7d329a98098007efea(srcObj){var B1= document.getElementById("Buildings.SW_ZMJ").value;
+var B2= document.getElementById("Buildings.SW_YSY_ZMJ").value;
+var B3= document.getElementById("Buildings.SW_KZ_ZMJ").value;
+var A1 = B1==""?0:Number(B1);
+var A2 = B2==""?0:Number(B2);
+var A3 =B3==""?0:Number(B3);
+if(A1<A2+A3)
+{
+     alert("楼宇商务总面积小于商务已用面积加商务空置面积之和。");
+   document.getElementById("Buildings.SW_YSY_ZMJ").value="";
+}}</script></td></tr><tr><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="176">已自用面积(㎡)：</td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="320"><input onchange="onchange_f427fd4434036161c8912f3828457718 (this);" title="" class="mytext" isflow="1" id="Buildings.SW_YSY_ZYMJ" type1="flow_text" name="Buildings.SW_YSY_ZYMJ" value="" style="width:300px" valuetype="4" type="text"/><script type="text/javascript">function onchange_f427fd4434036161c8912f3828457718(srcObj){var B2= document.getElementById("Buildings.SW_YSY_ZMJ").value;
+var B3= document.getElementById("Buildings.SW_YSY_ZYMJ").value;
+var A2 = B2==""?0:Number(B2);
+var A3 =B3==""?0:Number(B3);
+if(A2<A3)
+{
+     alert("商务已自用面积大于商务已用面积。");
+   document.getElementById("Buildings.SW_YSY_ZYMJ").value="";
+}}</script></td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="202">空置面积(㎡)：</td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="333"><input onchange="onchange_f736ba58569344b5b86288a0ccec0cb3 (this);" title="" class="mytext" isflow="1" id="Buildings.SW_KZ_ZMJ" type1="flow_text" name="Buildings.SW_KZ_ZMJ" value="" style="width:300px" valuetype="4" type="text"/><script type="text/javascript">function onchange_f736ba58569344b5b86288a0ccec0cb3(srcObj){var B1= document.getElementById("Buildings.SW_ZMJ").value;
+var B2= document.getElementById("Buildings.SW_YSY_ZMJ").value;
+var B3= document.getElementById("Buildings.SW_KZ_ZMJ").value;
+var A1 = B1==""?0:Number(B1);
+var A2 = B2==""?0:Number(B2);
+var A3 =B3==""?0:Number(B3);
+if(A1<A2+A3)
+{
+     alert("楼宇商务总面积小于商务已用面积加商务空置面积之和。");
+   document.getElementById("Buildings.SW_KZ_ZMJ").value="";
+}}</script></td></tr><tr><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="176">空置可租赁面积(㎡)：</td><td rowspan="1" colspan="1" align="left" valign="middle" width="320"><input onchange="onchange_cf2b1f736f4c6788aebf29540ec17f25 (this);" title="" class="mytext" isflow="1" id="Buildings.SW_KZ_KZLMJ" type1="flow_text" name="Buildings.SW_KZ_KZLMJ" value="" style="width:300px" valuetype="4" type="text"/><script type="text/javascript">function onchange_cf2b1f736f4c6788aebf29540ec17f25(srcObj){var B1= document.getElementById("Buildings.SW_KZ_ZMJ").value;
+var B2= document.getElementById("Buildings.SW_KZ_KZLMJ").value;
+var B3= document.getElementById("Buildings.SW_KZ_KXSMJ").value;
+var A1 = B1==""?0:Number(B1);
+var A2 = B2==""?0:Number(B2);
+var A3 =B3==""?0:Number(B3);
+if(A1<A2+A3)
+{
+     alert("商务空置面积小于商务空置可租赁面积加商务空置可销售面积之和。");
+   document.getElementById("Buildings.SW_KZ_KZLMJ").value="";
+}}</script></td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="202">空置可销售面积(㎡)：</td><td rowspan="1" colspan="1" align="left" valign="middle" width="333"><input onchange="onchange_1cc6224986e5e85e037abd7d03f34add (this);" title="" class="mytext" isflow="1" id="Buildings.SW_KZ_KXSMJ" type1="flow_text" name="Buildings.SW_KZ_KXSMJ" value="" style="width:300px" valuetype="4" type="text"/><script type="text/javascript">function onchange_1cc6224986e5e85e037abd7d03f34add(srcObj){var B1= document.getElementById("Buildings.SW_KZ_ZMJ").value;
+var B2= document.getElementById("Buildings.SW_KZ_KZLMJ").value;
+var B3= document.getElementById("Buildings.SW_KZ_KXSMJ").value;
+var A1 = B1==""?0:Number(B1);
+var A2 = B2==""?0:Number(B2);
+var A3 =B3==""?0:Number(B3);
+if(A1<A2+A3)
+{
+     alert("商务空置面积小于商务空置可租赁面积加商务空置可销售面积之和。");
+   document.getElementById("Buildings.SW_KZ_KXSMJ").value="";
+}}</script></td></tr><tr><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="176">单层空置最大面积(㎡)：</td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="320"><input title="" class="mytext" isflow="1" id="Buildings.SW_KZ_DCKZZDMJ" type1="flow_text" name="Buildings.SW_KZ_DCKZZDMJ" value="" style="width:300px" valuetype="4" type="text"/></td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="202">租金(元/㎡/月)：</td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="333"><select class="myselect" id="Buildings.SW_ZJ" name="Buildings.SW_ZJ" style="width:304px" isflow="1" type1="flow_select">@Html.Raw(BDictionary.GetOptionsByID("897e9f4a-7534-437c-8919-515633b38490".ToGuid(), RoadFlow.Platform.Dictionary.OptionValueField.ID, ""))</select></td></tr><tr><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="176">销售均价(元/㎡):</td><td rowspan="1" colspan="1" align="left" valign="middle" width="320"><input title="" class="mytext" isflow="1" name="Buildings.SW_XSJJ" id="Buildings.SW_XSJJ" style="width: 300px;" value="" valuetype="4" type1="flow_text" type="text"/></td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="202">物管费(元/㎡·月)：</td><td rowspan="1" colspan="1" align="left" valign="middle" width="333"><input title="" class="mytext" isflow="1" name="Buildings.SW_WGF" id="Buildings.SW_WGF" style="width: 300px;" value="" valuetype="4" type1="flow_text" type="text"/></td></tr><tr><td style="word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="17"><span style="color: rgb(255, 0, 0); font-size: 20px;"><em><strong><span style="font-size: 20px;">物业租售情况<strong style="color: rgb(255, 0, 0); font-size: 20px; font-style: italic;">：</strong></span></strong></em></span></td><td style="-ms-word-break: break-all;" rowspan="1" colspan="3" width="893"><br/></td></tr><tr><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="176">自持产权面积(㎡)：</td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="320"><input title="" class="mytext" isflow="1" name="Buildings.ZCCQMJ" id="Buildings.ZCCQMJ" style="width: 300px;" value="" valuetype="4" type1="flow_text" type="text"/></td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="202">楼宇产权情况：</td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="333"><select class="myselect" id="Buildings.LYCQQK" name="Buildings.LYCQQK" style="width:304px" isflow="1" type1="flow_select">@Html.Raw(BDictionary.GetOptionsByID("f257d4e8-6764-4b58-94bc-213a20afba27".ToGuid(), RoadFlow.Platform.Dictionary.OptionValueField.ID, ""))</select></td></tr><tr><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="176">电梯(部/每栋数)：</td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="320"><input title="" class="mytext" isflow="1" name="Buildings.DTS" id="Buildings.DTS" style="width: 300px;" value="" valuetype="3" type1="flow_text" type="text"/></td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="202">车位数(个)：</td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="333"><input title="" class="mytext" isflow="1" name="Buildings.CWS" id="Buildings.CWS" style="width: 300px;" value="" valuetype="3" type1="flow_text" type="text"/></td></tr><tr><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="176">招商方向：</td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="320"><input title="" class="mytext" isflow="1" name="Buildings.ZSFX" id="Buildings.ZSFX" style="width: 300px;" value="" valuetype="0" type1="flow_text" type="text"/></td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="189">中央空调：</td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="333"><select class="myselect" id="Buildings.ZYKT" name="Buildings.ZYKT" style="width:304px" isflow="1" type1="flow_select">@Html.Raw(BDictionary.GetOptionsByID("415dfd95-705f-424e-82db-5fe0c2ed76fc".ToGuid(), RoadFlow.Platform.Dictionary.OptionValueField.ID, ""))</select></td></tr><tr><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="176">是否愿意政府统筹招商：</td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="320"><select class="myselect" id="Buildings.TCZS" name="Buildings.TCZS" style="width:304px" isflow="1" type1="flow_select">@Html.Raw(BDictionary.GetOptionsByID("11ffc42a-4a7b-4e56-8b6c-dbea7c43b0aa".ToGuid(), RoadFlow.Platform.Dictionary.OptionValueField.ID, ""))</select></td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="189">入驻优惠：</td><td style="-ms-word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="333"><input title="" class="mytext" isflow="1" name="Buildings.RZYH" id="Buildings.RZYH" style="width: 300px;" value="" valuetype="0" type1="flow_text" type="text"/></td></tr><tr><td style="word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="176">百度定位：</td><td style="word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="320"><input onfocus="onfocus_0c3c61d374006634e5b021aabbdb4b8d (this);" title="" class="mytext" isflow="1" name="Buildings.BDDW" id="Buildings.BDDW" value="" valuetype="0" type1="flow_text" style="white-space: normal; width: 300px;" type="text"/><script type="text/javascript">function onfocus_0c3c61d374006634e5b021aabbdb4b8d(srcObj){  new RoadUI.Window().open(
+           {
+                title: "地图取点",
+                width: 600, height: 465, ismodal: true,
+                url: top.rootdir + "/Scripts/QueryDesign/map.aspx?tabid\x3d" + '@Request.QueryString["tabid"]' + "&name=" + $(srcObj).prop('name') ,
+                openerid: "", resize: !1
+            })}</script></td><td style="word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="189"><br/></td><td style="word-break: break-all;" rowspan="1" colspan="1" align="left" valign="middle" width="333"><br/></td></tr><tr><td rowspan="1" colspan="1" class="setcolor" style="word-break: break-all;" align="left" valign="middle">效果图、现状图：</td><td rowspan="1" colspan="3" style="word-break: break-all;" align="left" valign="middle"><input title="" class="myfile" isflow="1" type1="flow_files" id="Buildings.XGT" name="Buildings.XGT" value="" filetype="*.jpg;*.png" style="white-space: normal; width: 260px;" type="text"/></td></tr><tr><td style="word-break: break-all;" rowspan="1" colspan="1" class="setcolor" align="left" valign="middle" width="176">楼宇介绍：</td><td style="-ms-word-break: break-all;" rowspan="1" colspan="3" valign="top" width="893"><textarea isflow="1" type1="flow_textarea" id="Buildings.Note" name="Buildings.Note" class="mytext" style="width: 95%; height: 60px;" maxlength="500"></textarea></td></tr><tr><td style="-ms-word-break: break-all;" colspan="4" class="setcolor" valign="top"><span style="color: rgb(255, 0, 0); font-size: 20px;"><em><strong>入驻企业情况：</strong></em></span><table class="flowformsubtable" style="width:99%;margin:0 auto;" issubflowtable="1" id="subtable_Building_Enterprise_ID_ID_BuildingID" cellpadding="0" cellspacing="1"><thead><tr><td>企业名称<input name="flowsubtable_id" value="Building_Enterprise_ID_ID_BuildingID" type="hidden"/><input name="flowsubtable_Building_Enterprise_ID_ID_BuildingID_secondtable" value="Building_Enterprise" type="hidden"/><input name="flowsubtable_Building_Enterprise_ID_ID_BuildingID_primarytablefiled" value="ID" type="hidden"/><input name="flowsubtable_Building_Enterprise_ID_ID_BuildingID_secondtableprimarykey" value="ID" type="hidden"/><input name="flowsubtable_Building_Enterprise_ID_ID_BuildingID_secondtablerelationfield" value="BuildingID" type="hidden"/></td><td>注册地</td><td>统一社会信用代码</td><td>税收解缴地</td><td>企业类型</td><td>入驻总面积</td><td>租用面积</td><td>自购面积</td><td></td></tr></thead><tbody><tr type1="listtr"><td colname="Building_Enterprise_Name" iscount="0"><input name="hidden_guid_Building_Enterprise_ID_ID_BuildingID" value="dba4211469ebbff6028f551d52f0ba5b" type="hidden"/><input name="flowsubid" value="Building_Enterprise_ID_ID_BuildingID" type="hidden"/><input class="mytext" issubflow="1" type1="subflow_text" name="Building_Enterprise_ID_ID_BuildingID_dba4211469ebbff6028f551d52f0ba5b_Building_Enterprise_Name" id="Building_Enterprise_ID_ID_BuildingID_dba4211469ebbff6028f551d52f0ba5b_Building_Enterprise_Name" colname="Building_Enterprise_Name" style="width:150px" maxlength="200" value="" valuetype="0" type="text"/></td><td colname="Building_Enterprise_ZCD" iscount="0"><input class="mytext" issubflow="1" type1="subflow_text" name="Building_Enterprise_ID_ID_BuildingID_dba4211469ebbff6028f551d52f0ba5b_Building_Enterprise_ZCD" id="Building_Enterprise_ID_ID_BuildingID_dba4211469ebbff6028f551d52f0ba5b_Building_Enterprise_ZCD" colname="Building_Enterprise_ZCD" style="width:150px" maxlength="200" value="" valuetype="0" type="text"/></td><td colname="Building_Enterprise_TYSHXYDM" iscount="0"><input class="mytext" issubflow="1" type1="subflow_text" name="Building_Enterprise_ID_ID_BuildingID_dba4211469ebbff6028f551d52f0ba5b_Building_Enterprise_TYSHXYDM" id="Building_Enterprise_ID_ID_BuildingID_dba4211469ebbff6028f551d52f0ba5b_Building_Enterprise_TYSHXYDM" colname="Building_Enterprise_TYSHXYDM" style="width:150px" maxlength="50" value="" valuetype="0" type="text"/></td><td colname="Building_Enterprise_CSJJD" iscount="0"><input class="mytext" issubflow="1" type1="subflow_text" name="Building_Enterprise_ID_ID_BuildingID_dba4211469ebbff6028f551d52f0ba5b_Building_Enterprise_CSJJD" id="Building_Enterprise_ID_ID_BuildingID_dba4211469ebbff6028f551d52f0ba5b_Building_Enterprise_CSJJD" colname="Building_Enterprise_CSJJD" style="width:150px" maxlength="100" value="" valuetype="0" type="text"/></td><td colname="Building_Enterprise_Type" iscount="0"><select class="myselect" name="Building_Enterprise_ID_ID_BuildingID_dba4211469ebbff6028f551d52f0ba5b_Building_Enterprise_Type" id="Building_Enterprise_ID_ID_BuildingID_dba4211469ebbff6028f551d52f0ba5b_Building_Enterprise_Type" issubflow="1" type1="subflow_select" colname="Building_Enterprise_Type" style="width:150px"><option value=""></option>@Html.Raw(BDictionary.GetOptionsByID("379a7c62-5bf3-4653-9e62-2181344e7258".ToGuid(), RoadFlow.Platform.Dictionary.OptionValueField.ID, ""))</select></td><td colname="Building_Enterprise_InTotalArea" iscount="0"><input class="mytext" issubflow="1" type1="subflow_text" name="Building_Enterprise_ID_ID_BuildingID_dba4211469ebbff6028f551d52f0ba5b_Building_Enterprise_InTotalArea" id="Building_Enterprise_ID_ID_BuildingID_dba4211469ebbff6028f551d52f0ba5b_Building_Enterprise_InTotalArea" colname="Building_Enterprise_InTotalArea" value="" valuetype="1" type="text"/></td><td colname="Building_Enterprise_RentArea" iscount="0"><input class="mytext" issubflow="1" type1="subflow_text" name="Building_Enterprise_ID_ID_BuildingID_dba4211469ebbff6028f551d52f0ba5b_Building_Enterprise_RentArea" id="Building_Enterprise_ID_ID_BuildingID_dba4211469ebbff6028f551d52f0ba5b_Building_Enterprise_RentArea" colname="Building_Enterprise_RentArea" value="" valuetype="1" type="text"/></td><td colname="Building_Enterprise_PersonalUseArea" iscount="0"><input class="mytext" issubflow="1" type1="subflow_text" name="Building_Enterprise_ID_ID_BuildingID_dba4211469ebbff6028f551d52f0ba5b_Building_Enterprise_PersonalUseArea" id="Building_Enterprise_ID_ID_BuildingID_dba4211469ebbff6028f551d52f0ba5b_Building_Enterprise_PersonalUseArea" colname="Building_Enterprise_PersonalUseArea" value="" valuetype="1" type="text"/></td><td><input class="mybutton" style="margin-right:4px;" value="增加" onclick="formrun.subtableNewRow(this);" type="button"/><input class="mybutton" value="删除" onclick="formrun.subtableDeleteRow(this);" type="button"/></td></tr></tbody></table></td></tr></tbody></table><p><br/></p>

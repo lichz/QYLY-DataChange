@@ -1,0 +1,39 @@
+﻿@model List<RoadFlow.Data.Model.SMSModel>
+@{ViewBag.Title = "Index";}
+@Html.AntiForgeryToken()
+<div style=" padding:10px;"><input class="mybutton" type="button" value="短信发送" style="margin:0;" title="短信发送" onclick="send()"></div>
+<table class="mygrid">
+    <thead>
+        <tr>
+            <th>短信内容</th>
+            <th>发送给</th>
+            <th>发送时间</th>
+            <th>发送人</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>@item.Content</td>
+                <td>@item.SendTo</td>
+                <td>@item.CreateTime.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@item.SendUserName</td>
+            </tr>
+        }
+        <tr>
+            <td colspan="4" style="text-align:right; padding-right:20px;"></td>
+        </tr>
+    </tbody>
+</table>
+<div>@Html.Raw(ViewBag.Pager)</div>
+<script>
+    var dialog = top.mainDialog;
+    var appid = "@Request["appid"]";
+    var iframeid = "@Request["tabid"]";
+    function send() {
+        dialog.open({ id: "window_" + appid.replaceAll('-', ''), title: "短信发送", width: 800, height: 320, url: top.rootdir + "/SMS/Send", openerid: iframeid });
+    }
+    $(function () {
+        var dataGrid = new RoadUI.Grid({ table: $(".mygrid") });
+    });
+</script>

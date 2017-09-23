@@ -1,0 +1,40 @@
+﻿@{
+	string FlowID = Request.QueryString["flowid"];
+	string StepID = Request.QueryString["stepid"];
+	string GroupID = Request.QueryString["groupid"];
+	string TaskID = Request.QueryString["taskid"];
+	string InstanceID = Request.QueryString["instanceid"];
+	string DisplayModel = Request.QueryString["display"] ?? "0";
+	string DBConnID = "06075250-30dc-4d32-bf97-e922cb30fac8";
+	string DBTable = "b_information";
+	string DBTablePK = "ids";
+	string DBTableTitle = "title";
+	RoadFlow.Platform.Dictionary BDictionary = new RoadFlow.Platform.Dictionary();
+	RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
+	RoadFlow.Platform.WorkFlowTask BWorkFlowTask = new RoadFlow.Platform.WorkFlowTask();
+	string fieldStatus = BWorkFlow.GetFieldStatus(FlowID, StepID);
+	LitJson.JsonData initData = BWorkFlow.GetFormData(DBConnID, DBTable, DBTablePK, InstanceID, fieldStatus);
+	string TaskTitle = BWorkFlow.GetFromFieldData(initData, DBTable, DBTableTitle);
+}
+<link href="~/Scripts/FlowRun/Forms/flowform.css" rel="stylesheet" type="text/css" />
+<script src="~/Scripts/FlowRun/Forms/common.js" type="text/javascript" ></script>
+<script src="~/Scripts/Ueditor/ueditor.config.js" type="text/javascript" ></script>
+<script src="~/Scripts/Ueditor/ueditor.all.min.js" type="text/javascript" ></script>
+<script src="~/Scripts/Ueditor/lang/zh-cn/zh-cn.js" type="text/javascript" ></script>
+<input type="hidden" id="Form_HasUEditor" name="Form_HasUEditor" value="1" />
+<input type="hidden" id="Form_ValidateAlertType" name="Form_ValidateAlertType" value="1" />
+<input type="hidden" id="Form_TitleField" name="Form_TitleField" value="b_information.title" />
+<input type="hidden" id="Form_DBConnID" name="Form_DBConnID" value="06075250-30dc-4d32-bf97-e922cb30fac8" />
+<input type="hidden" id="Form_DBTable" name="Form_DBTable" value="b_information" />
+<input type="hidden" id="Form_DBTablePk" name="Form_DBTablePk" value="ids" />
+<input type="hidden" id="Form_DBTableTitle" name="Form_DBTableTitle" value="title" />
+<input type="hidden" id="Form_AutoSaveData" name="Form_AutoSaveData" value="1" />
+<script type="text/javascript">
+	var initData = @Html.Raw(BWorkFlow.GetFormDataJsonString(initData));
+	var fieldStatus = @Html.Raw(fieldStatus);
+	var displayModel = '@DisplayModel';
+	$(window).load(function (){
+		formrun.initData(initData, "b_information", fieldStatus, displayModel);
+	});
+</script>
+<p> </p><p style="text-align: center;"> <span style="font-size: 24px;"></span></p><p style="text-align: center;"><span style="font-size: 24px;"><strong>信 息 发 布</strong></span></p><p style="text-align: center;"> </p><table class="flowformtable" cellspacing="1" cellpadding="0"><tbody><tr class="firstRow"><td width="81" valign="top" style="-ms-word-break: break-all;">标题：<br/></td><td width="1036" valign="top"><input type="text" id="b_information.title" type1="flow_text" name="b_information.title" value="" style="width:80%" maxlength="255" valuetype="0" isflow="1" class="mytext" title=""/></td></tr><tr><td width="81" valign="top" style="word-break: break-all;">简介：<br/></td><td width="1036" valign="top" style="word-break: break-all;" align="left"><textarea isflow="1" type1="flow_textarea" id="b_information.intro" name="b_information.intro" class="mytext" style="width:80%;height:70px" maxlength="255"></textarea></td></tr><tr><td width="81" valign="top" style="-ms-word-break: break-all;">分类：<br/></td><td width="1036" valign="top" style="-ms-word-break: break-all;"><input type="hidden" id="b_information.releasePerson" name="b_information.releasePerson" type1="flow_hidden" value="@(new RoadFlow.Platform.Users().GetName(new RoadFlow.Platform.WorkFlowTask().GetFirstSnderID(FlowID.ToGuid(), GroupID.ToGuid(), true)))"/><select class="myselect" id="b_information.type" name="b_information.type" style="width:300px" isflow="1" type1="flow_select"><option value="4">先进性表彰</option><option value="3">通知公告</option><option value="5">党务建设</option><option value="2">新闻动态</option><option value="6">企业廉洁文化</option><option value="1">工作信息</option></select><input type="hidden" id="b_information.clickNum" name="b_information.clickNum" type1="flow_hidden" value="0"/><input type="hidden" id="b_information.releaseDate" name="b_information.releaseDate" type1="flow_hidden" value="@(RoadFlow.Utility.DateTimeNew.ShortDate)"/><input type="text" id="b_information.isimportant" type1="flow_text" name="b_information.isimportant" value="0" valuetype="0" isflow="1" class="mytext" title=""/></td></tr><tr><td width="81" valign="top" style="-ms-word-break: break-all;">内容：<br/></td><td width="1036" valign="top" style="-ms-word-break: break-all;"><textarea isflow="1" model="html" type1="flow_textarea" id="b_information.content" name="b_information.content" class="mytextarea" style="width:99%;height:350px">@Html.Raw(BWorkFlow.GetFromFieldData(initData, "b_information","content"))</textarea></td></tr><tr><td valign="top" colspan="1" rowspan="1" style="word-break: break-all;">附件：</td><td valign="top" colspan="1" rowspan="1"><input type="text" type1="flow_files" id="b_information.picturePath" name="b_information.picturePath" value="" style="width:200px" filetype="" isflow="1" class="myfile" title=""/></td></tr></tbody></table><p> </p>

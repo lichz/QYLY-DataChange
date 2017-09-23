@@ -1,0 +1,63 @@
+﻿@model RoadFlow.Data.Model.PostModel
+@{
+    Page.CheckApp = false;
+    ViewBag.Title = "Edit";
+}
+<script type="text/javascript">
+    var win = new RoadUI.Window();
+    var validate = new RoadUI.Validate();
+</script>
+<form action="" method="post">
+    @Html.AntiForgeryToken()
+    <br />
+    <table cellpadding="0" cellspacing="1" border="0" width="99%" class="formtable">
+        <tr>
+            <th style="width: 80px;">标题：</th>
+            <td style="width:40%"><input type="text" name="Title" class="mytext" value="@Model.Title" validate="empty" maxlength="100"  style="width: 200px;" /></td>
+            <th style="width: 80px;">类型：</th>
+            <td style="width: 40%">
+                <select name="Type" id="Type"  validate="empty">
+                    <option value="求租">求租</option>
+                    <option value="寻租">寻租</option>
+                    <option value="求售">求售</option>
+                    <option value="寻售">寻售</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th style="width: 80px;">地点：</th>
+            <td style="width:40%"><input type="text" name="Adresse" class="mytext" value="@Model.Adresse"   validate="empty" maxlength="100"  style="width: 200px;" /></td>
+            <th style="width: 80px;">面积(㎡)：</th>
+            <td style="width: 40%"><input type="text" name="Acreage" class="mytext" value="@Model.Acreage"  validate="empty,numeric" maxlength="20" style="width: 100px;" /></td>
+        </tr>
+        <tr>
+            <th style="width: 80px;">联系电话：</th>
+            <td style="width:40%"><input type="text" name="Mobile" class="mytext" value="@Model.Mobile"  validate="empty" maxlength="20" style="width: 200px;" /></td>
+            <th style="width: 80px;">状态：</th>
+            <td style="width:40%">
+                <select name="IsValid" id="IsValid"  validate="empty">
+                    <option value="0">有效</option>
+                    <option value="1">过期</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>内容：</th>
+            <td colspan="3"><textarea isflow="1" type1="flow_textarea" id="Announcement.Contents" class="Content" name="Content" style="width: 85%; height: 100px"  validate="empty">@Model.Contents</textarea></td>
+        </tr>
+    </table>
+    <div class="buttondiv">
+        <input type="submit" value="确定保存" class="mybutton" onclick="return validate.validateForm(document.forms[0]);" />
+        <input type="button" class="mybutton" value="取消关闭" style="margin-left: 5px;" onclick="closewin()" />
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            $("#IsValid").val(@Model.IsValid);
+            $("#Type").val("@Model.Type");
+            @Html.Raw(ViewBag.Script)
+        });
+        function closewin() {
+            win.close();
+        }
+    </script>
+</form>

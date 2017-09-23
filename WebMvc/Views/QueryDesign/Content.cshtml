@@ -1,0 +1,171 @@
+﻿@using RoadFlow.Utility
+@using RoadFlow.Data.Model
+@{
+    ViewBag.Title = "Content";
+}
+@model Dictionary<string, string>
+<style>
+  .gridpager{text-align:center!important}
+</style>
+<script type="text/javascript" src="/Scripts/roadui.editor.js"></script>
+
+<form action="" method="post">
+    @Html.AntiForgeryToken()
+    @{
+        string str = (string)ViewBag.SearchJson;
+        var list = new List<Element>();
+        if (!str.IsNullOrEmpty())
+        {
+            list = str.JsonConvertModel<List<Element>>();
+        }
+    } 
+    <table cellpadding="0" cellspacing="1" border="0" width="100%" class="formtable">
+        <tr>
+            <th style="width:120px;">
+                名称:
+            </th>
+            <td>
+                <input type="text" class="mytext" id="SJCXNAMEFVHJ" name="SJCXNAMEFVHJ" value="@ViewBag.Name" style="width:200px" required="required"  />
+            </td>
+        </tr>
+    </table>
+    <table class="mygrid ">
+        <thead>
+            <tr>
+                <th style="width:200px">配置中文字段名称</th>
+                <th style="width:120px">配置英文字段名称</th>
+                <th style="width:120px">匹配类型</th>
+                <th style="width:200px">数据源</th>
+                <th style="width:80px">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var nameval = "";
+                var input = "";
+                var option = "<option value='text'>文字匹配</option> <option value='int'>数字区间匹配</option><option value='date'>时间区间匹配</option><option value='select'>选项匹配</option>";
+                if (!list.IsNullObj() && list.Count > 0)
+                {
+                    foreach (var qure in list)
+                    {
+                        nameval = qure.title;
+                        option = string.Format("<option value='text' {0}>文字匹配</option>", qure.type == "text" ? "selected='selected'" : "");
+                        option += string.Format("<option value='int' {0}>数字区间匹配</option>", qure.type == "int" ? "selected='selected'" : "");
+                        option += string.Format("<option value='date' {0}>时间区间匹配</option>", qure.type == "date" ? "selected='selected'" : "");
+                        option += string.Format("<option value='select' {0}>选项匹配</option>", qure.type == "select" ? "selected='selected'" : "");
+                        if (qure.type == "select")
+                        {
+                            input = "<input type='button'  value='编辑数据源' onclick='openSelectSet(" + qure.name + ")'/><input type='hidden' id='" + qure.name + "' name='result' value='" + qure.ToJson() + "' />";
+                        }
+                        else
+                        {
+                            input = "<input type='hidden' id='" + qure.name + "' name='result'  value='" + qure.ToJson() + "'/>";
+                        }
+                        <tr>
+                            <td><input type="text" style="width:90%"  value="@nameval" onchange="op_title_change(this,'@qure.name')"/></td>
+                            <td><input type="text" style="width:90%"  value="@qure.name" onchange="op_key_change(this,'@qure.name')"/></td>
+                            <td>
+                                <select style="width:90%" class="myselect" @*id="@qure.name"*@ title="@nameval" name="@qure.name" onchange="op_change(this)">
+                                    <option></option>
+                                    @Html.Raw(option)
+                                </select>
+                            </td>
+                            <td>
+                               @Html.Raw(input)
+                            </td>
+                            <td></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    foreach (var qure in Model)
+                    {
+                        nameval = qure.Value;
+                        <tr>
+                            <td><input type="text" style="width:90%"  value="@nameval" onchange="op_title_change(this,'@qure.Key')"/></td>
+                            <td><input type="text" style="width:90%"  value="@qure.Key" onchange="op_key_change(this,'@qure.Key')"/></td>
+                            <td>
+                                <select style="width:90%" class="myselect" @*id="@qure.Key"*@ title="@nameval" name="@qure.Key" onchange="op_change(this)">
+                                    <option></option>
+                                    @Html.Raw(option)
+                                </select>
+                            </td>
+                            <td>
+                               @Html.Raw(input)
+                            </td>
+                            <td></td>
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+ 
+    <div class="buttondivs">
+        <input type="submit" name="save" value="确定保存" class="mybutton" />
+    </div>
+</form>
+
+<script type="text/javascript">
+    var appid = '@Request.QueryString["appid"]';
+    var iframeid = '@Request.QueryString["tabid"]';
+    var query = '@Html.Raw(ViewBag.Query)';
+    var dataGrid;
+    var formattributeJSON = { hasEditor: "0" };
+    formattributeJSON.dbconn = '@ViewBag.Connid';
+    formattributeJSON.dbtable = '@ViewBag.TableName';
+
+    $(function () {
+        var dataGrid = new RoadUI.Grid({ table: $(".mygrid") });
+    });
+
+    $(window).load(function () {
+            @Html.Raw(ViewBag.Script)
+    });
+
+    function op_title_change(obj, str) {
+        var val = obj.value;
+        var $tbl = $("table tbody tr td");
+        var $select = $("select[id = '" + str + "']", $tbl);
+        $select.attr("title", val);
+    }
+
+    function op_key_change(obj, str) {
+        var val = obj.value;
+        var $tbl = $("table tbody tr td");
+        var $select = $("select[id = '" + str + "']", $tbl);
+        $select.attr("name", val);
+    }
+
+    function op_change(select) {
+        if ($(select).val() == 'select') {
+            $(select).parent().next().html("<input type='button'  value='编辑数据源' onclick='openSelectSet(" + $(select).attr('name') + ")'/><input type='hidden' id='" + $(select).attr('name') + "' name='result' />");
+        }
+        else if ($(select).val() == '') {
+            $(select).parent().next().html('');
+        }
+        else {
+            var obj = "{'name':'" + $(select).attr('name') + "','type':'" + $(select).val() + "','title':'" + $(select).attr('title') + "'}";
+            $(select).parent().next().html("<input type='hidden' id='" + $(select).attr('name') + "' name='result'  value=" + obj + " />");
+        }
+    }
+    //下拉列表框
+    function openSelectSet(name) {
+        var DataInput = $("input[id='" + $(name).attr("name") + "']").val();
+        var title = $(name).prop('title');
+        $(".gridpager").hide();
+        new RoadUI.Window().open(
+            {
+                title: "",
+                width: 600,
+                height: 400,
+                ismodal: true,
+                url: top.rootdir + "/Scripts/QueryDesign/select.aspx?appid\x3d" + appid + "&name=" + $(name).prop('name') + "&data=" + escape(DataInput) + "&title=" + title,
+                openerid: "",
+                resize: !1
+            })
+    }
+</script>
+
+

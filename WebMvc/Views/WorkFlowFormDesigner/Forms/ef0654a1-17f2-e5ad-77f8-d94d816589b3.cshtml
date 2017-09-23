@@ -1,0 +1,58 @@
+﻿@{
+	string FlowID = Request.QueryString["flowid"];
+	string StepID = Request.QueryString["stepid"];
+	string GroupID = Request.QueryString["groupid"];
+	string TaskID = Request.QueryString["taskid"];
+	string InstanceID = Request.QueryString["instanceid"];
+	string DisplayModel = Request.QueryString["display"] ?? "0";
+	string DBConnID = "54ae6b67-aa84-4467-980b-fe8661bf0f67";
+	string DBTable = "OA_Enterprise";
+	string DBTablePK = "ID";
+	string DBTableTitle = "Name";
+	RoadFlow.Platform.Dictionary BDictionary = new RoadFlow.Platform.Dictionary();
+	RoadFlow.Platform.WorkFlow BWorkFlow = new RoadFlow.Platform.WorkFlow();
+	RoadFlow.Platform.WorkFlowTask BWorkFlowTask = new RoadFlow.Platform.WorkFlowTask();
+	string fieldStatus = BWorkFlow.GetFieldStatus(FlowID, StepID);
+	LitJson.JsonData initData = BWorkFlow.GetFormData(DBConnID, DBTable, DBTablePK, InstanceID, fieldStatus);
+	string TaskTitle = BWorkFlow.GetFromFieldData(initData, DBTable, DBTableTitle);
+}
+<link href="~/Scripts/FlowRun/Forms/flowform.css" rel="stylesheet" type="text/css" />
+<script src="~/Scripts/FlowRun/Forms/common.js" type="text/javascript" ></script>
+<input type="hidden" id="Form_ValidateAlertType" name="Form_ValidateAlertType" value="1" />
+<input type="hidden" id="Form_TitleField" name="Form_TitleField" value="OA_Enterprise.Name" />
+<input type="hidden" id="Form_DBConnID" name="Form_DBConnID" value="54ae6b67-aa84-4467-980b-fe8661bf0f67" />
+<input type="hidden" id="Form_DBTable" name="Form_DBTable" value="OA_Enterprise" />
+<input type="hidden" id="Form_DBTablePk" name="Form_DBTablePk" value="ID" />
+<input type="hidden" id="Form_DBTableTitle" name="Form_DBTableTitle" value="Name" />
+<input type="hidden" id="Form_AutoSaveData" name="Form_AutoSaveData" value="1" />
+
+
+<style>
+    .map{display:none;position:absolute;width:400px;height:400px;left:200px;top:50px;}
+</style>
+<div class="map" id="map"></div>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=72f51002473d365dcc093849d5da0f44"></script>
+<script type="text/javascript">
+    // 百度地图API功能
+    var map = new BMap.Map("map");
+    map.centerAndZoom(new BMap.Point(104.06965,30.681704), 11);  // 初始化地图,设置中心点坐标和地图级别
+    //map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
+    map.setCurrentCity("青羊");          // 设置地图显示的城市 此项是必须设置的
+    map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放    function showInfo(e){
+        alert(e.point.lng + ", " + e.point.lat);
+    }
+    map.addEventListener("click", showInfo);
+</script>
+
+<script type="text/javascript">
+	var initData = @Html.Raw(BWorkFlow.GetFormDataJsonString(initData));
+	var fieldStatus = @Html.Raw(fieldStatus);
+	var displayModel = '@DisplayModel';
+	$(window).load(function (){
+		formrun.initData(initData, "OA_Enterprise", fieldStatus, displayModel);
+	});
+
+	dialog.open({ id: "window_" + appid.replaceAll('-', ''), title: "地图描点", width: 900, height: 580, top: 200, url: top.rootdir + '/QueryDesign/map.aspx?name=' + $().prop("name") + '@ViewBag.Query1', openerid: iframeid });
+</script>
+ 
+<p><br/></p><p><br/></p><table class="flowformtable" cellpadding="0" cellspacing="1" data-sort="sortDisabled"><tbody><tr class="firstRow"><td width="203" valign="middle" style="word-break: break-all;" align="center"><span style="font-family: 宋体, SimSun; font-size: 14px;">企业名称</span><span style="font-family: 宋体, SimSun; font-size: 14px;"></span></td><td valign="top" style="word-break: break-all;" rowspan="1" colspan="3" width="1109"><input type="text" id="OA_Enterprise.Name" type1="flow_text" name="OA_Enterprise.Name" value="" style="width:80%" maxlength="500" valuetype="0" isflow="1" class="mytext" title=""/></td></tr><tr><td width="203" valign="middle" align="center" style="word-break: break-all;"><span style="font-size:14px;font-family:宋体">地址</span></td><td valign="top" rowspan="1" colspan="3" style="word-break: break-all;" width="965"><input type="text" id="OA_Enterprise.Adress" type1="flow_text" name="OA_Enterprise.Adress" value="" style="width:80%" maxlength="500" valuetype="0" isflow="1" class="mytext" title=""/></td></tr><tr><td width="203" valign="middle" align="center" style="word-break: break-all;"><span style="font-size:14px;font-family:宋体">法人</span></td><td valign="top" rowspan="1" colspan="3" style="word-break: break-all;" width="965"><input type="text" id="OA_Enterprise.ArtPerson" type1="flow_text" name="OA_Enterprise.ArtPerson" value="" style="width:80%" maxlength="25" valuetype="0" isflow="1" class="mytext" title=""/></td></tr><tr><td width="203" valign="middle" align="center" style="word-break: break-all;"><span style="font-size:14px;font-family:宋体">电话</span></td><td valign="top" rowspan="1" colspan="3" style="word-break: break-all;" width="965"><input type="text" id="OA_Enterprise.TelePhone" type1="flow_text" name="OA_Enterprise.TelePhone" value="" style="width:80%" maxlength="15" valuetype="0" isflow="1" class="mytext" title=""/></td></tr><tr><td width="203" valign="middle" align="center" style="word-break: break-all;"><span style="font-size:14px;font-family:宋体">经办人</span></td><td valign="top" rowspan="1" colspan="3" style="word-break: break-all;" width="965"><input type="text" id="OA_Enterprise.Agent" type1="flow_text" name="OA_Enterprise.Agent" value="" style="width:80%" maxlength="25" valuetype="0" isflow="1" class="mytext" title=""/></td></tr><tr><td width="203" valign="middle" align="center" style="word-break: break-all;"><span style="font-size:14px;font-family:宋体">行业</span></td><td valign="top" rowspan="1" colspan="3" width="965" style="word-break: break-all;"><select class="myselect" id="OA_Enterprise.Industry" name="OA_Enterprise.Industry" style="width:300px" isflow="1" type1="flow_select">@Html.Raw(BDictionary.GetOptionsByID("f50a2303-c34a-4267-b2d1-cf21451d822e".ToGuid(), RoadFlow.Platform.Dictionary.OptionValueField.ID, ""))</select></td></tr><tr><td width="203" valign="middle" align="center" style="word-break: break-all;"><span style="font-size:14px;font-family:宋体">规模</span></td><td valign="top" rowspan="1" colspan="3" width="965" style="word-break: break-all;"><p><select class="myselect" id="OA_Enterprise.Scale" name="OA_Enterprise.Scale" style="width:300px" isflow="1" type1="flow_select">@Html.Raw(BDictionary.GetOptionsByID("494797de-911c-4d63-b59a-5f3e2e05811a".ToGuid(), RoadFlow.Platform.Dictionary.OptionValueField.ID, ""))</select><input type="hidden" id="OA_Enterprise.AddPerson" name="OA_Enterprise.AddPerson" type1="flow_hidden" value="@(new RoadFlow.Platform.Users().GetName(new RoadFlow.Platform.WorkFlowTask().GetFirstSnderID(FlowID.ToGuid(), GroupID.ToGuid(), true)))"/><input type="hidden" id="OA_Enterprise.AddTime" name="OA_Enterprise.AddTime" type1="flow_hidden" value="@(RoadFlow.Utility.DateTimeNew.ShortDateTime)"/><br/></p></td></tr><tr><td width="203" valign="middle" align="center" style="word-break: break-all;"><span style="font-size:14px;font-family:宋体">产值</span></td><td valign="top" rowspan="1" colspan="3" style="word-break: break-all;" width="965"><input type="text" id="OA_Enterprise.GDP" type1="flow_text" name="OA_Enterprise.GDP" value="" style="width:78%" maxlength="20" valuetype="4" isflow="1" class="mytext" title=""/>万</td></tr><tr><td width="203" valign="middle" align="center" style="word-break: break-all;"><span style="font-size:14px;font-family:宋体">技术人员信息</span></td><td valign="top" style="word-break: break-all;" rowspan="1" colspan="3" width="965"><textarea isflow="1" type1="flow_textarea" id="OA_Enterprise.Artisan" name="OA_Enterprise.Artisan" class="mytext" style="width:80%;height:80px" maxlength="1000"></textarea></td></tr><tr><td width="203" valign="middle" align="center" style="word-break: break-all;"><span style="font-size:14px;font-family:宋体">管理人员信息</span></td><td valign="top" rowspan="1" colspan="3" style="word-break: break-all;" width="965"><textarea isflow="1" type1="flow_textarea" id="OA_Enterprise.Manage" name="OA_Enterprise.Manage" class="mytext" style="width:80%;height:80px" maxlength="1000"></textarea></td></tr><tr><td valign="middle" colspan="1" rowspan="1" style="word-break: break-all;" align="center" width="203"><span style="font-size:14px;font-family:宋体">学历信息</span></td><td valign="top" colspan="3" rowspan="1" style="word-break: break-all;" width="965"><textarea isflow="1" type1="flow_textarea" id="OA_Enterprise.Education" name="OA_Enterprise.Education" class="mytext" style="width:80%;height:80px" maxlength="1000"></textarea></td></tr><tr><td valign="middle" colspan="1" rowspan="1" align="center" style="word-break: break-all;" width="203"><span style="font-size:14px;font-family:宋体">是否有工会（人数）</span></td><td valign="top" colspan="3" rowspan="1" style="word-break: break-all;" width="965"><input type="radio" name="OA_Enterprise.Istrade" id="OA_Enterprise.Istrade_0" value="True" style="vertical-align:middle;" isflow="1" type1="flow_radio"/><label for="OA_Enterprise.Istrade_0" style="vertical-align:middle;margin-right:3px;">是</label><input type="radio" name="OA_Enterprise.Istrade" id="OA_Enterprise.Istrade_1" value="False" style="vertical-align:middle;" isflow="1" type1="flow_radio"/><label for="OA_Enterprise.Istrade_1" style="vertical-align:middle;margin-right:3px;">否</label><input type="text" id="OA_Enterprise.TradeNum" type1="flow_text" name="OA_Enterprise.TradeNum" value="" style="width:200px" maxlength="300" valuetype="0" isflow="1" class="mytext" title=""/></td></tr><tr><td valign="middle" colspan="1" rowspan="1" align="center" width="203" style="word-break: break-all;"><span style="font-size:14px;font-family:宋体">是否有党组织<span style="font-family: 宋体; font-size: 14px; text-align: -webkit-center;">（人数）</span></span></td><td valign="top" colspan="3" rowspan="1" style="word-break: break-all;" width="906"><input type="radio" name="OA_Enterprise.IsParty" id="OA_Enterprise.IsParty_0" value="True" style="vertical-align:middle;" isflow="1" type1="flow_radio"/><label for="OA_Enterprise.IsParty_0" style="vertical-align:middle;margin-right:3px;">是</label><input type="radio" name="OA_Enterprise.IsParty" id="OA_Enterprise.IsParty_1" value="False" style="vertical-align:middle;" isflow="1" type1="flow_radio"/><label for="OA_Enterprise.IsParty_1" style="vertical-align:middle;margin-right:3px;">否</label><input type="text" id="OA_Enterprise.PartyNum" type1="flow_text" name="OA_Enterprise.PartyNum" value="" style="width:200px" maxlength="10" valuetype="3" isflow="1" class="mytext" title=""/></td></tr><tr><td valign="middle" colspan="1" rowspan="1" align="center" width="203" style="word-break: break-all;"><span style="font-size:14px;font-family:宋体">税收缴纳</span></td><td valign="top" colspan="3" rowspan="1" style="word-break: break-all;" width="965"><input type="text" id="OA_Enterprise.Tax" type1="flow_text" name="OA_Enterprise.Tax" value="" style="width:78%" maxlength="25" valuetype="4" isflow="1" class="mytext" title=""/>万</td></tr></tbody></table><p><br/></p>

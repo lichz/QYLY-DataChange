@@ -1,0 +1,105 @@
+﻿@model RoadFlow.Data.Model.SMSModel
+@using RoadFlow.Data.Model
+@using RoadFlow.Utility;
+@{ViewBag.Title = "Send"; Page.CheckApp = false;}
+<link type="text/css" rel="stylesheet" href="/Scripts/FlowRun/Forms/flowform.css">
+<form method="post">
+    @Html.AntiForgeryToken()
+    @*<div class="toolbar" style="margin-top:0; border-top:none 0; position:fixed; top:0; left:0; right:0; margin-left:auto; z-index:999; width:100%; margin-right:auto; height:26px;">
+        <div style="padding-left:10px;">
+            <a href="#" onclick="save(); return false;" title="可先保存，下次再发送">
+                <span style="background:url(/Images/ico/save.gif) no-repeat left center;">保存</span>
+            </a>
+            <a href="#" onclick="send(); return false;" title="发送给选中的人">
+                <span style="background:url(/Images/ico/arrow_medium_right.png) no-repeat left center;">发送</span>
+            </a>
+        </div>
+    </div>*@
+    <p>&nbsp;</p>
+    <table class="flowformtable" cellspacing="1" cellpadding="0" data-sort="sortDisabled" style="">
+        <tbody>
+            @*<tr>
+                <td colspan="3">
+                    <span class="tip">提示:可以先保存，下次修改好内容之后再发送。</span>
+                </td>
+            </tr>*@
+            <tr>
+                <td style="vertical-align:top; width:60px;">短信内容</td>
+                <td colspan="2">@Html.TextAreaFor(Model => Model.Content, new { style = "width:500px; height:100px;" })</td>
+            </tr>
+            <tr>
+                <td style=" border-right:0;"></td>
+                <td colspan="2" style=" padding-left:10px;">
+                    还能输入<span id="enter">100</span>个字
+                </td>
+            </tr>
+            <tr>
+                <td>发送给</td>
+                <td colspan="2">
+                    @*<input type="text" class="mymember" rootid="9bc2d1bf-8c21-477a-b41b-64549ce044cf" unit='1' dept='1' station='1' workgroup='1' user='1' value="" id="user_e4f51e3d-bab6-4e95-b513-377840c35a3b" name="user_e4f51e3d-bab6-4e95-b513-377840c35a3b" style="width:280px;" title="选择发送给谁" />*@
+                    <input type="text" class="mymember" value="" id="SendTo" name="SendTo" style="width:280px;" title="选择发送给谁" /><span class="tip">*可以选组织，比如青羊商务局或街道办，发给该组织的所有人。</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2"></td>
+                <td>
+                    <input class="button1" type="button" value="发送" style="margin:0;" title="发送" onclick="send()">
+                </td>
+            </tr>
+            @*<tr>
+                <td style="width:80px;">发送时间</td>
+                <td>
+                    @Html.TextBoxFor(Model => Model.SendTime, new { @class = "mycalendar",istime="true" })
+                </td>
+                <td><span class="tip"><span style="color:red;">*</span>可以不填写，不填写即立即发送，如果填写时间，则会按照填写时间发送。</span></td>
+            </tr>*@
+        </tbody>
+    </table>
+</form>
+@if (ViewBag.Success != null && (bool)ViewBag.Success) {
+    <script>
+        $(function () {
+            alert("发送成功！");
+            new RoadUI.Window().reloadOpener(); new RoadUI.Window().close();
+        });
+    </script>
+}
+<script>
+    var maxLength = 100;
+    $(function () {
+        var val = $("#Content").val();
+        $("#enter").html(maxLength - val.length);
+        $("#Content").keyup(function () {
+            var val = $("#Content").val();
+            $("#enter").html(maxLength-val.length);
+        });
+    });
+
+    //把短信内容先保存
+    //function save() {
+    //    var content = $("#Content").val();
+    //    if (content.trim() != "") {
+    //        $("form").submit();
+    //    }
+    //}
+    //发送
+    @*function send() {
+        var path = "@Url.Action("Send")";
+        var content = $("#Content").val();
+        var time = 
+        $.ajax({
+            url: path,
+            context: content,
+
+        }).done(function () {
+            $(this).addClass("done");
+        });
+    }*@
+    function send() {
+        var content = $("#Content").val();
+        var sendTo = $("#SendTo").val();
+        if (content.trim() != ""&&sendTo.trim()!="") {
+            $("form").submit();
+        }
+    }
+</script>

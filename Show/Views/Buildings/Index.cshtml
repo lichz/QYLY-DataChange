@@ -1,0 +1,168 @@
+﻿@{
+    ViewBag.Title = "楼宇展示";
+}
+@model BuildingIndexViewModel
+<style>
+    .first_nav > li > ul > li > a {
+        width: 100%;
+        display: inline-block;
+    }
+</style>
+<!-- banner start -->
+<div class="d_banner">
+    <img src="~/Images/banner01.jpg" />
+</div>
+<!-- banner end -->
+<!-- content start -->
+<div class="show_cnt w1200 m0a clearfix">
+    <div class="asd_nav fl">
+        <h4><img src="~/Images/show_tit.jpg"></h4>
+        <ul class="first_nav">
+            <li class="val1" val1="已建楼宇">
+                已建楼宇
+                <ul class="senc_nav">
+                    <li class="on"><a href="javascript:;" data-jsjd="@Model.BuildedID" data-typeid="@Model.ImportantID">重点楼宇</a></li>
+                    <li><a href="javascript:;" data-jsjd="@Model.BuildedID" data-typeid="@Model.OtherID">其他楼宇</a></li>
+                </ul>
+            </li>
+            <li class="val1" val1="在建楼宇">
+                在建楼宇
+                <ul class="senc_nav dn">
+                    <li><a href="javascript:;" data-jsjd="@Model.BuildingID" data-typeid="@Model.ImportantID">重点楼宇</a></li>
+                    <li><a href="javascript:;" data-jsjd="@Model.BuildingID" data-typeid="@Model.OtherID">其他楼宇</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="floor_cnt fr">
+        <div class="titbox clearfix">
+            <h4 id="title" class="fl">重点楼宇</h4>
+            <div class="fr mbx_nav">
+                你的当前位置：
+                <a href="~/Home/Index">首页 ></a>
+                <a href="~/Buildings/Index">楼宇展示 ></a>
+                <a id="parentTitle" href="javascript:;" class="now">重点楼宇</a>
+            </div>
+        </div>
+        <div class="search_box clearfix">
+            <div class="fl condition1 clearfix">
+                <label class="fl">所属街道办：</label>
+                <div class="fl diy_search pr">
+                    <span class="key_word1">--不限--</span>
+                    <ul class="key_list pa dn">
+                        <li class="mr">--不限--</li>
+                        @foreach (var item in Model.SSJD)
+                        {
+                            <li value="@item.ID">@item.Title</li>
+                        }
+                    </ul>
+                    <select class="dn" name="SSJD" id="SSJD">
+                        <option value="">--不限--</option>
+                        @foreach (var item in Model.SSJD)
+                        {
+                            <option value="@item.ID">@item.Title</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="fl condition1 clearfix">
+                <label class="fl">建筑面积：</label>
+                <div class="fl diy_search pr">
+                    <span class="key_word1">--不限--</span>
+                    <ul class="key_list pa dn">
+                        <li class="mr">--不限--</li>
+                        <li value=",5000">5000以下</li>
+                        <li value="5000,10000">5000-10000</li>
+                        <li value="10000,">10000以上</li>
+                    </ul>
+                    <select class="dn" name="ZMJ" id="ZMJ">
+                        <option value="">--不限--</option>
+                        <option value=",5000">5000以下</option>
+                        <option value="5000,10000">5000-10000</option>
+                        <option value="10000,">10000以上</option>
+                    </select>
+                </div>
+            </div>
+            <div class="fl condition1 clearfix">
+                <label class="fl">楼宇名称：</label>
+                <div class="fl diy_search pr">
+                    <input type="text" name="Name" id="Name" value="@Model.Name" />
+                </div>
+            </div>
+            <input class="submit01 fl" type="button" value="查询" onclick="getList(1)">
+        </div>
+        <div class="result">
+            共搜索出<span id="totalCount" class="result_count">@Model.BuildingCount</span>个结果
+        </div>
+        <div class="result_wrap">
+            <ul class="result_list clearfix">
+                @foreach (var item in Model.Buildings)
+                {
+                    <li class="fl">
+                        <div>
+                            <a href="@Url.Action("Details", new { id=item.ID})"><img src="@item.XGT"></a>
+                            <h5>@item.Name</h5>
+                            <p>面积：@item.ZJZMJ<span>平方米</span></p>
+                            <p>开发商：@item.LYGLYYF</p>
+                        </div>
+                    </li>
+                }
+            </ul>
+            <div class="page">
+                @Html.Raw(Model.Pager)
+            </div>
+        </div>
+    </div>
+</div>
+<!-- content end -->
+<script type="text/javascript">
+    var jsjd, typeid;
+    $(function () {
+        bind();
+        bindMenuClick();
+        $(".first_nav .on a:first").click();    
+    });
+
+    function getList(pageIndex) {
+        var ssjd = $("#SSJD").val();
+        var zmj = $("#ZMJ").val();
+        var name = $("#Name").val();
+        var verstion = new Date().getTime();
+        $.getJSON("@Url.Action("GetList")", { pageIndex: pageIndex, jsjd: jsjd, typeid: typeid, ssjd: ssjd, zmj: zmj, name: name, verstion: verstion }, function (result) {
+            if (result.success) {
+                $(".result_list").html(result.html);
+                $("#totalCount").html(result.totalCount);
+                $(".page").html(result.pager);
+                    bind();
+            }
+        }
+    )
+    };
+    
+    function bindMenuClick() {
+        $(".senc_nav li a").click(function () {
+            //赋筛选值jsjd,typeid;
+            jsjd = $(this).data("jsjd");
+            typeid = $(this).data("typeid");
+
+            //左侧导航高亮
+            $(".senc_nav li").removeClass("on");
+            $(this).parent().addClass("on");
+            //右侧title改变
+            var typeText = $(this).text();
+            $("#title").text(typeText);
+            //右侧位置改变
+            var tileName = $(this).parents('.val1').attr("val1");
+            $("#parentTitle").text(tileName);
+
+            getList(1);
+        });
+    }
+    //翻页点击绑定,跳转绑定
+    function bind() {
+        $(".page a").click(function () {
+            var index = $(this).data("val");
+            getList(index);
+        });
+    }
+</script>

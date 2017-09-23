@@ -1,0 +1,86 @@
+﻿@model RoadFlow.Web.Model.BuildingEnterpriseTaxImportViewModel
+@using RoadFlow.Data.Model
+@using RoadFlow.Utility;
+
+@{
+    ViewBag.Title = "Index";
+}
+<form method="post">
+    @Html.AntiForgeryToken()
+    <div class="querybar">
+        <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+            <tr>
+                <td>
+                    企业名称：<input type="text"  name="Name" id="Name" style="width:150px;" value="@Model.ParaName"/>
+                    <input type="hidden" id="query" name="query" value=""/>
+                    <input type="submit" name="Search" value="&nbsp;&nbsp;查&nbsp;询&nbsp;&nbsp;" class="mybutton" />
+                    @*<input type="button" name="Search" value="&nbsp;&nbsp;添&nbsp;加&nbsp;&nbsp;" class="mybutton" />*@
+                    @*<input type="button" name="EnterpriseExport" onclick="EnterpriseExportExcel()" value="&nbsp;&nbsp;企&nbsp;业&nbsp;导&nbsp;出&nbsp;&nbsp;" class="mybutton" />*@
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
+<table class="mygrid">
+    <thead>
+        <tr>
+            <th>企业名称</th>
+            @*<th>国税</th>
+            <th>地税</th>*@
+            <th>税收</th>
+            <th>税收时间</th>
+            <th>操作</th>
+            </tr>
+    </thead>
+    <tbody>
+            @foreach (System.Data.DataRow dr in Model.List.Rows){
+                <tr>
+                    <td>@dr["Name"]</td>
+                    @*<td>@dr["NationalTax"]</td>
+                    <td>@dr["LandTax"]</td>*@
+                    <td>@dr["Tax"]</td>
+                    <td>@dr["TaxArea"]</td>
+                    <td>
+                        <input type="button" class="button1" value="编辑" onclick="edit('@dr["ID"]');"  />
+                        <input type="button" class="button1" value="删除" onclick="del('@dr["ID"]');" />
+                    </td>
+                   </tr>
+            }           
+        </tbody>
+</table>
+@Html.Raw(Model.Pager)
+<br />
+<script type="text/javascript">
+    var appid = '@Request.QueryString["appid"]';
+    var iframeid = '@Request.QueryString["tabid"]';
+    var dataGrid;
+    $(function ()
+    {
+        var dataGrid = new RoadUI.Grid({ table: $(".mygrid") });
+    });
+
+    function edit(id)
+    {
+        top.mainDialog.open({ id: "window_" + "@Guid.NewGuid()", title: "税收编辑", top: 128, left: 670, width: 380, height: 250, url: "@Url.Action("TaxEdit")"+"?id=" + id + "&appid=" + appid + "&&tabid=" + iframeid, openerid: iframeid });
+        return false;
+    }
+
+    function del(id)
+    {
+        if (confirm("确认删除此条税收记录吗？"))
+        {
+            $.get('@Url.Action("TaxDelete")', { id:id,verstion:new Date().getTime() }, function (data)
+            {
+                if (data == "success")
+                {
+                    window.location.href = window.location.href;
+
+                } else
+                {
+                    alert(data);
+                }
+            });
+        }
+    }
+</script>
+

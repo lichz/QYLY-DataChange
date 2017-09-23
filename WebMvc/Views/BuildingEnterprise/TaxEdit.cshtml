@@ -1,0 +1,66 @@
+﻿@model RoadFlow.Data.Model.EnterpriseTaxModel
+@{
+}
+<link type="text/css" rel="stylesheet" href="/Scripts/FlowRun/Forms/flowform.css">
+<style>
+    .field-validation-error {
+        color:red;
+    }
+</style>
+<p></p>
+    <form method="post">
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        <table class="flowformtable" cellspacing="1" cellpadding="0" data-sort="sortDisabled" style="">
+            <tbody>
+                <tr>
+                    <td style="vertical-align:top; width:120px;">企业名称</td>
+                    <td colspan="2">
+                        @Model.EnterpriseModel.Name
+                    </td>
+                </tr>
+                @*<tr>
+                    <td>@Html.LabelFor(model => model.NationalTax)</td>
+                    <td colspan="2">
+                        @Html.EditorFor(model => model.NationalTax)
+                        @Html.ValidationMessageFor(model => model.NationalTax)
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.LandTax)</td>
+                    <td colspan="2">
+                        @Html.EditorFor(model => model.LandTax)
+                        @Html.ValidationMessageFor(model => model.LandTax)
+                    </td>
+                </tr>*@
+                <tr>
+                    <td>@Html.LabelFor(model => model.Tax)</td>
+                    <td colspan="2">
+                        @Html.EditorFor(model => model.Tax)
+                        @Html.ValidationMessageFor(model => model.Tax)
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.TaxArea)</td>
+                    <td colspan="2">
+                        @Html.EditorFor(model => model.TaxArea)
+                        @Html.ValidationMessageFor(model => model.TaxArea)
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="hidden" name="modelID" value="@Model.ID" /></td>
+                    <td colspan="2">
+                        <input class="button1" type="submit" value="保存" style="margin:0;" title="保存">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </form>
+        @if (ViewBag.Success != null && (bool)ViewBag.Success) {
+            <script>
+                $(function () {
+                    alert("更新成功！");
+                    new RoadUI.Window().reloadOpener(); new RoadUI.Window().close();
+                });
+            </script>
+}

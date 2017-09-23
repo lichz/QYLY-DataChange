@@ -1,0 +1,68 @@
+﻿@model ArticleIndexViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+@using(Html.BeginForm()){
+    @Html.DisplayNameFor(p => p.Display.Title)
+    @Html.TextBox("titles",Model.Titles)
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Display.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Display.DictionaryType.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Display.BriefIntroduction)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Display.Content)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Display.PublishTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Display.CreateTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Display.Status)
+        </th>
+        <th></th>
+    </tr>
+@foreach (var item in Model.List) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Title)
+          
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DictionaryType.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BriefIntroduction)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Content)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PublishTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreateTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Status);
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

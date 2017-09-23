@@ -1,0 +1,41 @@
+﻿@model RoadFlow.Web.Model.SubmitIndexViewModel
+@{
+    ViewBag.Title = "Index";
+}
+<table class="mygrid">
+    <thead>
+        <tr>
+            <th>楼盘名称</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach (System.Data.DataRow dr in Model.List.Rows) {
+                string houseID = dr["ElementID"].ToString();
+                object toStreetID = Model.ToStreetID.ContainsKey(houseID) ? Model.ToStreetID[houseID] : "";
+                <tr>
+                    <td>
+                        @Model.HouseName.Rows.Find(houseID)["Title"]
+                    </td>
+                    <td><a href="javascript:;" style="color: #0695ce;" onclick="modify('WorkFlowRun/Index?flowid=@Model.CreateFlowID&appid=@Request["appid"]&houseID=@houseID&toStreetID=@toStreetID','楼栋新增')">新增楼栋</a></td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<br />
+<script type="text/javascript">
+    var appid = '@Request.QueryString["appid"]';
+    var iframeid = '@Request.QueryString["tabid"]';
+    var dataGrid;
+    $(function () {
+        var dataGrid = new RoadUI.Grid({ table: $(".mygrid") });
+    });
+
+    function modify(url, name) {
+        var id = RoadUI.Core.newid();
+        top.openApp(url, 0, name, id, 0, 0, false);
+        return false;
+    }
+</script>

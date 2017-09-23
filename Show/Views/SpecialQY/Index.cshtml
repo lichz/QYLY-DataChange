@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "魅力青羊";
+    var count = 0;
+}
+@model SpecialQYIndexViewModel
+<!-- banner start -->
+<div class="d_banner">
+    <img src="~/Images/banner01.jpg" />
+</div>
+<!-- banner end -->
+<!-- content start -->
+<div class="show_cnt w1200 m0a clearfix">
+    <div class="asd_nav fl">
+        <h4><img src="~/Images/special_tit.png"></h4>
+        <ul class="first_nav">
+            <li>
+                <ul class="senc_nav">
+                    @foreach (var item in Model.ArticleType)
+                    {
+                        count++;
+                        if (count == 1)
+                        {
+                            <li class="on"><a href="javascript:;" data-val="@Html.DisplayFor(modelItem=>item.ID)">@Html.DisplayFor(modelItem => item.Title)</a></li>
+                        }
+                        else
+                        {
+                            <li><a href="javascript:;" data-val="@Html.DisplayFor(modelItem=>item.ID)">@Html.DisplayFor(modelItem => item.Title)</a></li>
+                        }
+                    }
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="floor_cnt fr">
+        <div class="titbox clearfix">
+            <h4 id="title" class="fl">@Model.TypeName</h4>
+            <div class="fr mbx_nav">
+                你的当前位置：
+                <a href="~/Home/Index">首页 ></a>
+                <a href="~/SpecialQY/Index">魅力青羊 ></a>
+                <a id="typeName" href="javascript:;" class="now">@Model.TypeName</a>
+            </div>
+        </div>
+        <div class="special_wrap">
+            @Html.Raw(Model.Content)
+        </div>
+    </div>
+</div>
+<!-- content end -->
+<script type="text/javascript">
+    $(function () {
+        $(".senc_nav li").click(function () {
+            //导航高亮
+            $(this).attr("class", "on")
+            //右侧title改变
+            var text = $(this).find("a").text();
+            $("#title").text(text);
+            $("#typeName").text(text);
+            var typeID = $(this).find("a").data("val");
+            getArticle(typeID);
+        });
+    });
+    function getArticle(typeID)
+    {
+        var verstion = new Date().getTime();
+        $.getJSON("@Url.Action("getArticle")", {typeID:typeID, verstion: verstion }, function (result) {
+            if (result.success) {
+                $(".special_wrap").html(result.content);
+            }
+        });
+    }
+</script>
+

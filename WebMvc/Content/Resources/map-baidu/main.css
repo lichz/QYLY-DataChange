@@ -1,0 +1,67 @@
+﻿.no-1 {
+    background-image: url("markers_new2_4ab0bc5.png");
+    background-position: 0 -139px;
+    display: inline-block;
+    height: 27px;
+    width: 18px;
+}
+.no-2 {
+    background-image: url("markers_new2_4ab0bc5.png");
+    background-position: -18px -139px;
+    display: inline-block;
+    height: 27px;
+    width: 18px;
+}
+.no-3 {
+    background-image: url("markers_new2_4ab0bc5.png");
+    background-position: -36px -139px;
+    display: inline-block;
+    height: 27px;
+    width: 18px;
+}
+.no-4 {
+    background-image: url("markers_new2_4ab0bc5.png");
+    background-position: -54px -139px;
+    display: inline-block;
+    height: 27px;
+    width: 18px;
+}
+.no-5 {
+    background-image: url("markers_new2_4ab0bc5.png");
+    background-position: -72px -139px;
+    display: inline-block;
+    height: 27px;
+    width: 18px;
+}
+.no-6 {
+    background-image: url("markers_new2_4ab0bc5.png");
+    background-position: -90px -139px;
+    display: inline-block;
+    height: 27px;
+    width: 18px;
+}
+/*分页*/
+#poi_page {
+    padding-bottom:5px;
+    margin: 5px 0 0;
+}
+.page {
+    font-family: "宋体",sans-serif;
+    font-size: 13px;
+    line-height: 12px;
+    text-align: center;
+}
+.page span {
+    display: inline-block;
+    margin: 0 2px;
+}
+.page span.curPage {
+    padding: 4px 5px;
+}
+.page a {
+    border: 1px solid #e7ecf0;
+    display: inline-block;
+    padding: 5px 6px 3px;
+    text-decoration: none;
+}
+

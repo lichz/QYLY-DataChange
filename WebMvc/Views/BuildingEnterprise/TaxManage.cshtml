@@ -1,0 +1,133 @@
+﻿@model RoadFlow.Web.Model.BuildingEnterpriseTaxManageViewModel
+    <p></p>
+<table cellspacing="1" cellpadding="0" data-sort="sortDisabled" style="width:100%;">
+    <tbody>
+        <tr>
+            <td colspan="3">
+                @Model.Enterprise.Name
+            </td>
+        </tr>
+        <tr>
+            <td style="width:140px">税收金额</td>
+            <td style="width:140px">税收年份</td>
+            <td>操作</td>
+        </tr>
+        @foreach (System.Data.DataRow dr in Model.Taxs.Rows)
+        {
+            <tr>
+                <td class="tax">@dr["Tax"]</td>
+                <td class="taxArea">@dr["TaxArea"]</td>
+                <td>
+                    <input class="button1" type="button" value="编辑" onclick="edit('@dr["ID"]',this)" />
+                    <input class="button1" type="button" value="删除" onclick="del('@dr["ID"]',this)" />
+                </td>
+            </tr>
+        }
+        <tr>
+            <td colspan="3">
+                <input class="button1" type="button" value="添加" onclick="create(this)" />
+            </td>
+        </tr>
+    </tbody>
+</table>
+<script type="text/javascript">
+    //添加
+    function create(dom) {
+        var tr = "<tr><td><input type=\"number\" class=\"tax\" /></td><td><input type=\"number\" class=\"taxArea\" /></td><td><input class=\"button1\" type=\"button\" value=\"保存\" onclick=\"createPost(this)\" /><input class=\"button1\" type=\"button\" value=\"取消\" onclick=\"createCancel(this)\" style=\"margin-left:5px;\" /></td></tr>";
+        $(dom).parent().parent().before(tr);
+    }
+
+    //提交
+    function createPost(dom) {
+        var enterpriseID = "@Request["enterpriseID"]";
+        $tr = $(dom).parent().parent();
+        var tax = $tr.find(".tax").val();
+        var taxArea = $tr.find(".taxArea").val();
+        var version = new Date().getTime();
+        $.post("@Url.Action("ManageCreateTax")", { version: version, tax: tax, taxArea: taxArea, enterpriseID: enterpriseID }, function (result) {
+            if (result.success) {
+                var button = editbutton.replace("{0}", result.id) + deletebutton.replace("{0}", result.id);
+                var trhtml = "<td class=\"tax\">{tax}</td>" +
+                             "<td class=\"taxArea\">{taxArea}</td>" +
+                             "<td>" + button + "</td>";
+                trhtml = trhtml.replace("{tax}", tax).replace("{taxArea}", taxArea);
+                $tr.addClass(result.id);
+                $tr.html(trhtml);
+                alert("保存成功。");
+            }
+            else {
+                alert(result.errorMessage);
+            }
+        });
+    }
+
+    //取消
+    function createCancel(dom) {
+        $(dom).parent().parent().remove();
+    }
+
+    //编辑
+    function edit(id, dom) {
+        $tr = $(dom).parent().parent();
+        var tax = $tr.find(".tax").html();
+        var taxArea = $tr.find(".taxArea").html();
+        if (tax.indexOf('<input') > 0) {
+            return;
+        }
+
+        var text = "<input type=\"number\" value=\"{0}\" class=\"{1}\" />";
+        $tr.find(".tax").html(text.replace("{0}", tax).replace("{1}", "taxVal"));
+        $tr.find(".taxArea").html(text.replace("{0}", taxArea).replace("{1}", "taxAreaVal"));
+        var button = "<input class=\"button1\" type=\"button\" value=\"保存\" onclick=\"editPost('" + id + "',this)\" /><input class=\"button1\" type=\"button\" value=\"取消\" onclick=\"editCancel('" + id + "',this)\" style=\"margin-left:5px;\" />";
+        $(dom).parent().html(button);
+    }
+
+
+    var editbutton = "<input class=\"button1\" type=\"button\" value=\"编辑\" onclick=\"edit('{0}',this)\" />";
+    var deletebutton = "<input class=\"button1\" type=\"button\" value=\"删除\" onclick=\"del('{0}',this)\"  style=\"margin-left:5px;\"/>";
+    //提交
+    function editPost(id, dom) {
+        $tr = $(dom).parent().parent();
+        var tax = $tr.find(".taxVal").val();
+        var taxArea = $tr.find(".taxAreaVal").val();
+        var version = new Date().getTime();
+        $.post("@Url.Action("ManageEditTax")", { version: version, taxID: id, tax: tax, taxArea: taxArea }, function (result) {
+            $tr.find(".tax").html(tax);
+            $tr.find(".taxArea").html(taxArea);
+            if (result.success) {
+                alert("保存成功。");
+            }
+            else {
+                alert(result.errorMessage);
+            }
+            editbutton = editbutton.replace("{0}", id);
+            deletebutton = deletebutton.replace("{0}", id);
+            $(dom).parent().html(editbutton + deletebutton);
+        });
+    }
+
+    //取消
+    function editCancel(id, dom) {
+        $tr = $(dom).parent().parent();
+        var tax = $tr.find(".taxVal").val();
+        var taxArea = $tr.find(".taxAreaVal").val();
+        $tr.find(".tax").html(tax);
+        $tr.find(".taxArea").html(taxArea);
+        editbutton = editbutton.replace("{0}", id);
+        deletebutton = deletebutton.replace("{0}", id);
+        $(dom).parent().html(editbutton + deletebutton);
+    }
+
+    function del(id, dom) {
+        if (confirm("确定删除本条数据吗？")) {
+            $.post("@Url.Action("ManageDeleteTax")", { taxID: id }, function (result) {
+                if (result.success) {
+                    $(dom).parent().parent().remove();
+                }
+                else {
+                    alert(result.errorMessage);
+                }
+            });
+        }
+    }
+</script>

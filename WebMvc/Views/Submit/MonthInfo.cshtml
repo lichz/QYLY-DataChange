@@ -1,0 +1,91 @@
+﻿@model RoadFlow.Web.Model.SubmitMonthViewModel
+@{
+    ViewBag.Title = "企业变更";
+}
+@if (!string.IsNullOrWhiteSpace(Model.Message)) {
+    <div class="querybar">
+        <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+            <tr>
+                <td>
+                    @Model.Message
+                </td>
+            </tr>
+        </table>
+    </div>
+} else {
+    <form method="post">
+        @Html.AntiForgeryToken()
+        <div class="querybar">
+            <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+                <tr>
+                    <td>
+                        楼栋名称：<input type="text" name="Name" id="Name" style="width:150px;" value="@Model.ParaName" />
+                        <input type="submit" name="Search" value="&nbsp;&nbsp;查&nbsp;询&nbsp;&nbsp;" class="mybutton" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </form>
+    <table class="mygrid">
+        <thead>
+            <tr>
+                <th>楼栋名称</th>
+                <th>最近时间段</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+    foreach (System.Data.DataRow dr in Model.List.Rows) {
+        <tr>
+            <td>@dr["Name"]</td>
+            <td>
+                @{
+        var lastMonth = Model.MonthInfos.FirstOrDefault(p => p.BuildingID == (Guid)dr["ID"]);
+        if (lastMonth != null) {
+            <span>@Model.MonthInfos.OrderByDescending(p => p.TimeArea).FirstOrDefault(p => p.BuildingID == (Guid)dr["ID"]).TimeArea</span>
+        }
+                }
+            </td>
+            <td>
+                @{
+        string houseID = dr["HouseID"].ToString();
+        object toStreetID = Model.ToStreetID.ContainsKey(houseID) ? Model.ToStreetID[houseID] : "";
+        string query = string.Empty;
+        if (lastMonth != null) {
+            query = string.Format("flowid={0}&buildingID={1}&instanceid={2}&toStreetID={3}&appid=" + Request["appid"], Model.CreateFlowID, dr["ID"], lastMonth.BuildingMonthInfoID,toStreetID);//更新参数
+        } else {
+            query = string.Format("flowid={0}&buildingID={1}&toStreetID={2}&appid=" + Request["appid"], Model.CreateFlowID, dr["ID"],toStreetID);//新增参数
+        }
+                }
+                <a href="javascript:;" style="color: #0695ce;" onclick="modify('WorkFlowRun/Index?@Html.Raw(query)','@dr["Name"]')" )>每月更新</a>
+            </td>
+        </tr>
+    }
+
+            }
+        </tbody>
+    </table>
+    @Html.Raw(Model.Pager)
+    <br />
+    <script type="text/javascript">
+        var appid = '@Request.QueryString["appid"]';
+        var iframeid = '@Request.QueryString["tabid"]';
+        var dialog = top.mainDialog;
+        var dataGrid;
+        $(function () {
+            var dataGrid = new RoadUI.Grid({ table: $(".mygrid") });
+            dataGrid.oddColor();
+            dataGrid.resetWidth();
+        });
+
+        //变更
+        function modify(url, name) {
+            var id = RoadUI.Core.newid();
+            top.openApp(url, 0, name, id, 0, 0, false);
+            return false;
+        }
+    </script>
+}
+
+

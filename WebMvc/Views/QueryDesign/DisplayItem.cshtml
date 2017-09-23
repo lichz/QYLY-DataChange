@@ -1,0 +1,149 @@
+﻿@{
+    ViewBag.Title = "DisplayItem";
+}
+@using RoadFlow.Utility
+@using RoadFlow.Data.Model
+@model Dictionary<string, string>
+<style>
+  .gridpager{text-align:center!important}
+</style>
+<script type="text/javascript" src="/Scripts/roadui.editor.js"></script>
+
+<form  action="" method="post">
+    @Html.AntiForgeryToken()
+    @{
+        string str = (string)ViewBag.DisplayItem;
+        var list = new List<ColItem>();
+        if (!str.IsNullOrEmpty())
+        {
+            list = str.JsonConvertModel<List<ColItem>>();
+        }
+        var sort = 0;
+        var val = "";
+        var key = "";
+        var chkd = false;
+        var hj = false;
+    } 
+    <table cellpadding="0" cellspacing="1" border="0" width="100%" class="formtable">
+        <tr>
+            <th style="width:120px;">
+                名称:
+            </th>
+            <td>
+                <input type="text" class="mytext" id="SJCXNAMEFVHJ" name="SJCXNAMEFVHJ" value="@ViewBag.Name" style="width:200px" required="required"  />
+            </td>
+        </tr>
+    </table>
+    <table class="mygrid">
+        <thead>
+            <tr>
+                <th>中文名称</th>
+                <th>英文名称</th>
+                <th><input type="checkbox" onclick="checkAll(this.checked);" style="vertical-align:middle;" />默认显示</th>
+                <th>合计列</th>
+                <th>显示顺序</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                if (list != null && list.Count > 0)
+                {
+                    foreach (var it in list)
+                    {
+                        val = it.value;
+                        key = it.id;
+                        chkd = it.chk;
+                        hj = it.heji;
+                        sort = it.sortid;
+                        <tr>
+                            <td><input type="text" name ="txt_name" style="width:90%"  value="@val"/></td>
+                            <td><input type="text" name ="txt_id" style="width:90%"  value="@key"/></td>
+                            <td><input type="checkbox" name="checkbox_app" checked="@chkd" style="vertical-align:middle;"/></td>
+                            <td><input type="checkbox" name="checkbox_heji" checked="@hj" style="vertical-align:middle;"/></td>
+                            <td><input type="text" name ="txt_sort" style="width:90%"  value="@sort"/></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        val = item.Value;
+                        key = item.Key;
+                        chkd = false;
+                        hj = false;
+                        sort++;
+                        <tr>
+                            <td><input type="text" name ="txt_name" style="width:90%"  value="@val"/></td>
+                            <td><input type="text" name ="txt_id" style="width:90%"  value="@key"/></td>
+                            <td><input type="checkbox" name="checkbox_app" checked="@chkd" style="vertical-align:middle;"/></td>
+                            <td><input type="checkbox" name="checkbox_heji" checked="@hj" style="vertical-align:middle;"/></td>
+                            <td><input type="text" name ="txt_sort" style="width:90%"  value="@sort"/></td>
+                        </tr>
+                    }
+                }
+                for(int i=0;i<3;i++)
+                {
+                    chkd = false;
+                    hj = false;
+                    sort++;
+                    <tr>
+                       <td><input type="text" name ="txt_name" style="width:90%"  value=""/></td>
+                       <td><input type="text" name ="txt_id" style="width:90%"  value=""/></td>
+                       <td><input type="checkbox" name="checkbox_app" checked="@chkd" style="vertical-align:middle;"/></td>
+                       <td><input type="checkbox" name="checkbox_heji" checked="@hj" style="vertical-align:middle;"/></td>
+                       <td><input type="text" name ="txt_sort" style="width:90%"  value="@sort"/></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <div class="buttondivs">
+        <input type="submit" name="save" value="确定保存"class="mybutton" onclick="saveok();"  />
+        <input type="hidden" id ="reldata" name="reldata" value="" />
+    </div>
+</form>
+<script type="text/javascript">
+    var appid = '@Request.QueryString["appid"]';
+    var iframeid = '@Request.QueryString["tabid"]';
+    var queryID = '@Request.QueryString["queryID"]';
+    var query = '@Html.Raw(ViewBag.Query)';
+    var dataGrid;
+    var formattributeJSON = { hasEditor: "0" };
+    formattributeJSON.dbconn = '@ViewBag.Connid';
+    formattributeJSON.dbtable = '@ViewBag.TableName';
+
+    $(function () {
+        var dataGrid = new RoadUI.Grid({ table: $(".mygrid") });
+    });
+
+    $(window).load(function () {
+        @Html.Raw(ViewBag.Script)
+    });
+
+    function checkAll(checked)
+    {
+        $("input[name='checkbox_app']").prop("checked", checked);
+    }
+
+    function saveok() {
+        var $dy = $(".mygrid tbody tr td");
+        var $retData = $("#reldata");
+        var $nm = $("input[name='txt_name']", $dy);
+        var $id = $("input[name='txt_id']", $dy);
+        var $ret = $("input[name='checkbox_app'] ", $dy);
+        var $heji = $("input[name='checkbox_heji'] ", $dy);
+        var $sortid = $("input[name='txt_sort'] ", $dy);
+        var ret ="";
+        for (i = 0; i < $nm.length; i++) {
+            if ($id.get(i).value != "") {
+                if (ret == "") {
+                    ret = "{'id':'" + $id.get(i).value + "','value':'" + $nm.get(i).value + "','chk':'" + $ret.get(i).checked + "','heji':'" + $heji.get(i).checked + "','sortid':'" + $sortid.get(i).value + "'}";
+                } else {
+                    ret = ret + ",{'id':'" + $id.get(i).value + "','value':'" + $nm.get(i).value + "','chk':'" + $ret.get(i).checked + "','heji':'" + $heji.get(i).checked + "','sortid':'" + $sortid.get(i).value + "'}";
+                }
+            }
+        }
+        $retData.get(0).value = ret;
+    }
+</script>
