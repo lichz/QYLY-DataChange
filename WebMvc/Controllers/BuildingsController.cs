@@ -243,7 +243,7 @@ namespace WebMvc.Controllers
                 }
             }
 
-            ExportExcel.Export(dt.ExportExcelPre(dicionary, true), "楼栋列表");
+            ExportExcel.Export(dt.ExportExcelPre(dicionary), "楼栋列表");
         }
 
         //重点楼宇设置

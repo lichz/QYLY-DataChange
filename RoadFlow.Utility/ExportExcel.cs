@@ -12,6 +12,9 @@ using System.Reflection;
 using System.Web;
 namespace RoadFlow.Utility
 {
+    /// <summary>
+    /// 导入导出Excel
+    /// </summary>
     public class ExportExcel
     {
         /// <summary>
@@ -111,15 +114,10 @@ namespace RoadFlow.Utility
             //保存excel文档
             sheet.ForceFormulaRecalculation = true;
             //文件流对象
-            var stream = new MemoryStream();
-            workbook.Write(stream);
-            HttpContext.Current.Response.AddHeader("Content-Disposition", string.Format("attachment; filename={0}.xls", HttpUtility.UrlEncode(name + "_" + DateTime.Now.ToString("yyyy-MM-dd"), System.Text.Encoding.UTF8)));
-            HttpContext.Current.Response.BinaryWrite(stream.ToArray());
-            HttpContext.Current.Response.End();
-            stream.Close();
-            stream.Dispose();
+            WorkbookWrite(name,workbook);
 
         }
+
         /// <summary>
         /// 导入到DataTable
         /// </summary>
@@ -397,10 +395,11 @@ namespace RoadFlow.Utility
             return list;
         }
 
+        #region 公共方法
         /// <summary>
         /// 文件流输出
         /// </summary>
-        private static void WorkbookWrite(string name,HSSFWorkbook workbook)
+        private static void WorkbookWrite(string name, HSSFWorkbook workbook)
         {
             //文件流对象
             var stream = new MemoryStream();
@@ -415,7 +414,7 @@ namespace RoadFlow.Utility
         /// <summary>
         /// 创建设置单元格值。
         /// </summary>
-        private static void WorkbookCreateCell(HSSFWorkbook workbook,DataTable dt, List<List<string>> endList)
+        private static void WorkbookCreateCell(HSSFWorkbook workbook, DataTable dt, List<List<string>> endList)
         {
             //Excel的Sheet对象
             var sheet = workbook.CreateSheet("sheet1");
@@ -457,13 +456,13 @@ namespace RoadFlow.Utility
                 }
             }
 
-            if (endList!=null)
+            if (endList != null)
             {
-                int row = dt.Rows.Count+2;
-                for (var i=0;i<endList.Count;i++)
+                int row = dt.Rows.Count + 2;
+                for (var i = 0; i < endList.Count; i++)
                 {
                     var trow = sheet.CreateRow(row + i);
-                    for(var j=0;j< endList[i].Count;j++)
+                    for (var j = 0; j < endList[i].Count; j++)
                     {
                         var cell = trow.CreateCell(j);
                         cell.SetCellValue(endList[i][j]);
@@ -552,95 +551,8 @@ namespace RoadFlow.Utility
                 return cell.ToString();
             }
         }
+        #endregion
 
-
-        ///// <summary>
-        ///// 获取Excel首行内容（一般是列名）
-        ///// </summary>
-        ///// <returns></returns>
-        //public static DataTable GetColumnName(string filePath) {
-        //    HSSFWorkbook hssfworkbook;
-        //    #region//初始化信息
-        //    try {
-        //        using (FileStream file = new FileStream(filePath, FileMode.Open, FileAccess.Read)) {
-        //            hssfworkbook = new HSSFWorkbook(file);
-        //        }
-        //    } catch (Exception e) {
-        //        throw e;
-        //    }
-        //    #endregion
-        //    ISheet sheet = hssfworkbook.GetSheetAt(0);
-        //    DataTable table = new DataTable();
-        //    //获取sheet的首行
-        //    IRow headerRow = sheet.GetRow(0);
-        //    if(headerRow==null){
-        //        return list;
-        //    }
-
-
-        //    int cellCount = headerRow.LastCellNum;
-        //    for (int i = headerRow.FirstCellNum; i < cellCount; i++) {
-        //        DataRow dr = new DataRow();
-        //        if (row.GetCell(j) != null)
-        //            dataRow[j] = row.GetCell(j).ToString();
-
-        //        //item.Text = headerRow.GetCell(i).StringCellValue;
-        //        //item.Value = i.ToString();
-        //        //list.Add(item);
-        //    }
-        //    return list;
-        //}
-        public static string FilePath(string strDirectory, DataTable dt, int number)
-        {
-            //创建工作薄
-            var workbook = new HSSFWorkbook();
-            //Excel的Sheet对象
-            var sheet = workbook.CreateSheet("sheet1");
-            var style = workbook.CreateCellStyle();
-            style.Alignment = HorizontalAlignment.Center;
-            style.VerticalAlignment = VerticalAlignment.Center;
-            style.WrapText = true;
-
-
-            //使用NPOI操作Excel表
-            if (dt.Rows.Count <= 0) return "";
-            //设置导出字段标题
-            var rowZdTitle = sheet.CreateRow(0);
-            for (var i = 0; i < dt.Columns.Count; i++)
-            {
-                var cellZdTitle = rowZdTitle.CreateCell(i);
-                cellZdTitle.SetCellValue(dt.Columns[i].Caption);
-                cellZdTitle.CellStyle = style;
-            }
-            //设置导出数据
-            for (var row = 0; row < dt.Rows.Count; row++)
-            {
-                var trow = sheet.CreateRow(row + 1);
-                for (var col = 0; col < dt.Columns.Count; col++)
-                {
-                    var cell = trow.CreateCell(col);
-                    var temp = dt.Rows[row][col];
-                    cell.SetCellValue(temp.ToString());
-
-                    cell.CellStyle = style;
-                }
-            }
-            //保存excel文档
-            sheet.ForceFormulaRecalculation = true;
-
-            var stream = new MemoryStream();
-            workbook.Write(stream);
-
-            strDirectory = @System.Web.HttpContext.Current.Server.MapPath(strDirectory);
-            if (!Directory.Exists(strDirectory)) Directory.CreateDirectory(strDirectory);
-            //文件流对象
-            FileStream fs = File.Create(strDirectory + "/" + number + ".xls");
-            fs.Write(stream.ToArray(), 0, stream.ToArray().Length);
-            //清空缓冲区、关闭流
-            fs.Flush();
-            fs.Close();
-            return strDirectory + "/" + number + ".xls";
-        }
 
     }
 }

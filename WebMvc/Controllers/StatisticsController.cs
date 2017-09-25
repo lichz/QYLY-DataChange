@@ -80,7 +80,7 @@ namespace WebMvc.Controllers
         {
             //获取导出列表
             DataTable dt = BuildingsStreetStatisticsBLL.GetBySSJD(Request["ssjd"]);
-            ExportExcel.Export(dt.ExportExcelPre("街道统计"), "街道统计");
+            ExportExcel.Export(dt.ExportExcelPreByName("街道统计"), "街道统计");
         }
 
         //楼盘面积统计导出
@@ -95,7 +95,7 @@ namespace WebMvc.Controllers
                 { "HouseName", "楼盘名称" },
                 { "ZJZMJ", "总建筑面积" }
             };
-            ExportExcel.Export(dt.ExportExcelPre(dicionary, true), "楼盘面积统计");
+            ExportExcel.Export(dt.ExportExcelPre(dicionary), "楼盘面积统计");
         }
 
         //简单统计（空置率，落地率）导出
@@ -113,7 +113,7 @@ namespace WebMvc.Controllers
                 { "FloorRate", "落地率" }
             };
 
-            ExportExcel.Export(list.ExportExcelPre(dicionary, true), "简单统计", new List<List<string>>() {
+            ExportExcel.Export(list.ExportExcelPre(dicionary), "简单统计", new List<List<string>>() {
                 new List<string>()
                 {
                     "总空置率：",
