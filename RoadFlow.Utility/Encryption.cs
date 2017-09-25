@@ -19,6 +19,8 @@ namespace RoadFlow.Utility
         /// <returns></returns>
         public static string Encrypt(string encryptString)
         {
+
+
             if (string.IsNullOrEmpty(encryptString))
                 return string.Empty;
             RijndaelManaged rijndaelProvider = new RijndaelManaged();
