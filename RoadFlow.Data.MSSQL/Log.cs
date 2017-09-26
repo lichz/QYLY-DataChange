@@ -177,22 +177,22 @@ namespace RoadFlow.Data.MSSQL
             if (date1.IsDateTime())
             {
                 where.Append("AND WriteTime>=@Date1 ");
-                parList.Add(new SqlParameter("@Date1", SqlDbType.DateTime) { Value = date1.ToDateTime().ToString("yyyy-MM-dd 00:00:00") });
+                parList.Add(new SqlParameter("@Date1", SqlDbType.DateTime) { Value = date1.Convert<DateTime>().ToString("yyyy-MM-dd 00:00:00") });
             }
             if (date2.IsDateTime())
             {
                 where.Append("AND WriteTime<=@Date2 ");
-                parList.Add(new SqlParameter("@Date2", SqlDbType.DateTime) { Value = date2.ToDateTime().AddDays(1).ToString("yyyy-MM-dd 00:00:00") });
+                parList.Add(new SqlParameter("@Date2", SqlDbType.DateTime) { Value = date2.Convert<DateTime>().AddDays(1).ToString("yyyy-MM-dd 00:00:00") });
             }
             if (userID.IsGuid())
             {
                 where.Append("AND UserID=@UserID ");
-                parList.Add(new SqlParameter("@UserID", SqlDbType.UniqueIdentifier) { Value = userID.ToGuid() });
+                parList.Add(new SqlParameter("@UserID", SqlDbType.UniqueIdentifier) { Value = userID.Convert<Guid>() });
             }
             long count;
             string sql = dbHelper.GetPaerSql("Log", "ID,Title,Type,WriteTime,UserName,IPAddress", where.ToString(), "WriteTime DESC", size, number, out count, parList.ToArray());
             //pager = RoadFlow.Utility.Tools.GetPagerHtml(count, size, number, query);
-            pager = MyExtensions.GetPagerHtml(count, size, number);
+            pager = RoadFlow.Utility.New.Tools.GetPagerHtml(count, size, number);
             return dbHelper.GetDataTable(sql.ToString(), parList.ToArray());
         }
     }

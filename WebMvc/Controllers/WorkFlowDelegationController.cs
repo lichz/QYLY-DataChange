@@ -114,15 +114,15 @@ namespace WebMvc.Controllers
                     workFlowDelegation = new RoadFlow.Data.Model.WorkFlowDelegation();
                     workFlowDelegation.ID = Guid.NewGuid();
                 }
-                workFlowDelegation.UserID = isOneSelf ? RoadFlow.Platform.Users.CurrentUserID : RoadFlow.Platform.Users.RemovePrefix(UserID).ToGuid();
-                workFlowDelegation.EndTime = EndTime.ToDateTime();
+                workFlowDelegation.UserID = isOneSelf ? RoadFlow.Platform.Users.CurrentUserID : RoadFlow.Platform.Users.RemovePrefix(UserID).Convert<Guid>();
+                workFlowDelegation.EndTime = EndTime.Convert<DateTime>();
                 if (FlowID.IsGuid())
                 {
-                    workFlowDelegation.FlowID = FlowID.ToGuid();
+                    workFlowDelegation.FlowID = FlowID.Convert<Guid>();
                 }
                 workFlowDelegation.Note = Note.IsNullOrEmpty() ? null : Note;
-                workFlowDelegation.StartTime = StartTime.ToDateTime();
-                workFlowDelegation.ToUserID = RoadFlow.Platform.Users.RemovePrefix(ToUserID).ToGuid();
+                workFlowDelegation.StartTime = StartTime.Convert<DateTime>();
+                workFlowDelegation.ToUserID = RoadFlow.Platform.Users.RemovePrefix(ToUserID).Convert<Guid>();
                 workFlowDelegation.WriteTime = DateTime.Now;
 
 

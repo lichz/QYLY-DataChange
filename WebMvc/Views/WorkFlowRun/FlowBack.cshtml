@@ -21,7 +21,7 @@
         Response.End();
     }
 
-    var steps = wfInstalled.Steps.Where(p => p.ID == stepid.ToGuid());
+    var steps = wfInstalled.Steps.Where(p => p.ID == stepid.Convert<Guid>());
     if (steps.Count() == 0)
     {
         Response.Write("未找到当前步骤");

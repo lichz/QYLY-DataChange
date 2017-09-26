@@ -210,7 +210,7 @@ namespace RoadFlow.Data.MSSQL
 			};
             DBHelper dbHelper = new DBHelper();
             string sort = dbHelper.GetFieldValue(sql, parameters);
-            return sort.ToInt();
+            return sort.Convert<int>();
         }
     }
 }

@@ -183,7 +183,7 @@ namespace RoadFlow.Data.MSSQL
 				new SqlParameter("@ParentID", SqlDbType.UniqueIdentifier){ Value = id }
 			};
             string sort = dbHelper.GetFieldValue(sql, parameters);
-            return sort.ToInt();
+            return sort.Convert<int>();
         }
 
         /// <summary>

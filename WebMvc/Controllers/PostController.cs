@@ -43,7 +43,7 @@ namespace WebMvc.Controllers
                 PostModel postmodel = new PostModel();
                 if(id != "0")
                 {
-                    postmodel = new RoadFlow.Platform.Post().GetPostModel(id.ToInt());
+                    postmodel = new RoadFlow.Platform.Post().GetPostModel(id.Convert<int>());
                 }
                 return View(postmodel);
         }
@@ -93,7 +93,7 @@ namespace WebMvc.Controllers
                     string mobile = collection["Mobile"];
                     string valid = collection["IsValid"];
                     string content = collection["Content"];
-                    model = post.GetPostModel(id.ToInt());
+                    model = post.GetPostModel(id.Convert<int>());
                     model.Type = type;
                     model.Acreage = acreage;
                     //model.Price = price;
@@ -101,7 +101,7 @@ namespace WebMvc.Controllers
                     model.Mobile = mobile;
                     model.Title = title;
                     model.Contents = content;
-                    model.IsValid = valid.ToInt();
+                    model.IsValid = valid.Convert<int>();
 
                     Guid userId = RoadFlow.Platform.Users.CurrentUserID;
                     post.UpdatePost(model);

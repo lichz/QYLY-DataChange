@@ -9,7 +9,7 @@
     }
     RoadFlow.Platform.WorkFlowForm WFF = new RoadFlow.Platform.WorkFlowForm();
     
-    var wff = WFF.Get(id.ToGuid());
+    var wff = WFF.Get(id.Convert<Guid>());
     
     if(wff==null)
     {

@@ -7,7 +7,7 @@
     RoadFlow.Platform.WorkFlow bwf = new RoadFlow.Platform.WorkFlow();
 
 
-    var taskList = bwfTask.GetTaskList(flowid.ToGuid(), groupid.ToGuid()).Where(p => !p.Comment.IsNullOrEmpty() && p.CompletedTime1.HasValue).OrderBy(p => p.Sort);
+    var taskList = bwfTask.GetTaskList(flowid.Convert<Guid>(), groupid.Convert<Guid>()).Where(p => !p.Comment.IsNullOrEmpty() && p.CompletedTime1.HasValue).OrderBy(p => p.Sort);
 }
     <style type="text/css">
         .commenttable { margin:12px auto 0 auto; width:96%; background:#ededee; }

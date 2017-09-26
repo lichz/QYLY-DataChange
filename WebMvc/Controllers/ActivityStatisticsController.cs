@@ -49,7 +49,7 @@ namespace WebMvc.Controllers
             int allPage = 0, count = 0;
             DataTable dt = a.GetPagerData(out allPage, out count, query, pageIndex, pageSize);
             //ViewBag.Pager = RoadFlow.Utility.Tools.GetPagerHtml(count, pageSize, pageIndex, null);
-            ViewBag.Pager = MyExtensions.GetPagerHtml(count, pageSize, pageIndex);
+            ViewBag.Pager = RoadFlow.Utility.New.Tools.GetPagerHtml(count, pageSize, pageIndex);
             return dt;
         }
         
@@ -65,7 +65,7 @@ namespace WebMvc.Controllers
             int allPage = 0, count = 0;
             DataTable dt = a.GetPagerData(out allPage, out count, query, pageIndex, pageSize);
             //ViewBag.Pager = RoadFlow.Utility.Tools.GetPagerHtml(count, pageSize, pageIndex, null);
-            ViewBag.Pager = MyExtensions.GetPagerHtml(count, pageSize, pageIndex);
+            ViewBag.Pager = RoadFlow.Utility.New.Tools.GetPagerHtml(count, pageSize, pageIndex);
             return RoadFlow.Utility.ObjectExpand.ToJson(dt);
         }
 

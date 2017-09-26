@@ -188,15 +188,15 @@ namespace RoadFlow.Platform
             {
                 if (id.StartsWith(Users.PREFIX))//人员
                 {
-                    userList.Add(busers.Get(Users.RemovePrefix(id).ToGuid()));
+                    userList.Add(busers.Get(Users.RemovePrefix(id).Convert<Guid>()));
                 }
                 else if (id.IsGuid())//机构
                 {
-                    userList.AddRange(GetAllUsers(id.ToGuid()));
+                    userList.AddRange(GetAllUsers(id.Convert<Guid>()));
                 }
                 else if (id.StartsWith(WorkGroup.PREFIX))//工作组
                 {
-                   addWorkGroupUsers(userList, bwg.Get(WorkGroup.RemovePrefix(id).ToGuid()));
+                   addWorkGroupUsers(userList, bwg.Get(WorkGroup.RemovePrefix(id).Convert<Guid>()));
                 }
             }
             userList.RemoveAll(p => p == null);
@@ -216,15 +216,15 @@ namespace RoadFlow.Platform
             { 
                 if (id.StartsWith(Users.PREFIX))//人员
                 {
-                    userList.Add(busers.Get(Users.RemovePrefix(id).ToGuid()));
+                    userList.Add(busers.Get(Users.RemovePrefix(id).Convert<Guid>()));
                 }
                 else if (id.IsGuid())//机构
                 {
-                    userList.AddRange(GetAllUsers(id.ToGuid()));
+                    userList.AddRange(GetAllUsers(id.Convert<Guid>()));
                 }
                 else if (id.StartsWith(WorkGroup.PREFIX))//工作组
                 {
-                    addWorkGroupUsers(userList, bwg.Get(WorkGroup.RemovePrefix(id).ToGuid()));
+                    addWorkGroupUsers(userList, bwg.Get(WorkGroup.RemovePrefix(id).Convert<Guid>()));
                 }
             }
         }
@@ -430,7 +430,7 @@ namespace RoadFlow.Platform
             string name = string.Empty;
             if (id.IsGuid())//机构
             {
-                return GetName(id.ToGuid());
+                return GetName(id.Convert<Guid>());
             }
             else if (id.StartsWith(Users.PREFIX))//用户
             {

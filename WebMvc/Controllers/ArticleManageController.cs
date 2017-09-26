@@ -57,7 +57,7 @@ namespace WebMvc.Controllers
             ViewBag.Type = articleType;
 
             string query = string.Format("&appid={0}&tabid={1}", Request.QueryString["appid"], Request.QueryString["tabid"]);
-            articleDB.Update(model,id.ToGuid());
+            articleDB.Update(model,id.Convert<Guid>());
             ViewBag.Script = "alert('修改成功！;new RoadUI.Window().reloadOpener();)";
             return RedirectToAction("Index", new { appid = Request["appid"] });
         }
@@ -66,7 +66,7 @@ namespace WebMvc.Controllers
            string query = string.Format("&appid={0}&tabid={1}", Request.QueryString["appid"], Request.QueryString["tabid"]);
            RoadFlow.Data.Model.ArticleModel model =new RoadFlow.Data.Model.ArticleModel();
            model.Status = 255;  //状态为无效
-           articleDB.Update(model,id.ToGuid());
+           articleDB.Update(model,id.Convert<Guid>());
            //ViewBag.Script = "alert('删除成功！;new RoadUI.Window().reloadOpener();)";
            return RedirectToAction("Index", new { appid = Request["appid"] });
        }

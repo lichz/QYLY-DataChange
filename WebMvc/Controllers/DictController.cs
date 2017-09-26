@@ -123,7 +123,7 @@ namespace WebMvc.Controllers
             string id = Request.QueryString["id"];
             if (id.IsGuid())
             {
-                dict = bdict.Get(id.ToGuid());
+                dict = bdict.Get(id.Convert<Guid>());
             }
             if (dict == null)
             {
@@ -211,8 +211,8 @@ namespace WebMvc.Controllers
                 dict.Code = code.IsNullOrEmpty() ? null : code.Trim();
                 dict.Note = note.IsNullOrEmpty() ? null : note.Trim();
                 dict.Other = other.IsNullOrEmpty() ? null : other.Trim();
-                dict.ParentID = id.ToGuid();
-                dict.Sort = bdict.GetMaxSort(id.ToGuid());
+                dict.ParentID = id.Convert<Guid>();
+                dict.Sort = bdict.GetMaxSort(id.Convert<Guid>());
                 dict.Title = title.Trim();
                 dict.Value = values.IsNullOrEmpty() ? null : values.Trim();
 
@@ -271,7 +271,7 @@ namespace WebMvc.Controllers
 
                 RoadFlow.Platform.Log.Add("保存了数据字典排序", "保存了ID为：" + id + "的同级排序", RoadFlow.Platform.Log.Types.数据字典);
                 ViewBag.Script = "parent.frames[0].reLoad('" + refreshID + "');";
-                dicts = BDict.GetChilds(refreshID.ToGuid());
+                dicts = BDict.GetChilds(refreshID.Convert<Guid>());
             }
 
             return View(dicts);

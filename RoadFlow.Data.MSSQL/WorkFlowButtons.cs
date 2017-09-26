@@ -130,7 +130,7 @@ namespace RoadFlow.Data.MSSQL
         {
             string sql = "SELECT ISNULL(MAX(Sort),0)+1 FROM WorkFlowButtons";
             string max = dbHelper.GetFieldValue(sql);
-            return max.IsInt() ? max.ToInt() : 1;
+            return max.IsInt() ? max.Convert<int>() : 1;
         }
     }
 }

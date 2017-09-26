@@ -77,7 +77,7 @@ namespace WebMvc.Controllers
             string size = Request.QueryString["pagesize"];
             string number = Request.QueryString["pagenumber"];
             RoadFlow.Platform.Log blog = new RoadFlow.Platform.Log();
-            System.Data.DataTable dt = new System.Data.DataTable();// blog.GetPagerData(out count, size.ToInt(), number.ToInt(), "", title, type, date1, date2, userid);
+            System.Data.DataTable dt = new System.Data.DataTable();// blog.GetPagerData(out count, size.Convert<int>(), number.Convert<int>(), "", title, type, date1, date2, userid);
             string data = RoadFlow.Utility.Tools.DataTableToJsonString(dt);
             return "{\"count\":" + count.ToString() + ",\"data\":" + data + "}";
         }
@@ -87,7 +87,7 @@ namespace WebMvc.Controllers
             string id = Request.QueryString["id"];
             if (id.IsGuid())
             {
-                return View(new RoadFlow.Platform.Log().Get(id.ToGuid()));
+                return View(new RoadFlow.Platform.Log().Get(id.Convert<Guid>()));
             }
             else
             {

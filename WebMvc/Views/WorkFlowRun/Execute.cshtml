@@ -62,14 +62,14 @@
             break;
     }
     
-    execute.FlowID = flowid.ToGuid();
-    execute.GroupID = groupid.ToGuid();
+    execute.FlowID = flowid.Convert<Guid>();
+    execute.GroupID = groupid.Convert<Guid>();
     execute.InstanceID = instanceid;
     execute.IsSign = "1" == issign;
     execute.Note = "";
     execute.Sender = RoadFlow.Platform.Users.CurrentUser;
-    execute.StepID = stepid.IsGuid() ? stepid.ToGuid() : wfInstalled.FirstStepID;
-    execute.TaskID = taskid.ToGuid();
+    execute.StepID = stepid.IsGuid() ? stepid.Convert<Guid>() : wfInstalled.FirstStepID;
+    execute.TaskID = taskid.Convert<Guid>();
     execute.Title = title ?? "";
     
     LitJson.JsonData stepsjson = opationJSON["steps"];

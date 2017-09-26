@@ -20,7 +20,7 @@ namespace WebMvc.Controllers
         {
             string userid = Request.QueryString["id"];
             RoadFlow.Platform.Role brole = new RoadFlow.Platform.Role();
-            var roles = new RoadFlow.Platform.UsersRole().GetByUserID(userid.ToGuid());
+            var roles = new RoadFlow.Platform.UsersRole().GetByUserID(userid.Convert<Guid>());
             List<RoadFlow.Data.Model.Role> roleList = new List<RoadFlow.Data.Model.Role>();
             foreach (var role in roles)
             {
@@ -119,7 +119,7 @@ namespace WebMvc.Controllers
             //加载个人应用
             if (userID.IsGuid())
             {
-                BUsersApp.AppendUserApps(userID.ToGuid(), rid, childs);
+                BUsersApp.AppendUserApps(userID.Convert<Guid>(), rid, childs);
             }
 
             System.Text.StringBuilder json = new System.Text.StringBuilder("[", childs.Count * 50);
@@ -210,7 +210,7 @@ namespace WebMvc.Controllers
 
             if (collection != null && id.IsGuid() && userID.IsGuid())
             {
-                usersApp = busersApp.Get(id.ToGuid());
+                usersApp = busersApp.Get(id.Convert<Guid>());
                 if (!Request.Form["Save"].IsNullOrEmpty())
                 {
                     string name = Request.Form["Name"];
@@ -222,14 +222,14 @@ namespace WebMvc.Controllers
                     RoadFlow.Data.Model.UsersApp usersApp1 = new RoadFlow.Data.Model.UsersApp();
 
                     usersApp1.ID = Guid.NewGuid();
-                    usersApp1.ParentID = id.ToGuid();
+                    usersApp1.ParentID = id.Convert<Guid>();
                     usersApp1.Title = name.Trim();
-                    usersApp1.Sort = broleApp.GetMaxSort(id.ToGuid());
-                    usersApp1.UserID = userID.ToGuid();
-                    usersApp1.RoleID = roleID.IsGuid() ? roleID.ToGuid() : Guid.Empty;
+                    usersApp1.Sort = broleApp.GetMaxSort(id.Convert<Guid>());
+                    usersApp1.UserID = userID.Convert<Guid>();
+                    usersApp1.RoleID = roleID.IsGuid() ? roleID.Convert<Guid>() : Guid.Empty;
                     if (appid.IsGuid())
                     {
-                        usersApp1.AppID = appid.ToGuid();
+                        usersApp1.AppID = appid.Convert<Guid>();
                     }
                     else
                     {
@@ -304,7 +304,7 @@ namespace WebMvc.Controllers
                     usersApp.Title = name.Trim();
                     if (appid.IsGuid())
                     {
-                        usersApp.AppID = appid.ToGuid();
+                        usersApp.AppID = appid.Convert<Guid>();
                     }
                     else
                     {

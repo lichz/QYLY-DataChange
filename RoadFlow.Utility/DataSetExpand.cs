@@ -191,7 +191,7 @@ namespace RoadFlow.Utility
         //    }
         //    if (typeFullName == DataType.DateTime)
         //    {
-        //        return Convert.ToDateTime(BaseSet.DateTimeLongNull);
+        //        return Convert.Convert<DateTime>(BaseSet.DateTimeLongNull);
         //    }
         //    if (typeFullName == DataType.Boolean)
         //    {

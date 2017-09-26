@@ -5,7 +5,7 @@
     string type = Request.Form["type"];
 
     RoadFlow.Platform.WorkFlow bworkFlow = new RoadFlow.Platform.WorkFlow();
-    var flow = bworkFlow.Get(id.ToGuid());
+    var flow = bworkFlow.Get(id.Convert<Guid>());
     if (flow == null)
     {
         Response.Write("该流程还未保存!");

@@ -67,7 +67,7 @@ namespace WebMvc.Controllers
             string typeid = Request.QueryString["typeid"];
             RoadFlow.Platform.Dictionary bdict = new RoadFlow.Platform.Dictionary();
             RoadFlow.Platform.AppLibrary bapp = new RoadFlow.Platform.AppLibrary();
-            string typeidstring = typeid.IsGuid() ? bapp.GetAllChildsIDString(typeid.ToGuid()) : "";
+            string typeidstring = typeid.IsGuid() ? bapp.GetAllChildsIDString(typeid.Convert<Guid>()) : "";
             string query = string.Format("&appid={0}&tabid={1}&title1={2}&typeid={3}&address={4}",
                         Request.QueryString["appid"],
                         Request.QueryString["tabid"],
@@ -101,7 +101,7 @@ namespace WebMvc.Controllers
             RoadFlow.Data.Model.AppLibrary appLibrary = null;
             if (editID.IsGuid())
             {
-                appLibrary = bappLibrary.Get(editID.ToGuid());
+                appLibrary = bappLibrary.Get(editID.Convert<Guid>());
             }
             bool isAdd = !editID.IsGuid();
             string oldXML = string.Empty;
@@ -134,10 +134,10 @@ namespace WebMvc.Controllers
                 appLibrary.Address = address.Trim();
                 appLibrary.Height = height.ToIntOrNull();
                 appLibrary.Note = note;
-                appLibrary.OpenMode = openModel.ToInt();
+                appLibrary.OpenMode = openModel.Convert<int>();
                 appLibrary.Params = params1;
                 appLibrary.Title = title;
-                appLibrary.Type = type.ToGuid();
+                appLibrary.Type = type.Convert<Guid>();
                 appLibrary.Width = width.ToIntOrNull();
 
                 if (!useMember.IsNullOrEmpty())

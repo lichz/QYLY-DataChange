@@ -185,18 +185,18 @@ namespace RoadFlow.Platform {
                     execute.ExecuteType = RoadFlow.Data.Model.WorkFlowExecute.EnumType.ExecuteType.Back;
                     break;
             }
-            execute.FlowID = jsondata["flowid"].ToString().ToGuid();
-            execute.GroupID = jsondata["groupid"].ToString().ToGuid();
+            execute.FlowID = jsondata["flowid"].ToString().Convert<Guid>();
+            execute.GroupID = jsondata["groupid"].ToString().Convert<Guid>();
             execute.InstanceID = jsondata["instanceid"].ToString();
-            execute.IsSign = jsondata["issign"].ToString().ToInt() == 1;
-            execute.StepID = jsondata["stepid"].ToString().ToGuid();
-            execute.TaskID = jsondata["taskid"].ToString().ToGuid();
+            execute.IsSign = jsondata["issign"].ToString().Convert<int>() == 1;
+            execute.StepID = jsondata["stepid"].ToString().Convert<Guid>();
+            execute.TaskID = jsondata["taskid"].ToString().Convert<Guid>();
 
             var stepsjson = jsondata["steps"];
             Dictionary<Guid, List<RoadFlow.Data.Model.Users>> steps = new Dictionary<Guid, List<RoadFlow.Data.Model.Users>>();
             if (stepsjson.IsArray) {
                 foreach (LitJson.JsonData step in stepsjson) {
-                    var id = step["id"].ToString().ToGuid();
+                    var id = step["id"].ToString().Convert<Guid>();
                     var member = step["member"].ToString();
                     if (id == Guid.Empty || member.IsNullOrEmpty()) {
                         continue;
@@ -318,7 +318,7 @@ namespace RoadFlow.Platform {
                     && currentStep.Behavior.SubFlowStrategy == 0
                     && currentTask.SubFlowGroupID.HasValue
                     && !currentTask.SubFlowGroupID.Value.IsEmptyGuid()
-                    && !GetInstanceIsCompleted(currentStep.SubFlowID.ToGuid(), currentTask.SubFlowGroupID.Value)) {
+                    && !GetInstanceIsCompleted(currentStep.SubFlowID.Convert<Guid>(), currentTask.SubFlowGroupID.Value)) {
                     result.DebugMessages = "当前步骤的子流程实例未完成,子流程：" + currentStep.SubFlowID + ",实例组：" + currentTask.SubFlowGroupID.ToString();
                     result.IsSuccess = false;
                     result.Messages = "当前步骤的子流程未完成,不能提交!";
@@ -495,7 +495,7 @@ namespace RoadFlow.Platform {
                                     }
                                 }
                                 subflowExecuteModel.ExecuteType = RoadFlow.Data.Model.WorkFlowExecute.EnumType.ExecuteType.Save;
-                                subflowExecuteModel.FlowID = nextStep.SubFlowID.ToGuid();
+                                subflowExecuteModel.FlowID = nextStep.SubFlowID.Convert<Guid>();
                                 subflowExecuteModel.Sender = user;
                                 if (subflowExecuteModel.Title.IsNullOrEmpty()) {
                                     subflowExecuteModel.Title = bWorkFlow.GetFlowName(subflowExecuteModel.FlowID);
@@ -770,7 +770,7 @@ namespace RoadFlow.Platform {
 
                 //如果退回步骤是子流程步骤，则要作废子流程实例
                 if (currentStep.Type == "subflow" && currentStep.SubFlowID.IsGuid() && currentTask.SubFlowGroupID.HasValue) {
-                    DeleteInstance(currentStep.SubFlowID.ToGuid(), currentTask.SubFlowGroupID.Value, true);
+                    DeleteInstance(currentStep.SubFlowID.Convert<Guid>(), currentTask.SubFlowGroupID.Value, true);
                 }
 
                 if (isBack) {

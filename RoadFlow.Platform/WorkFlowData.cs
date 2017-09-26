@@ -93,7 +93,7 @@ namespace RoadFlow.Platform
                 Dictionary<string, string> key = new Dictionary<string, string>();
                 foreach (var pkvalue in pkvalues)
                 {
-                    if (array[0].ToGuid() == pkvalue.LinkID && array[1] == pkvalue.TableName)
+                    if (array[0].Convert<Guid>() == pkvalue.LinkID && array[1] == pkvalue.TableName)
                     {
                         key.Add(pkvalue.FieldName , pkvalue.Value);
                     }

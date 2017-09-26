@@ -144,8 +144,8 @@ namespace RoadFlow.Platform
             options.AppendFormat("<option value=\"@(RoadFlow.Platform.Users.CurrentUserName)\" {0}>当前步骤用户姓名</option>", "11" == value ? "selected=\"selected\"" : "");
             options.AppendFormat("<option value=\"@(RoadFlow.Platform.Users.CurrentDeptID)\" {0}>当前步骤用户部门ID</option>", "12" == value ? "selected=\"selected\"" : "");
             options.AppendFormat("<option value=\"@(RoadFlow.Platform.Users.CurrentDeptName)\" {0}>当前步骤用户部门名称</option>", "13" == value ? "selected=\"selected\"" : "");
-            options.AppendFormat("<option value=\"u_@(new RoadFlow.Platform.WorkFlowTask().GetFirstSnderID(FlowID.ToGuid(), GroupID.ToGuid(), true))\" {0}>流程发起者ID</option>", "14" == value ? "selected=\"selected\"" : "");
-            options.AppendFormat("<option value=\"@(new RoadFlow.Platform.Users().GetName(new RoadFlow.Platform.WorkFlowTask().GetFirstSnderID(FlowID.ToGuid(), GroupID.ToGuid(), true)))\" {0}>流程发起者姓名</option>", "15" == value ? "selected=\"selected\"" : "");
+            options.AppendFormat("<option value=\"u_@(new RoadFlow.Platform.WorkFlowTask().GetFirstSnderID(FlowID.Convert<Guid>(), GroupID.Convert<Guid>(), true))\" {0}>流程发起者ID</option>", "14" == value ? "selected=\"selected\"" : "");
+            options.AppendFormat("<option value=\"@(new RoadFlow.Platform.Users().GetName(new RoadFlow.Platform.WorkFlowTask().GetFirstSnderID(FlowID.Convert<Guid>(), GroupID.Convert<Guid>(), true)))\" {0}>流程发起者姓名</option>", "15" == value ? "selected=\"selected\"" : "");
             options.Append("<optgroup label=\"日期时间相关选项\"></optgroup>");
             options.AppendFormat("<option value=\"@(DateTime.Now.ToShortDateString())\" {0}>短日期格式(2014/4/15)</option>", "20" == value ? "selected=\"selected\"" : "");
             options.AppendFormat("<option value=\"@(DateTime.Now.ToLongDateString())\" {0}>长日期格式(2014年4月15日)</option>", "21" == value ? "selected=\"selected\"" : "");
@@ -154,8 +154,8 @@ namespace RoadFlow.Platform
             options.AppendFormat("<option value=\"@(DateTime.Now.ToString(&#34;yyyy/MM/hh HH:mm&#34;))\" {0}>短日期时间格式(2014/4/15 22:31)</option>", "24" == value ? "selected=\"selected\"" : "");
             options.AppendFormat("<option value=\"@DateTime.Now.ToString(&#34;yyyy年MM月hh日 HH时mm分&#34;)\" {0}>长日期时间格式(2014年4月15日 22时31分)</option>", "25" == value ? "selected=\"selected\"" : "");
             options.Append("<optgroup label=\"流程实例相关选项\"></optgroup>");
-            options.AppendFormat("<option value=\"@Html.Raw(BWorkFlow.GetFlowName(FlowID.ToGuid()))\" {0}>当前流程名称</option>", "30" == value ? "selected=\"selected\"" : "");
-            options.AppendFormat("<option value=\"@Html.Raw(BWorkFlow.GetStepName(StepID.ToGuid(), FlowID.ToGuid(), true))\" {0}>当前步骤名称</option>", "31" == value ? "selected=\"selected\"" : "");
+            options.AppendFormat("<option value=\"@Html.Raw(BWorkFlow.GetFlowName(FlowID.Convert<Guid>()))\" {0}>当前流程名称</option>", "30" == value ? "selected=\"selected\"" : "");
+            options.AppendFormat("<option value=\"@Html.Raw(BWorkFlow.GetStepName(StepID.Convert<Guid>(), FlowID.Convert<Guid>(), true))\" {0}>当前步骤名称</option>", "31" == value ? "selected=\"selected\"" : "");
             return options.ToString();
         }
 
@@ -173,8 +173,8 @@ namespace RoadFlow.Platform
         //    options.AppendFormat("<option value=\"<%=RoadFlow.Platform.Users.CurrentUserName%>\" {0}>当前步骤用户姓名</option>", "11" == value ? "selected=\"selected\"" : "");
         //    options.AppendFormat("<option value=\"<%=RoadFlow.Platform.Users.CurrentDeptID%>\" {0}>当前步骤用户部门ID</option>", "12" == value ? "selected=\"selected\"" : "");
         //    options.AppendFormat("<option value=\"<%=RoadFlow.Platform.Users.CurrentDeptName%>\" {0}>当前步骤用户部门名称</option>", "13" == value ? "selected=\"selected\"" : "");
-        //    options.AppendFormat("<option value=\"u_<%=new RoadFlow.Platform.WorkFlowTask().GetFirstSnderID(FlowID.ToGuid(), GroupID.ToGuid(), true)%>\" {0}>流程发起者ID</option>", "14" == value ? "selected=\"selected\"" : "");
-        //    options.AppendFormat("<option value=\"<%=new RoadFlow.Platform.Users().GetName(new RoadFlow.Platform.WorkFlowTask().GetFirstSnderID(FlowID.ToGuid(), GroupID.ToGuid(), true))%>\" {0}>流程发起者姓名</option>", "15" == value ? "selected=\"selected\"" : "");
+        //    options.AppendFormat("<option value=\"u_<%=new RoadFlow.Platform.WorkFlowTask().GetFirstSnderID(FlowID.Convert<Guid>(), GroupID.Convert<Guid>(), true)%>\" {0}>流程发起者ID</option>", "14" == value ? "selected=\"selected\"" : "");
+        //    options.AppendFormat("<option value=\"<%=new RoadFlow.Platform.Users().GetName(new RoadFlow.Platform.WorkFlowTask().GetFirstSnderID(FlowID.Convert<Guid>(), GroupID.Convert<Guid>(), true))%>\" {0}>流程发起者姓名</option>", "15" == value ? "selected=\"selected\"" : "");
         //    options.Append("<optgroup label=\"日期时间相关选项\"></optgroup>");
         //    options.AppendFormat("<option value=\"<%=RoadFlow.Utility.DateTimeNew.ShortDate%>\" {0}>短日期格式(2014/4/15)</option>", "20" == value ? "selected=\"selected\"" : "");
         //    options.AppendFormat("<option value=\"<%=RoadFlow.Utility.DateTimeNew.LongDate%>\" {0}>长日期格式(2014年4月15日)</option>", "21" == value ? "selected=\"selected\"" : "");
@@ -183,8 +183,8 @@ namespace RoadFlow.Platform
         //    options.AppendFormat("<option value=\"<%=RoadFlow.Utility.DateTimeNew.ShortDateTime%>\" {0}>短日期时间格式(2014/4/15 22:31)</option>", "24" == value ? "selected=\"selected\"" : "");
         //    options.AppendFormat("<option value=\"<%=RoadFlow.Utility.DateTimeNew.LongDateTime%>\" {0}>长日期时间格式(2014年4月15日 22时31分)</option>", "25" == value ? "selected=\"selected\"" : "");
         //    options.Append("<optgroup label=\"流程实例相关选项\"></optgroup>");
-        //    options.AppendFormat("<option value=\"<%=BWorkFlow.GetFlowName(FlowID.ToGuid())%>\" {0}>当前流程名称</option>", "30" == value ? "selected=\"selected\"" : "");
-        //    options.AppendFormat("<option value=\"<%=BWorkFlow.GetStepName(StepID.ToGuid(), FlowID.ToGuid(), true)%>\" {0}>当前步骤名称</option>", "31" == value ? "selected=\"selected\"" : "");
+        //    options.AppendFormat("<option value=\"<%=BWorkFlow.GetFlowName(FlowID.Convert<Guid>())%>\" {0}>当前流程名称</option>", "30" == value ? "selected=\"selected\"" : "");
+        //    options.AppendFormat("<option value=\"<%=BWorkFlow.GetStepName(StepID.Convert<Guid>(), FlowID.Convert<Guid>(), true)%>\" {0}>当前步骤名称</option>", "31" == value ? "selected=\"selected\"" : "");
         //    return options.ToString();
         //}
 
@@ -443,7 +443,7 @@ namespace RoadFlow.Platform
             { 
                 case "0":
                     DBConnection dbConn = new DBConnection();
-                    var dbconn = dbConn.Get(connID.ToGuid());
+                    var dbconn = dbConn.Get(connID.Convert<Guid>());
                     if (dbconn == null)
                     {
                         return "";
@@ -483,10 +483,10 @@ namespace RoadFlow.Platform
                     }
                 case "2":
                     RoadFlow.Data.Model.WorkFlowCustomEventParams eventParams = new RoadFlow.Data.Model.WorkFlowCustomEventParams();
-                    eventParams.FlowID = (System.Web.HttpContext.Current.Request.QueryString["FlowID"] ?? "").ToGuid();
-                    eventParams.GroupID = (System.Web.HttpContext.Current.Request.QueryString["GroupID"] ?? "").ToGuid();
-                    eventParams.StepID = (System.Web.HttpContext.Current.Request.QueryString["StepID"] ?? "").ToGuid();
-                    eventParams.TaskID = (System.Web.HttpContext.Current.Request.QueryString["TaskID"] ?? "").ToGuid();
+                    eventParams.FlowID = (System.Web.HttpContext.Current.Request.QueryString["FlowID"] ?? "").Convert<Guid>();
+                    eventParams.GroupID = (System.Web.HttpContext.Current.Request.QueryString["GroupID"] ?? "").Convert<Guid>();
+                    eventParams.StepID = (System.Web.HttpContext.Current.Request.QueryString["StepID"] ?? "").Convert<Guid>();
+                    eventParams.TaskID = (System.Web.HttpContext.Current.Request.QueryString["TaskID"] ?? "").Convert<Guid>();
                     eventParams.InstanceID = System.Web.HttpContext.Current.Request.QueryString["InstanceID"] ?? "";
                     object obj = null;
                     try

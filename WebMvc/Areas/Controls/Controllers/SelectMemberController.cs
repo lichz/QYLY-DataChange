@@ -34,12 +34,12 @@ namespace WebMvc.Areas.Controls.Controllers
             RoadFlow.Platform.Users buser = new RoadFlow.Platform.Users();
             if (id.StartsWith(RoadFlow.Platform.Users.PREFIX))
             {
-                Guid uid = buser.RemovePrefix1(id).ToGuid();
+                Guid uid = buser.RemovePrefix1(id).Convert<Guid>();
                 return string.Concat(borg.GetAllParentNames(buser.GetMainStation(uid)), " / ", buser.GetName(uid));
             }
             else if (id.StartsWith(RoadFlow.Platform.WorkGroup.PREFIX))
             {
-                return new RoadFlow.Platform.WorkGroup().GetUsersNames(RoadFlow.Platform.WorkGroup.RemovePrefix(id).ToGuid(), '、');
+                return new RoadFlow.Platform.WorkGroup().GetUsersNames(RoadFlow.Platform.WorkGroup.RemovePrefix(id).Convert<Guid>(), '、');
             }
             else if (id.IsGuid(out gid))
             {

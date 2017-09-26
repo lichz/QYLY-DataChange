@@ -45,7 +45,7 @@
                                     }
                                     else if (!element.dictid.IsNullOrEmpty())
                                     {
-                                        options += new RoadFlow.Platform.Dictionary().GetOptionsByID(element.dictid.ToGuid(),Dictionary.OptionValueField.ID);
+                                        options += new RoadFlow.Platform.Dictionary().GetOptionsByID(element.dictid.Convert<Guid>(),Dictionary.OptionValueField.ID);
                                     }
                                     else
                                     {

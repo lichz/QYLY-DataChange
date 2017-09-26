@@ -50,7 +50,7 @@ namespace RoadFlow.Data.MSSQL
             string fileList = " * ";
             string sql = dbHelper.GetPaerSql("Post", fileList, wher + where.ToString(), "Id DESC", size, number, out count, parList.ToArray());
             //pager = RoadFlow.Utility.Tools.GetPagerHtml(count, size, number, query);
-            pager = MyExtensions.GetPagerHtml(count, size, number);
+            pager = RoadFlow.Utility.New.Tools.GetPagerHtml(count, size, number);
             return dbHelper.GetDataTable(sql, parList.ToArray());
         }
 

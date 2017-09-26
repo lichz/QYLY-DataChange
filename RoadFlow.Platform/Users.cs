@@ -90,12 +90,18 @@ namespace RoadFlow.Platform
         /// <returns></returns>
         public string EncryptionPassword(string password)
         {
-            if (password.IsNullOrEmpty())
-            {
-                return "";
+            //if (password.IsNullOrEmpty())
+            //{
+            //    return "";
+            //}
+            //RoadFlow.Utility.HashEncrypt hash = new RoadFlow.Utility.HashEncrypt();
+            //return hash.MD5System(hash.MD5System(password)); //hash.SHA512Encrypt(hash.SHA512Encrypt(password.Trim()));
+
+            if (string.IsNullOrEmpty(password)) {
+                return string.Empty;
             }
-            RoadFlow.Utility.HashEncrypt hash = new RoadFlow.Utility.HashEncrypt();
-            return hash.MD5System(hash.MD5System(password)); //hash.SHA512Encrypt(hash.SHA512Encrypt(password.Trim()));
+            string result = RoadFlow.Utility.New.Encryption.ComputeMd5(password);
+            return RoadFlow.Utility.New.Encryption.ComputeMd5(result);
         }
 
         /// <summary>
@@ -256,7 +262,7 @@ namespace RoadFlow.Platform
             get
             {
                 object session = System.Web.HttpContext.Current.Session[RoadFlow.Utility.Keys.SessionKeys.UserID.ToString()];
-                return session == null ? Guid.Empty : session.ToString().ToGuid();
+                return session == null ? Guid.Empty : session.ToString().Convert<Guid>();
             }
         }
         /// <summary>

@@ -7,7 +7,7 @@
         Response.Write("[]");
         Response.End();
     }
-    var dbconn = new RoadFlow.Platform.DBConnection().Get(conn.ToGuid());
+    var dbconn = new RoadFlow.Platform.DBConnection().Get(conn.Convert<Guid>());
     var dt = new RoadFlow.Platform.DBConnection().GetDataTable(dbconn, sql);
     if (dt == null || dt.Rows.Count == 0)
     {

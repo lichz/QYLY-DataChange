@@ -51,7 +51,7 @@
                 </td>
                 @{
                     string typeID = dr["Type"].ToString();
-                    System.Data.DataTable dt = new RoadFlow.Platform.Dictionary().GetByID(typeID.ToGuid());
+                    System.Data.DataTable dt = new RoadFlow.Platform.Dictionary().GetByID(typeID.Convert<Guid>());
                     foreach (System.Data.DataRow item in dt.Rows)
                     {
                         <td>@item["Title"]</td>

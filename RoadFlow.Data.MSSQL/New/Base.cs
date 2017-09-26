@@ -36,7 +36,7 @@ namespace RoadFlow.Data.MSSQL
             SqlParameter[] parameters = dictionary["para"] as SqlParameter[];
             long count = 0;
             string sql = dbHelper.GetPaerSql(_tableName, "*", dictionary["where"].ToString(), _order, size, number, out count, parameters);
-            pager = MyExtensions.GetPagerHtml(count, size, number);  //生成HTML的分页
+            pager = RoadFlow.Utility.New.Tools.GetPagerHtml(count, size, number);  //生成HTML的分页
             return dbHelper.GetDataTable(sql, parameters);
         }
 
@@ -50,7 +50,7 @@ namespace RoadFlow.Data.MSSQL
             SqlParameter[] parameters = dictionary["para"] as SqlParameter[];
             long count = 0;
             string sql = dbHelper.GetPaerSql(_tableName, "*", dictionary["where"].ToString(), _order, size, number, out count, parameters);
-            pager = MyExtensions.GetPagerHtml(count, size, number);  //生成HTML的分页
+            pager = RoadFlow.Utility.New.Tools.GetPagerHtml(count, size, number);  //生成HTML的分页
             return dbHelper.GetList<T>(sql, parameters);
         }
 
@@ -151,7 +151,7 @@ namespace RoadFlow.Data.MSSQL
             try
             {
                 string sql = dbHelper.GetPaerSql(_tableName, "*", dictionary["where"].ToString(), _order, size, number, out count, parameters);
-                pager = MyExtensions.GetPagerHtml(count, size, number);  //生成HTML的分页
+                pager = RoadFlow.Utility.New.Tools.GetPagerHtml(count, size, number);  //生成HTML的分页
                 result.Data = dbHelper.GetDataTable(sql, parameters);
                 result.Success = true;
             }
@@ -178,7 +178,7 @@ namespace RoadFlow.Data.MSSQL
             try
             {
                 string sql = dbHelper.GetPaerSql(_tableName, "*", dictionary["where"].ToString(), _order, size, number, out count, parameters);
-                pager = MyExtensions.GetPagerHtml(count, size, number);  //生成HTML的分页
+                pager = RoadFlow.Utility.New.Tools.GetPagerHtml(count, size, number);  //生成HTML的分页
                 result.Data = dbHelper.GetList<T>(sql, parameters);
                 result.Success = true;
             }

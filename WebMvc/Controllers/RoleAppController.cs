@@ -113,7 +113,7 @@ namespace WebMvc.Controllers
                 return "[]";
             }
             RoadFlow.Platform.RoleApp BRoleApp = new RoadFlow.Platform.RoleApp();
-            var childs = BRoleApp.GetChild(id.ToGuid());
+            var childs = BRoleApp.GetChild(id.Convert<Guid>());
             System.Text.StringBuilder json = new System.Text.StringBuilder("[", childs.Count * 50);
             int count = childs.Count;
             int i = 0;
@@ -170,7 +170,7 @@ namespace WebMvc.Controllers
                 string tpl = Request.Form["ToTpl"];
                 if (tpl.IsGuid())
                 {
-                    new RoadFlow.Platform.RoleApp().CopyRoleApp(roleGID, tpl.ToGuid());
+                    new RoadFlow.Platform.RoleApp().CopyRoleApp(roleGID, tpl.Convert<Guid>());
                     RoadFlow.Platform.Log.Add("复制了模板应用", "源：" + roleID + "复制给：" + tpl, RoadFlow.Platform.Log.Types.角色应用);
                     ViewBag.Script = "alert('复制成功!');";
                 }
@@ -320,7 +320,7 @@ namespace WebMvc.Controllers
                 roleApp.Title = name.Trim();
                 if (appid.IsGuid())
                 {
-                    roleApp.AppID = appid.ToGuid();
+                    roleApp.AppID = appid.Convert<Guid>();
                 }
                 else
                 {
@@ -368,7 +368,7 @@ namespace WebMvc.Controllers
         {
             string type = Request.Form["type"];
             string appid = Request.Form["value"];
-            return new RoadFlow.Platform.AppLibrary().GetAppsOptions(type.ToGuid(), appid);
+            return new RoadFlow.Platform.AppLibrary().GetAppsOptions(type.Convert<Guid>(), appid);
         }
 
 
@@ -389,7 +389,7 @@ namespace WebMvc.Controllers
 
             if (collection != null)
             {
-                roleApp = broleApp.Get(id.ToGuid());
+                roleApp = broleApp.Get(id.Convert<Guid>());
                 if (!Request.Form["Save"].IsNullOrEmpty())
                 {
                     string name = Request.Form["Name"];
@@ -401,7 +401,7 @@ namespace WebMvc.Controllers
                     RoadFlow.Data.Model.RoleApp roleApp1 = new RoadFlow.Data.Model.RoleApp();
 
                     roleApp1.ID = Guid.NewGuid();
-                    roleApp1.ParentID = id.ToGuid();
+                    roleApp1.ParentID = id.Convert<Guid>();
                     roleApp1.RoleID = roleApp.RoleID;
                     roleApp1.Title = name.Trim();
                     roleApp1.ParentID = roleApp.ID;
@@ -409,7 +409,7 @@ namespace WebMvc.Controllers
                     roleApp1.Type = 0;
                     if (appid.IsGuid())
                     {
-                        roleApp1.AppID = appid.ToGuid();
+                        roleApp1.AppID = appid.Convert<Guid>();
                     }
                     else
                     {
@@ -446,7 +446,7 @@ namespace WebMvc.Controllers
             RoadFlow.Platform.RoleApp broleApp = new RoadFlow.Platform.RoleApp();
             List<RoadFlow.Data.Model.RoleApp> roleAppList = new List<RoadFlow.Data.Model.RoleApp>();
             string id = Request.QueryString["id"];
-            var roleApp = broleApp.Get(id.ToGuid());
+            var roleApp = broleApp.Get(id.Convert<Guid>());
             roleAppList = broleApp.GetChild(roleApp.ParentID);
 
             if (collection != null)

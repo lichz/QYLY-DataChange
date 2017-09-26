@@ -260,7 +260,7 @@ namespace RoadFlow.Platform
             {
                 DataRow dr = apps[i];
                 if (!dr["UseMember"].ToString().IsNullOrEmpty() && dr["AppID"].ToString().IsGuid()
-                    && !Applibary.GetUseMemberCache(dr["AppID"].ToString().ToGuid()).Contains(userID))
+                    && !Applibary.GetUseMemberCache(dr["AppID"].ToString().Convert<Guid>()).Contains(userID))
                 {
                     continue;
                 }
@@ -314,7 +314,7 @@ namespace RoadFlow.Platform
             foreach (DataRow dr in appDt.Rows)
             {
                 if (!dr["UseMember"].ToString().IsNullOrEmpty() && dr["AppID"].ToString().IsGuid()
-                    && !Applibary.GetUseMemberCache(dr["AppID"].ToString().ToGuid()).Contains(userID))
+                    && !Applibary.GetUseMemberCache(dr["AppID"].ToString().Convert<Guid>()).Contains(userID))
                 {
                     continue;
                 }

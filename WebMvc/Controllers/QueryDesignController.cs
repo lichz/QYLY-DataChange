@@ -108,7 +108,7 @@ namespace WebMvc.Controllers
             string tableName = Request.QueryString["table"];
             string connid = Request.QueryString["connid"];
             string name = Request["SJCXNAMEFVHJ"];
-            dic = conn.GetFields(connid.ToGuid(), tableName);
+            dic = conn.GetFields(connid.Convert<Guid>(), tableName);
             if (id.IsNullOrEmpty())
             {
                  if (!Request["save"].IsNullOrEmpty())
@@ -120,7 +120,7 @@ namespace WebMvc.Controllers
                      model.TableName = tableName;
                      model.CreateUserID = RoadFlow.Platform.Users.CurrentUserID;
                      model.CreateUserName = RoadFlow.Platform.Users.CurrentUserName;
-                     model.ConnectionID = connid.ToGuid();
+                     model.ConnectionID = connid.Convert<Guid>();
                      model.DisplayItem = eleme;
                      model.Status = 0;
                      queryDesign.Add(model);
@@ -130,17 +130,17 @@ namespace WebMvc.Controllers
                  {
                      model.Name = name;
                      model.TableName = tableName;
-                     model.ConnectionID = connid.ToGuid();
+                     model.ConnectionID = connid.Convert<Guid>();
                  }
             }
             else
             {
-                model = queryDesign.Get(id.ToGuid());
+                model = queryDesign.Get(id.Convert<Guid>());
                 if (connid.IsNullOrEmpty() || tableName.IsNullOrEmpty())
                 {
                     tableName = model.TableName;
                     connid = model.ConnectionID.ToString();
-                    dic = conn.GetFields(connid.ToGuid(), tableName);
+                    dic = conn.GetFields(connid.Convert<Guid>(), tableName);
                 }
                 if (!Request["save"].IsNullOrEmpty())
                 {
@@ -148,7 +148,7 @@ namespace WebMvc.Controllers
                     eleme = "[" + eleme + "]";
                     model.Name = name;
                     model.TableName = tableName;
-                    model.ConnectionID = connid.ToGuid();
+                    model.ConnectionID = connid.Convert<Guid>();
                     model.DisplayItem = eleme;
                     queryDesign.Update(model);
                     ViewBag.Script = "alert('保存成功!');new RoadUI.Window().reloadOpener();new RoadUI.Window().close();";
@@ -177,7 +177,7 @@ namespace WebMvc.Controllers
             string connid = Request.QueryString["connid"];
             RoadFlow.Data.Model.QueryDesign model= new QueryDesign();
             Dictionary<string, string> dic = new Dictionary<string, string>();
-            if (!id.IsNullOrEmpty()) {  model = queryDesign.Get(id.ToGuid()); }
+            if (!id.IsNullOrEmpty()) {  model = queryDesign.Get(id.Convert<Guid>()); }
             if (tableName.IsNullOrEmpty() && connid.IsNullOrEmpty()&&model!=null)
             {
                 tableName = model.TableName;
@@ -199,7 +199,7 @@ namespace WebMvc.Controllers
                 }
                 else
                 {
-                    model.ConnectionID = connid.ToGuid();
+                    model.ConnectionID = connid.Convert<Guid>();
                     model.CreateUserID = RoadFlow.Platform.Users.CurrentUserID;
                     model.CreateUserName = RoadFlow.Platform.Users.CurrentUserName;
                     model.ID = Guid.NewGuid();
@@ -214,7 +214,7 @@ namespace WebMvc.Controllers
 
             if (!tableName.IsNullOrEmpty() && !connid.IsNullOrEmpty())
             {
-                dic = conn.GetFields(connid.ToGuid(), tableName);
+                dic = conn.GetFields(connid.Convert<Guid>(), tableName);
             }
             ViewBag.Connid = connid;
             ViewBag.TableName = tableName;
@@ -246,7 +246,7 @@ namespace WebMvc.Controllers
             {
                 if (retdata.IsNullOrEmpty()) return 1;
                 List<ColItem> ls = retdata.JsonConvertModel<List<ColItem>>();
-                var model = queryDesign.Get(id.ToGuid());
+                var model = queryDesign.Get(id.Convert<Guid>());
                 string showItem = string.Empty;
                 List<ColItem> ll = model.DisplayItem.JsonConvertModel<List<ColItem>>();
                 //读取最大排序编号

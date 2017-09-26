@@ -44,7 +44,7 @@ namespace WebMvc.Areas.Controls.Controllers
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             foreach (string value in values.Split(','))
             {
-                var dict = Dict.Get(value.ToGuid(), true);
+                var dict = Dict.Get(value.Convert<Guid>(), true);
                 if (dict != null)
                 {
                     sb.Append(dict.Title);
