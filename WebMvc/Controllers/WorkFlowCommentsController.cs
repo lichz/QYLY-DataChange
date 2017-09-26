@@ -103,7 +103,7 @@ namespace WebMvc.Controllers
 
                 workFlowComment.MemberID = member.IsNullOrEmpty() ? "" : member.Trim();
                 workFlowComment.Comment = comment.IsNullOrEmpty() ? "" : comment.Trim();
-                workFlowComment.Sort = sort.IsInt() ? sort.ToInt() : bworkFlowComment.GetManagerMaxSort();
+                workFlowComment.Sort = sort.IsInt() ? sort.Convert<int>() : bworkFlowComment.GetManagerMaxSort();
 
 
                 if (isAdd)

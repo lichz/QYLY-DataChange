@@ -179,7 +179,7 @@ namespace RoadFlow.Data.MSSQL
             string sql = dbHelper.GetPaerSql("AppLibrary", "*", WHERE.ToString(), order, size, number, out count, parList.ToArray());
 
             //pager = RoadFlow.Utility.Tools.GetPagerHtml(count, size, number, query);
-            pager = MyExtensions.GetPagerHtml(count, size, number);
+            pager = RoadFlow.Utility.New.Tools.GetPagerHtml(count, size, number);
             SqlDataReader dataReader = dbHelper.GetDataReader(sql, parList.ToArray());
             List<RoadFlow.Data.Model.AppLibrary> List = DataReaderToList(dataReader);
             dataReader.Close();

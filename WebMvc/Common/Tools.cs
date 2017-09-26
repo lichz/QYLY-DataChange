@@ -128,7 +128,7 @@ namespace WebMvc.Common
             if (app != null)
             {
                 var roles = RoadFlow.Platform.Users.CurrentUserRoles;
-                if (roles.Contains(app["RoleID"].ToString().ToGuid()))
+                if (roles.Contains(app["RoleID"].ToString().Convert<Guid>()))
                 {
                     return true;
                 }
@@ -148,7 +148,7 @@ namespace WebMvc.Common
                 var userApp = new RoadFlow.Platform.UsersApp().GetUserDataRows(userID);
                 foreach (System.Data.DataRow dr in userApp)
                 {
-                    if (dr["ID"].ToString().ToGuid() == appGuid)
+                    if (dr["ID"].ToString().Convert<Guid>() == appGuid)
                     {
                         return true;
                     }

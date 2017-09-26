@@ -38,7 +38,7 @@ namespace Show.Controllers
             }
             viewModel.TypeName = typeName;
             IQueryable<ArticleModel> list = db.Articles.Where(p => p.Type == typeID).OrderByDescending(p => p.PublishTime);
-            viewModel.Pager = MyExtensions.GetPagingHtml(list.Count(), pageSize, pageIndex.Value);
+            viewModel.Pager = RoadFlow.Utility.New.Tools.GetPagingHtml(list.Count(), pageSize, pageIndex.Value);
             viewModel.FirstArticles = db.Articles.Where(p => p.Type == typeID).OrderByDescending(p => p.PublishTime).Skip(pageSize * (pageIndex.Value - 1)).Take(pageSize);
             return View(viewModel);
         }
@@ -73,7 +73,7 @@ namespace Show.Controllers
             StringBuilder html = new StringBuilder();
             IQueryable<ArticleModel> list = db.Articles.Where(p => p.Type == typeID).OrderByDescending(p => p.PublishTime);
             //分页
-            viewModel.Pager = MyExtensions.GetPagingHtml(list.Count(), pageSize, pageIndex);
+            viewModel.Pager = RoadFlow.Utility.New.Tools.GetPagingHtml(list.Count(), pageSize, pageIndex);
             //列表
             viewModel.Articles = db.Articles.Where(p => p.Type == typeID).OrderByDescending(p => p.PublishTime).Skip(pageSize * (pageIndex - 1)).Take(pageSize);
             if (list.Count() == 0)

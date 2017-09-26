@@ -8,7 +8,7 @@
         Response.End();
     }
     RoadFlow.Platform.WorkFlowForm workFlowFrom = new RoadFlow.Platform.WorkFlowForm();
-    var forms = workFlowFrom.GetAllByType(typeid.ToGuid());
+    var forms = workFlowFrom.GetAllByType(typeid.Convert<Guid>());
     System.Text.StringBuilder html = new System.Text.StringBuilder();
     foreach(var form in forms.Where(p=>p.Status<2).OrderBy(p=>p.Name))
     {

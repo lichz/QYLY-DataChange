@@ -96,8 +96,8 @@ namespace WebMvc.Controllers
             string flowOptions = bworkFlow.GetOptions(flows, typeid, flowid);
 
             var taskList = bworkFlowTask.GetInstances(manageFlows, new Guid[] { },
-                sender.IsNullOrEmpty() ? new Guid[] { } : new Guid[] { sender.Replace(RoadFlow.Platform.Users.PREFIX, "").ToGuid() },
-                out pager, query1, title, flowid, date1, date2, status.ToInt());
+                sender.IsNullOrEmpty() ? new Guid[] { } : new Guid[] { sender.Replace(RoadFlow.Platform.Users.PREFIX, "").Convert<Guid>() },
+                out pager, query1, title, flowid, date1, date2, status.Convert<int>());
 
             ViewBag.Query = query;
             ViewBag.Pager = pager;
@@ -296,7 +296,7 @@ namespace WebMvc.Controllers
             string displayModel = Request.QueryString["displaymodel"];
 
             var wfInstall = bworkFlow.GetWorkFlowRunModel(flowid);
-            var tasks = bworkFlowTask.GetTaskList(flowid.ToGuid(), groupid.ToGuid()).OrderBy(p => p.Sort);
+            var tasks = bworkFlowTask.GetTaskList(flowid.Convert<Guid>(), groupid.Convert<Guid>()).OrderBy(p => p.Sort);
             string query = string.Format("&flowid1={0}&groupid={1}&appid={2}&tabid={3}&title={4}&flowid={5}&sender={6}&date1={7}&date2={8}&iframeid={9}&openerid={10}",
                 flowid, groupid,
                 Request.QueryString["appid"],
@@ -348,7 +348,7 @@ namespace WebMvc.Controllers
             {
                 return View(new List<RoadFlow.Data.Model.WorkFlowTask>());
             }
-            var task = bworkFlowTask.Get(taskid.ToGuid());
+            var task = bworkFlowTask.Get(taskid.Convert<Guid>());
             
             if (task == null || !task.SubFlowGroupID.HasValue)
             {

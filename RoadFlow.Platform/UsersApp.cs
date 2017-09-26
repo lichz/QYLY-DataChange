@@ -121,16 +121,16 @@ namespace RoadFlow.Platform
             var userApps = GetUserDataRows(userID);
             foreach (var userApp in userApps)
             {
-                if (userApp["ParentID"].ToString().ToGuid() == parentID)
+                if (userApp["ParentID"].ToString().Convert<Guid>() == parentID)
                 {
                     RoadFlow.Data.Model.RoleApp app = new RoadFlow.Data.Model.RoleApp();
-                    app.ID = userApp["ID"].ToString().ToGuid();
-                    app.AppID = userApp["AppID"].ToString().ToGuid();
+                    app.ID = userApp["ID"].ToString().Convert<Guid>();
+                    app.AppID = userApp["AppID"].ToString().Convert<Guid>();
                     app.Ico = userApp["Ico"].ToString();
                     app.Params = userApp["Params"].ToString();
-                    app.ParentID = userApp["ParentID"].ToString().ToGuid();
-                    app.RoleID = userApp["RoleID"].ToString().ToGuid();
-                    app.Sort = userApp["Sort"].ToString().ToInt();
+                    app.ParentID = userApp["ParentID"].ToString().Convert<Guid>();
+                    app.RoleID = userApp["RoleID"].ToString().Convert<Guid>();
+                    app.Sort = userApp["Sort"].ToString().Convert<int>();
                     app.Title = userApp["Title"].ToString();
                     app.Type = 1;
                     appList.Add(app);

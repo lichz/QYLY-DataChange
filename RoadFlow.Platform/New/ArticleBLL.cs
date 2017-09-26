@@ -25,7 +25,7 @@ namespace RoadFlow.Platform
         }
         public RoadFlow.Data.Model.ArticleModel Get(string id)
         {
-            return baseDb.Get<RoadFlow.Data.Model.ArticleModel>(new KeyValuePair<string, object>("ID", id.ToGuid()));
+            return baseDb.Get<RoadFlow.Data.Model.ArticleModel>(new KeyValuePair<string, object>("ID", id.Convert<Guid>()));
         }
         #endregion
 

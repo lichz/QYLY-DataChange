@@ -109,7 +109,7 @@ namespace WebMvc.Controllers
             }
 
             RoadFlow.Platform.DBConnection bdbconn = new RoadFlow.Platform.DBConnection();
-            var dbconn1 = bdbconn.Get(dbconn.ToGuid());
+            var dbconn1 = bdbconn.Get(dbconn.Convert<Guid>());
             if (bdbconn.TestSql(dbconn1, sql))
             {
                 return "SQL语句测试正确";
@@ -148,7 +148,7 @@ namespace WebMvc.Controllers
             {
                 wff = new RoadFlow.Data.Model.WorkFlowForm();
                 wff.ID = formID;
-                wff.Type = type.ToGuid();
+                wff.Type = type.Convert<Guid>();
                 wff.CreateUserID = RoadFlow.Platform.Users.CurrentUserID;
                 wff.CreateUserName = RoadFlow.Platform.Users.CurrentUserName;
                 wff.CreateTime = DateTime.Now;
@@ -302,7 +302,7 @@ namespace WebMvc.Controllers
             app.OpenMode = 0;
             app.Params = "";
             app.Title = name.Trim();
-            app.Type = appType.IsGuid() ? appType.ToGuid() : new RoadFlow.Platform.Dictionary().GetIDByCode("FormTypes");
+            app.Type = appType.IsGuid() ? appType.Convert<Guid>() : new RoadFlow.Platform.Dictionary().GetIDByCode("FormTypes");
             if (isAdd)
             {
                 App.Add(app);

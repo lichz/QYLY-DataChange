@@ -53,7 +53,7 @@ namespace WebMvc.Controllers
                         );
             string query1 = string.Format("{0}&pagesize={1}&pagenumber={2}", query, Request.QueryString["pagesize"], Request.QueryString["pagenumber"]);
             string pager;
-            System.Data.DataTable Dt = BWFA.GetPagerData(out pager, query, title, BWF.GetFlowIDFromType(typeid.ToGuid()));
+            System.Data.DataTable Dt = BWFA.GetPagerData(out pager, query, title, BWF.GetFlowIDFromType(typeid.Convert<Guid>()));
 
             ViewBag.Pager = pager;
             ViewBag.Title1 = title;
@@ -72,7 +72,7 @@ namespace WebMvc.Controllers
             {
                 return View();
             }
-            var archives = new RoadFlow.Platform.WorkFlowArchives().Get(id.ToGuid());
+            var archives = new RoadFlow.Platform.WorkFlowArchives().Get(id.Convert<Guid>());
             if (archives == null)
             {
                 return View();

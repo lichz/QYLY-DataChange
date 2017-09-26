@@ -34,7 +34,7 @@
         {
             continue;
         }
-        if (type.IsGuid() && !bwf.GetAllChildsIDString(type.ToGuid()).Contains(flow.Type.ToString(),  StringComparison.CurrentCultureIgnoreCase))
+        if (type.IsGuid() && !bwf.GetAllChildsIDString(type.Convert<Guid>()).Contains(flow.Type.ToString(),  StringComparison.CurrentCultureIgnoreCase))
         {
             continue;
         }

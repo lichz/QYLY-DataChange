@@ -60,7 +60,7 @@ namespace WebMvc.Controllers
             {
                 return "{}";
             }
-            var flow = new RoadFlow.Platform.WorkFlow().Get(flowid.ToGuid());
+            var flow = new RoadFlow.Platform.WorkFlow().Get(flowid.Convert<Guid>());
             if (flow == null)
             {
                 return "{}";
@@ -84,7 +84,7 @@ namespace WebMvc.Controllers
             {
                 return "[]";
             }
-            List<string> tables = new RoadFlow.Platform.DBConnection().GetTables(connID.ToGuid());
+            List<string> tables = new RoadFlow.Platform.DBConnection().GetTables(connID.Convert<Guid>());
             System.Text.StringBuilder sb = new System.Text.StringBuilder("[", 1000);
             foreach (string table in tables)
             {
@@ -104,7 +104,7 @@ namespace WebMvc.Controllers
             {
                 return "[]";
             }
-            Dictionary<string, string> fields = new RoadFlow.Platform.DBConnection().GetFields(connid.ToGuid(), table);
+            Dictionary<string, string> fields = new RoadFlow.Platform.DBConnection().GetFields(connid.Convert<Guid>(), table);
             System.Text.StringBuilder sb = new System.Text.StringBuilder("[", 1000);
 
             foreach (var field in fields)
@@ -174,7 +174,7 @@ namespace WebMvc.Controllers
             {
                 return "流程未设置数据连接!";
             }
-            var conn = dbconn.Get(connid.ToGuid());
+            var conn = dbconn.Get(connid.Convert<Guid>());
             if (conn == null)
             {
                 return "未找到连接!";

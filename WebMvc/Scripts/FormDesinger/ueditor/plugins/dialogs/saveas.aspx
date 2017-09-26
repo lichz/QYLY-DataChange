@@ -24,7 +24,7 @@
         }
         else
         {
-            var wff = workFlowFrom.Get(id.ToGuid());
+            var wff = workFlowFrom.Get(id.Convert<Guid>());
             if (wff != null)
             {
                 wff.ID = Guid.NewGuid();

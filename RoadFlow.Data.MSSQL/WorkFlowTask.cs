@@ -227,21 +227,21 @@ namespace RoadFlow.Data.MSSQL {
             }
             if (flowid.IsGuid()) {
                 sql.Append(" AND FlowID=@FlowID");
-                parList.Add(new SqlParameter("@FlowID", SqlDbType.UniqueIdentifier) { Value = flowid.ToGuid() });
+                parList.Add(new SqlParameter("@FlowID", SqlDbType.UniqueIdentifier) { Value = flowid.Convert<Guid>() });
             } else if (!flowid.IsNullOrEmpty() && flowid.IndexOf(',') >= 0) {
                 sql.Append(" AND FlowID IN(" + RoadFlow.Utility.Tools.GetSqlInString(flowid) + ")");
             }
             if (sender.IsGuid()) {
                 sql.Append(" AND SenderID=@SenderID");
-                parList.Add(new SqlParameter("@SenderID", SqlDbType.UniqueIdentifier) { Value = sender.ToGuid() });
+                parList.Add(new SqlParameter("@SenderID", SqlDbType.UniqueIdentifier) { Value = sender.Convert<Guid>() });
             }
             if (date1.IsDateTime()) {
                 sql.Append(" AND ReceiveTime>=@ReceiveTime");
-                parList.Add(new SqlParameter("@ReceiveTime", SqlDbType.DateTime) { Value = date1.ToDateTime().Date });
+                parList.Add(new SqlParameter("@ReceiveTime", SqlDbType.DateTime) { Value = date1.Convert<DateTime>().Date });
             }
             if (date2.IsDateTime()) {
                 sql.Append(" AND ReceiveTime<=@ReceiveTime1");
-                parList.Add(new SqlParameter("@ReceiveTime1", SqlDbType.DateTime) { Value = date1.ToDateTime().AddDays(1).Date });
+                parList.Add(new SqlParameter("@ReceiveTime1", SqlDbType.DateTime) { Value = date1.Convert<DateTime>().AddDays(1).Date });
             }
 
             long count;
@@ -249,7 +249,7 @@ namespace RoadFlow.Data.MSSQL {
             int number = RoadFlow.Utility.Tools.GetPageNumber();
             string sql1 = dbHelper.GetPaerSql(sql.ToString(), size, number, out count, parList.ToArray());
             //pager = RoadFlow.Utility.Tools.GetPagerHtml(count, size, number, query);
-            pager = MyExtensions.GetPagerHtml(count, size, number);
+            pager = RoadFlow.Utility.New.Tools.GetPagerHtml(count, size, number);
 
             SqlDataReader dataReader = dbHelper.GetDataReader(sql1, parList.ToArray());
             List<RoadFlow.Data.Model.WorkFlowTask> List = DataReaderToList(dataReader);
@@ -314,17 +314,17 @@ namespace RoadFlow.Data.MSSQL {
             //}
             //if (flowid.IsGuid()) {
             //    where.Append(" AND a.FlowID=@FlowID");
-            //    parList.Add(new SqlParameter("@FlowID", SqlDbType.UniqueIdentifier) { Value = flowid.ToGuid() });
+            //    parList.Add(new SqlParameter("@FlowID", SqlDbType.UniqueIdentifier) { Value = flowid.Convert<Guid>() });
             //} else if (!flowid.IsNullOrEmpty() && flowid.IndexOf(',') >= 0) {
             //    where.Append(" AND a.FlowID IN(" + RoadFlow.Utility.Tools.GetSqlInString(flowid) + ")");
             //}
             //if (date1.IsDateTime()) {
             //    where.Append(" AND a.SenderTime>=@SenderTime");
-            //    parList.Add(new SqlParameter("@SenderTime", SqlDbType.DateTime) { Value = date1.ToDateTime().Date });
+            //    parList.Add(new SqlParameter("@SenderTime", SqlDbType.DateTime) { Value = date1.Convert<DateTime>().Date });
             //}
             //if (date2.IsDateTime()) {
             //    where.Append(" AND a.SenderTime<=@SenderTime1");
-            //    parList.Add(new SqlParameter("@SenderTime1", SqlDbType.DateTime) { Value = date1.ToDateTime().AddDays(1).Date });
+            //    parList.Add(new SqlParameter("@SenderTime1", SqlDbType.DateTime) { Value = date1.Convert<DateTime>().AddDays(1).Date });
             //}
 
             if (status != 0) {
@@ -360,17 +360,17 @@ namespace RoadFlow.Data.MSSQL {
             }
             if (flowid.IsGuid()) {
                 where.Append(" AND FlowID=@FlowID");
-                parList.Add(new SqlParameter("@FlowID", SqlDbType.UniqueIdentifier) { Value = flowid.ToGuid() });
+                parList.Add(new SqlParameter("@FlowID", SqlDbType.UniqueIdentifier) { Value = flowid.Convert<Guid>() });
             } else if (!flowid.IsNullOrEmpty() && flowid.IndexOf(',') >= 0) {
                 where.Append(" AND FlowID IN(" + RoadFlow.Utility.Tools.GetSqlInString(flowid) + ")");
             }
             if (date1.IsDateTime()) {
                 where.Append(" AND SenderTime>=@SenderTime");
-                parList.Add(new SqlParameter("@SenderTime", SqlDbType.DateTime) { Value = date1.ToDateTime().Date });
+                parList.Add(new SqlParameter("@SenderTime", SqlDbType.DateTime) { Value = date1.Convert<DateTime>().Date });
             }
             if (date2.IsDateTime()) {
                 where.Append(" AND SenderTime<=@SenderTime1");
-                parList.Add(new SqlParameter("@SenderTime1", SqlDbType.DateTime) { Value = date1.ToDateTime().AddDays(1).Date });
+                parList.Add(new SqlParameter("@SenderTime1", SqlDbType.DateTime) { Value = date1.Convert<DateTime>().AddDays(1).Date });
             }
 
 
@@ -380,7 +380,7 @@ namespace RoadFlow.Data.MSSQL {
             string sql = dbHelper.GetPaerSql("WorkFlowTask", " * ", where.ToString(), "Sort DESC", size, number, out count, parList.ToArray());
             //string sql1 = dbHelper.GetPaerSql(sql.ToString(), size, number, out count, parList.ToArray());
             //pager = RoadFlow.Utility.Tools.GetPagerHtml(count, size, number, query);
-            pager = MyExtensions.GetPagerHtml(count, size, number);
+            pager = RoadFlow.Utility.New.Tools.GetPagerHtml(count, size, number);
 
             SqlDataReader dataReader = dbHelper.GetDataReader(sql, parList.ToArray());
             List<RoadFlow.Data.Model.WorkFlowTask> List = DataReaderToList(dataReader);
@@ -402,7 +402,7 @@ namespace RoadFlow.Data.MSSQL {
                 new SqlParameter("@PrevID", SqlDbType.UniqueIdentifier){ Value = Guid.Empty }
 			};
             string senderID = dbHelper.GetFieldValue(sql, parameters);
-            return senderID.ToGuid();
+            return senderID.Convert<Guid>();
         }
 
         /// <summary>

@@ -160,17 +160,17 @@ namespace RoadFlow.Data.MSSQL
             if (userID.IsGuid())
             {
                 WHERE.Append("AND UserID>=@UserID ");
-                parList.Add(new SqlParameter("@UserID", SqlDbType.UniqueIdentifier) { Value = userID.ToGuid() });
+                parList.Add(new SqlParameter("@UserID", SqlDbType.UniqueIdentifier) { Value = userID.Convert<Guid>() });
             }
             if (startTime.IsDateTime())
             {
                 WHERE.Append("AND StartTime>=@StartTime ");
-                parList.Add(new SqlParameter("@StartTime", SqlDbType.DateTime) { Value = startTime.ToDateTime().ToString("yyyy-MM-dd").ToDateTime() });
+                parList.Add(new SqlParameter("@StartTime", SqlDbType.DateTime) { Value = startTime.Convert<DateTime>().ToString("yyyy-MM-dd").Convert<DateTime>() });
             }
             if (endTime.IsDateTime())
             {
                 WHERE.Append("AND EndTime>=@EndTime ");
-                parList.Add(new SqlParameter("@EndTime", SqlDbType.DateTime) { Value = endTime.ToDateTime().AddDays(1).ToString("yyyy-MM-dd").ToDateTime() });
+                parList.Add(new SqlParameter("@EndTime", SqlDbType.DateTime) { Value = endTime.Convert<DateTime>().AddDays(1).ToString("yyyy-MM-dd").Convert<DateTime>() });
             }
             long count;
             int pageSize=RoadFlow.Utility.Tools.GetPageSize();
@@ -178,7 +178,7 @@ namespace RoadFlow.Data.MSSQL
             string sql = dbHelper.GetPaerSql("WorkFlowDelegation", "*", WHERE.ToString(), "WriteTime Desc", pageSize, pageNumber, out count, parList.ToArray());
 
             //pager = RoadFlow.Utility.Tools.GetPagerHtml(count, pageSize, pageNumber, query);
-            pager = MyExtensions.GetPagerHtml(count, pageSize, pageNumber);
+            pager = RoadFlow.Utility.New.Tools.GetPagerHtml(count, pageSize, pageNumber);
             SqlDataReader dataReader = dbHelper.GetDataReader(sql, parList.ToArray());
             List<RoadFlow.Data.Model.WorkFlowDelegation> List = DataReaderToList(dataReader);
             dataReader.Close();

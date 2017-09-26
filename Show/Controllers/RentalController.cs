@@ -129,7 +129,7 @@ namespace Show.Controllers
             }
             #endregion
             int totalCount = list.Count();
-            string pager = MyExtensions.GetPagingHtml(totalCount, pageSize, pageIndex);
+            string pager = RoadFlow.Utility.New.Tools.GetPagingHtml(totalCount, pageSize, pageIndex);
             list = list.OrderByDescending(p => p.CreateTime).Skip(pageSize * (pageIndex - 1)).Take(pageSize);
             return Json(new { success = true, html = GetHtml(list, rentalType).ToString(), pager = pager, totalCount = totalCount, }, JsonRequestBehavior.AllowGet);
         }

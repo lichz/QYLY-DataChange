@@ -262,7 +262,7 @@ namespace RoadFlow.Platform
             get
             {
                 object session = System.Web.HttpContext.Current.Session[RoadFlow.Utility.Keys.SessionKeys.UserID.ToString()];
-                return session == null ? Guid.Empty : session.ToString().ToGuid();
+                return session == null ? Guid.Empty : session.ToString().Convert<Guid>();
             }
         }
         /// <summary>

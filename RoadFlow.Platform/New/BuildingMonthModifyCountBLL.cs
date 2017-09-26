@@ -88,7 +88,7 @@ namespace RoadFlow.Platform
             
             //分页
             int allCount = result.Count;
-            pager = MyExtensions.GetPagerHtml(allCount, size, pageIndex);  //生成HTML的分页
+            pager = RoadFlow.Utility.New.Tools.GetPagerHtml(allCount, size, pageIndex);  //生成HTML的分页
 
             return result.OrderByDescending(p => p.Count + p.EnterpriseModifyCount).Skip((pageIndex - 1) * size).Take(size).ToList();
         }

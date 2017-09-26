@@ -53,7 +53,7 @@ namespace WebMvc.Controllers
             RoadFlow.Data.Model.DBConnection dbconn = null;
             if (editid.IsGuid())
             {
-                dbconn = bdbConn.Get(editid.ToGuid());
+                dbconn = bdbConn.Get(editid.Convert<Guid>());
             }
             bool isAdd = !editid.IsGuid();
             string oldXML = string.Empty;

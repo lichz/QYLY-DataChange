@@ -210,7 +210,7 @@ namespace RoadFlow.Data.MSSQL
             if (userID.IsGuid())
             {
                 sql += " and ID<>@ID";
-                plist.Add(new SqlParameter("@ID", SqlDbType.UniqueIdentifier) { Value = userID.ToGuid() });
+                plist.Add(new SqlParameter("@ID", SqlDbType.UniqueIdentifier) { Value = userID.Convert<Guid>() });
             }
             SqlDataReader dataReader = dbHelper.GetDataReader(sql, plist.ToArray());
             bool flag = dataReader.HasRows;

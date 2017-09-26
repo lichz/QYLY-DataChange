@@ -54,7 +54,7 @@ namespace Show.Controllers
             viewModel.OtherID = otherID;
             //默认显示已建楼宇-重点楼宇
             IQueryable<BuildingModel> list1 = db.BuildingsAndBuildingMonthInfo.Where(p => p.JSJD == buildedID && p.IsImportant == importantID && p.Status == Status.Normal);
-            viewModel.Pager = MyExtensions.GetPagingHtml(list1.Count(), pageSize, pageIndex.Value);
+            viewModel.Pager = RoadFlow.Utility.New.Tools.GetPagingHtml(list1.Count(), pageSize, pageIndex.Value);
             viewModel.Buildings = db.BuildingsAndBuildingMonthInfo.Where(p => p.JSJD == buildedID && p.IsImportant == importantID && p.Status == Status.Normal).OrderByDescending(p => p.CreateTime).Skip(pageSize * (pageIndex.Value - 1)).Take(pageSize);
             viewModel.BuildingCount = viewModel.Buildings.Count();
             return viewModel;
@@ -106,7 +106,7 @@ namespace Show.Controllers
                 list = list.Where(p => p.Name.Contains(name));
             }
             int totalCount = list.Count();
-            string pager = MyExtensions.GetPagingHtml(totalCount, pageSize, pageIndex);
+            string pager = RoadFlow.Utility.New.Tools.GetPagingHtml(totalCount, pageSize, pageIndex);
             list = list.OrderByDescending(p => p.CreateTime).Skip(pageSize * (pageIndex - 1)).Take(pageSize);
 
             int count = 0;

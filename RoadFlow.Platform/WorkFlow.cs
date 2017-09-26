@@ -149,7 +149,7 @@ namespace RoadFlow.Platform
                 wf.InstanceManager = jsonData["instanceManager"].ToString();
                 wf.Manager = jsonData["manager"].ToString();
                 wf.Name = name.Trim();
-                wf.Type = type.IsGuid() ? type.ToGuid() : new Dictionary().GetIDByCode("FlowTypes");
+                wf.Type = type.IsGuid() ? type.Convert<Guid>() : new Dictionary().GetIDByCode("FlowTypes");
                 try
                 {
                     if (isAdd)
@@ -202,7 +202,7 @@ namespace RoadFlow.Platform
                     using (System.Transactions.TransactionScope scope = new System.Transactions.TransactionScope())
                     {
                         wf.InstallDate = wfInstalled.InstallTime;
-                        wf.InstallUserID = wfInstalled.InstallUser.ToGuid();
+                        wf.InstallUserID = wfInstalled.InstallUser.Convert<Guid>();
                         wf.RunJSON = wfInstalled.RunJSON;
                         wf.Status = 2;
                         dataWorkFlow.Update(wf);
@@ -225,7 +225,7 @@ namespace RoadFlow.Platform
                         app.OpenMode = 0;
                         app.Params = "flowid=" + wfInstalled.ID.ToString();
                         app.Title = wfInstalled.Name;
-                        app.Type = wfInstalled.Type.IsGuid() ? wfInstalled.Type.ToGuid() : new Dictionary().GetIDByCode("FlowTypes");
+                        app.Type = wfInstalled.Type.IsGuid() ? wfInstalled.Type.Convert<Guid>() : new Dictionary().GetIDByCode("FlowTypes");
                         if (isAdd)
                         {
                             bappLibrary.Add(app);
@@ -410,7 +410,7 @@ namespace RoadFlow.Platform
             }
             else
             {
-                wfInstalled.ID = id.ToGuid();
+                wfInstalled.ID = id.Convert<Guid>();
             }
 
             string name = json["name"].ToString();
@@ -450,8 +450,8 @@ namespace RoadFlow.Platform
                 wfInstalled.Manager = instanceManager;
             }
 
-            wfInstalled.RemoveCompleted = json["removeCompleted"].ToString().ToInt();
-            wfInstalled.Debug = json["debug"].ToString().ToInt();
+            wfInstalled.RemoveCompleted = json["removeCompleted"].ToString().Convert<int>();
+            wfInstalled.Debug = json["debug"].ToString().Convert<int>();
             wfInstalled.DebugUsers = new RoadFlow.Platform.Organize().GetAllUsers(json["debugUsers"].ToString());
             wfInstalled.Note = json["note"].ToString();
 
@@ -463,7 +463,7 @@ namespace RoadFlow.Platform
                 {
                     dataBases.Add(new RoadFlow.Data.Model.WorkFlowInstalledSub.DataBases()
                     {
-                        LinkID = db["link"].ToString().ToGuid(),
+                        LinkID = db["link"].ToString().Convert<Guid>(),
                         LinkName = db["linkName"].ToString(),
                         Table = db["table"].ToString(),
                         PrimaryKey = db["primaryKey"].ToString()
@@ -478,7 +478,7 @@ namespace RoadFlow.Platform
                 wfInstalled.TitleField = new RoadFlow.Data.Model.WorkFlowInstalledSub.TitleField()
                 {
                     Field = titleField["field"].ToString(),
-                    LinkID = titleField["link"].ToString().ToGuid(),
+                    LinkID = titleField["link"].ToString().Convert<Guid>(),
                     LinkName = "",
                     Table = titleField["table"].ToString()
                 };
@@ -497,21 +497,21 @@ namespace RoadFlow.Platform
                     RoadFlow.Data.Model.WorkFlowInstalledSub.StepSet.Behavior behavior1 = new RoadFlow.Data.Model.WorkFlowInstalledSub.StepSet.Behavior();
                     if (behavior.IsObject)
                     {
-                        behavior1.BackModel = behavior["backModel"].ToString().ToInt();
-                        behavior1.BackStepID = behavior["backStep"].ToString().ToGuid();
-                        behavior1.BackType = behavior["backType"].ToString().ToInt();
+                        behavior1.BackModel = behavior["backModel"].ToString().Convert<int>();
+                        behavior1.BackStepID = behavior["backStep"].ToString().Convert<Guid>();
+                        behavior1.BackType = behavior["backType"].ToString().Convert<int>();
                         behavior1.DefaultHandler = behavior["defaultHandler"].ToString();
-                        behavior1.FlowType = behavior["flowType"].ToString().ToInt();
-                        behavior1.HandlerStepID = behavior["handlerStep"].ToString().ToGuid();
-                        behavior1.HandlerType = behavior["handlerType"].ToString().ToInt();
-                        behavior1.HanlderModel = behavior["hanlderModel"].ToString().ToInt(3);
-                        behavior1.Percentage = behavior["percentage"].ToString().IsDecimal() ? behavior["percentage"].ToString().ToDecimal() : decimal.MinusOne;
-                        behavior1.RunSelect = behavior["runSelect"].ToString().ToInt();
+                        behavior1.FlowType = behavior["flowType"].ToString().Convert<int>();
+                        behavior1.HandlerStepID = behavior["handlerStep"].ToString().Convert<Guid>();
+                        behavior1.HandlerType = behavior["handlerType"].ToString().Convert<int>();
+                        behavior1.HanlderModel = behavior["hanlderModel"].ToString().Convert<int>(3);
+                        behavior1.Percentage = behavior["percentage"].ToString().IsDecimal() ? behavior["percentage"].ToString().Convert<decimal>() : decimal.MinusOne;
+                        behavior1.RunSelect = behavior["runSelect"].ToString().Convert<int>();
                         behavior1.SelectRange = behavior["selectRange"].ToString();
                         behavior1.ValueField = behavior["valueField"].ToString();
-                        behavior1.Countersignature = behavior.ContainsKey("countersignature") ? behavior["countersignature"].ToString().ToInt() : 0;
-                        behavior1.CountersignaturePercentage = behavior.ContainsKey("countersignaturePercentage") ? behavior["countersignaturePercentage"].ToString().ToDecimal() : decimal.MinusOne;
-                        behavior1.SubFlowStrategy = behavior.ContainsKey("subflowstrategy") ? behavior["subflowstrategy"].ToString().ToInt() : int.MinValue;
+                        behavior1.Countersignature = behavior.ContainsKey("countersignature") ? behavior["countersignature"].ToString().Convert<int>() : 0;
+                        behavior1.CountersignaturePercentage = behavior.ContainsKey("countersignaturePercentage") ? behavior["countersignaturePercentage"].ToString().Convert<decimal>() : decimal.MinusOne;
+                        behavior1.SubFlowStrategy = behavior.ContainsKey("subflowstrategy") ? behavior["subflowstrategy"].ToString().Convert<int>() : int.MinValue;
                     }
                     #endregion
                     #region 按钮
@@ -526,7 +526,7 @@ namespace RoadFlow.Platform
                             {
                                 continue;
                             }
-                            var buttonModel = new WorkFlowButtons().Get(butID.ToGuid(), true);
+                            var buttonModel = new WorkFlowButtons().Get(butID.Convert<Guid>(), true);
                             if (buttonModel == null)
                             {
                                 continue;
@@ -535,7 +535,7 @@ namespace RoadFlow.Platform
                             {
                                 ID = butID,
                                 Note = buttonModel.Note.IsNullOrEmpty() ? "" : buttonModel.Note.Replace("\"", "'"),
-                                Sort = button["sort"].ToString().ToInt()
+                                Sort = button["sort"].ToString().Convert<int>()
                             });
                         }
                     }
@@ -567,9 +567,9 @@ namespace RoadFlow.Platform
                         {
                             formList.Add(new RoadFlow.Data.Model.WorkFlowInstalledSub.StepSet.Form()
                             {
-                                ID = form["id"].ToString().ToGuid(),
+                                ID = form["id"].ToString().Convert<Guid>(),
                                 Name = form["name"].ToString(),
-                                Sort = form["srot"].ToString().ToInt()
+                                Sort = form["srot"].ToString().Convert<int>()
                             });
                         }
                     }
@@ -588,9 +588,9 @@ namespace RoadFlow.Platform
                         {
                             fieldStatusList.Add(new RoadFlow.Data.Model.WorkFlowInstalledSub.StepSet.FieldStatus()
                             {
-                                Check = field["check"].ToString().ToInt(),
+                                Check = field["check"].ToString().Convert<int>(),
                                 Field = field["field"].ToString(),
-                                Status1 = field["status"].ToString().ToInt()
+                                Status1 = field["status"].ToString().Convert<int>()
                             });
                         }
                     }
@@ -600,29 +600,29 @@ namespace RoadFlow.Platform
                     decimal x = 0, y = 0;
                     if (position.IsObject)
                     {
-                        x = position["x"].ToString().ToDecimal();
-                        y = position["y"].ToString().ToDecimal();
+                        x = position["x"].ToString().Convert<decimal>();
+                        y = position["y"].ToString().Convert<decimal>();
                     }
 
                     stepsList.Add(new RoadFlow.Data.Model.WorkFlowInstalledSub.Step()
                     {
-                        Archives = step["archives"].ToString().ToInt(),
+                        Archives = step["archives"].ToString().Convert<int>(),
                         ArchivesParams = step["archivesParams"].ToString(),
                         Behavior = behavior1,
                         Buttons = buttionList,
                         Event = event2,
-                        ExpiredPrompt = step["expiredPrompt"].ToString().ToInt(),
+                        ExpiredPrompt = step["expiredPrompt"].ToString().Convert<int>(),
                         Forms = formList,
                         FieldStatus = fieldStatusList,
-                        ID = step["id"].ToString().ToGuid(),
+                        ID = step["id"].ToString().Convert<Guid>(),
                         Type = step.ContainsKey("type") ? step["type"].ToString() : "normal",
-                        LimitTime = step["limitTime"].ToString().ToDecimal(),
+                        LimitTime = step["limitTime"].ToString().Convert<decimal>(),
                         Name = step["name"].ToString(),
                         Note = step["note"].ToString(),
-                        OpinionDisplay = step["opinionDisplay"].ToString().ToInt(),
-                        OtherTime = step["otherTime"].ToString().ToDecimal(),
-                        SignatureType = step["signatureType"].ToString().ToInt(),
-                        WorkTime = step["workTime"].ToString().ToDecimal(),
+                        OpinionDisplay = step["opinionDisplay"].ToString().Convert<int>(),
+                        OtherTime = step["otherTime"].ToString().Convert<decimal>(),
+                        SignatureType = step["signatureType"].ToString().Convert<int>(),
+                        WorkTime = step["workTime"].ToString().Convert<decimal>(),
                         SubFlowID = step.ContainsKey("subflow") ? step["subflow"].ToString() : "",
                         Position_x = x,
                         Position_y = y
@@ -649,9 +649,9 @@ namespace RoadFlow.Platform
                 {
                     linesList.Add(new RoadFlow.Data.Model.WorkFlowInstalledSub.Line()
                     {
-                        ID = line["id"].ToString().ToGuid(),
-                        FromID = line["from"].ToString().ToGuid(),
-                        ToID = line["to"].ToString().ToGuid(),
+                        ID = line["id"].ToString().Convert<Guid>(),
+                        FromID = line["from"].ToString().Convert<Guid>(),
+                        ToID = line["to"].ToString().Convert<Guid>(),
                         CustomMethod = line["customMethod"].ToString(),
                         SqlWhere = line["sql"].ToString(),
                         NoAccordMsg = line.ContainsKey("noaccordMsg") ? line["noaccordMsg"].ToString() : "",
@@ -932,7 +932,7 @@ namespace RoadFlow.Platform
             Dictionary<Guid, string> flowids = new Dictionary<Guid, string>();
             foreach (var flow in flows)
             {
-                if (typeID.IsGuid() && !GetAllChildsIDString(typeID.ToGuid()).Contains(flow.Type.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                if (typeID.IsGuid() && !GetAllChildsIDString(typeID.Convert<Guid>()).Contains(flow.Type.ToString(), StringComparison.CurrentCultureIgnoreCase))
                 {
                     continue;
                 }
@@ -1045,7 +1045,7 @@ namespace RoadFlow.Platform
         public string GetAutoTitle(string flowID, string stepID)
         {
             string flowName;
-            string stepName = GetStepName(stepID.ToGuid(), flowID.ToGuid(), out flowName, true);
+            string stepName = GetStepName(stepID.Convert<Guid>(), flowID.Convert<Guid>(), out flowName, true);
             return string.Format("<div class='flowautotitle'>{0} - {1}</div>", flowName, stepName);
         }
 
@@ -1064,7 +1064,7 @@ namespace RoadFlow.Platform
             Guid gid;
             if (groupID.IsGuid(out gid) || gid == Guid.Empty)
             {
-                var fqz = new WorkFlowTask().GetFirstSnderID(flowID.ToGuid(), gid);
+                var fqz = new WorkFlowTask().GetFirstSnderID(flowID.Convert<Guid>(), gid);
                 senderName = new Users().GetName(fqz);
             }
             if (senderName.IsNullOrEmpty())
@@ -1292,7 +1292,7 @@ namespace RoadFlow.Platform
         //        return instanceid;
         //    }
 
-        //    RoadFlow.Data.Model.DBConnection dbconn = bdbconn.Get(dbconnid.ToGuid());
+        //    RoadFlow.Data.Model.DBConnection dbconn = bdbconn.Get(dbconnid.Convert<Guid>());
         //    if (dbconn == null)
         //    {
         //        return instanceid;
@@ -1740,7 +1740,7 @@ namespace RoadFlow.Platform
                 return jsonData;
             }
             RoadFlow.Platform.DBConnection bdbconn = new RoadFlow.Platform.DBConnection();
-            RoadFlow.Data.Model.DBConnection dbconn = bdbconn.Get(connid.ToGuid());
+            RoadFlow.Data.Model.DBConnection dbconn = bdbconn.Get(connid.Convert<Guid>());
             if (dbconn == null)
             {
                 return "";
@@ -1860,7 +1860,7 @@ namespace RoadFlow.Platform
                 return jsonData;
             }
             RoadFlow.Platform.DBConnection bdbconn = new RoadFlow.Platform.DBConnection();
-            RoadFlow.Data.Model.DBConnection dbconn = bdbconn.Get(connID.ToGuid());
+            RoadFlow.Data.Model.DBConnection dbconn = bdbconn.Get(connID.Convert<Guid>());
             if (dbconn == null)
             {
                 return "";

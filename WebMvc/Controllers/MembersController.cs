@@ -276,7 +276,7 @@ namespace WebMvc.Controllers
             string id = Request.QueryString["id"];
             if (id.IsGuid())
             {
-                org = borganize.Get(id.ToGuid());
+                org = borganize.Get(id.Convert<Guid>());
             }
 
             //保存
@@ -290,8 +290,8 @@ namespace WebMvc.Controllers
                 string note = Request.Form["note"];
                 string oldXML = org.Serialize();
                 org.Name = name.Trim();
-                org.Type = type.ToInt(1);
-                org.Status = status.ToInt(0);
+                org.Type = type.Convert<int>(1);
+                org.Status = status.Convert<int>(0);
                 org.ChargeLeader = chargeLeader;
                 org.Leader = leader;
                 org.Note = note.IsNullOrEmpty() ? null : note.Trim();
@@ -379,8 +379,8 @@ namespace WebMvc.Controllers
                 org1.ParentID = org.ID;
                 org1.Sort = borganize.GetMaxSort(org.ID);
 
-                org1.Status = status.IsInt() ? status.ToInt() : 0;
-                org1.Type = type.ToInt();
+                org1.Status = status.IsInt() ? status.Convert<int>() : 0;
+                org1.Type = type.Convert<int>();
                 org1.Depth = org.Depth + 1;
 
                 using (System.Transactions.TransactionScope scope = new System.Transactions.TransactionScope())
@@ -440,7 +440,7 @@ namespace WebMvc.Controllers
                     user.Note = note.IsNullOrEmpty() ? null : note;
                     user.Password = busers.GetUserEncryptionPassword(userID.ToString(), busers.GetInitPassword());
                     user.Sort = 1;
-                    user.Status = status.IsInt() ? status.ToInt() : 0;
+                    user.Status = status.IsInt() ? status.Convert<int>() : 0;
                     user.ID = userID;
                     busers.Add(user);
 
@@ -554,7 +554,7 @@ namespace WebMvc.Controllers
 
                     user.Name = name.Trim();
                     user.Account = account.Trim();
-                    user.Status = status.ToInt(1);
+                    user.Status = status.Convert<int>(1);
                     user.Tell = tell.Trim();
                     user.Note = note.IsNullOrEmpty() ? null : note.Trim();
 
@@ -588,7 +588,7 @@ namespace WebMvc.Controllers
 
                     string refreshID = parentID;
                     string url = string.Empty;
-                    var users = borganize.GetAllUsers(refreshID.ToGuid());
+                    var users = borganize.GetAllUsers(refreshID.Convert<Guid>());
                     if (users.Count > 0)
                     {
                         url = "User?id=" + users.Last().ID + "&appid=" + Request.QueryString["appid"] + "&tabid=" + Request.QueryString["tabid"] + "&parentid=" + parentID;
@@ -682,7 +682,7 @@ namespace WebMvc.Controllers
                 }
                 ViewBag.Script = "parent.frames[0].reLoad('" + parentid + "');";
             }
-            var orgs = new RoadFlow.Platform.Organize().GetChilds(parentid.ToGuid());
+            var orgs = new RoadFlow.Platform.Organize().GetChilds(parentid.Convert<Guid>());
             return View(orgs);
         }
 
@@ -712,7 +712,7 @@ namespace WebMvc.Controllers
                 }
                 ViewBag.Script = "parent.frames[0].reLoad('" + parentID + "');";
             }
-            var users = new RoadFlow.Platform.Organize().GetAllUsers(parentID.ToGuid());
+            var users = new RoadFlow.Platform.Organize().GetAllUsers(parentID.Convert<Guid>());
             return View(users);
         }
 
@@ -748,12 +748,12 @@ namespace WebMvc.Controllers
             RoadFlow.Platform.Users buser = new RoadFlow.Platform.Users();
             if (id.StartsWith(RoadFlow.Platform.Users.PREFIX))
             {
-                Guid uid = buser.RemovePrefix1(id).ToGuid();
+                Guid uid = buser.RemovePrefix1(id).Convert<Guid>();
                 return string.Concat(borg.GetAllParentNames(buser.GetMainStation(uid)), " / ", buser.GetName(uid));
             }
             else if (id.StartsWith(RoadFlow.Platform.WorkGroup.PREFIX))
             {
-                return new RoadFlow.Platform.WorkGroup().GetUsersNames(RoadFlow.Platform.WorkGroup.RemovePrefix(id).ToGuid(), '、');
+                return new RoadFlow.Platform.WorkGroup().GetUsersNames(RoadFlow.Platform.WorkGroup.RemovePrefix(id).Convert<Guid>(), '、');
             }
             else if (id.IsGuid(out gid))
             {

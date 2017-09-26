@@ -111,11 +111,11 @@
 
             if ('radio' == type)
             {
-                radios = '<span>@Html.Raw(BDictionary.GetRadiosByID("' + dictid + '".ToGuid(), "' + id + '", RoadFlow.Platform.Dictionary.OptionValueField.ID, "' + defaultvalue + '", "isflow=\'1\' type1=\'flow_radio\'' + eventArrs + '"))' + eventScripts + '</span>';
+                radios = '<span>@Html.Raw(BDictionary.GetRadiosByID("' + dictid + '".Convert<Guid>(), "' + id + '", RoadFlow.Platform.Dictionary.OptionValueField.ID, "' + defaultvalue + '", "isflow=\'1\' type1=\'flow_radio\'' + eventArrs + '"))' + eventScripts + '</span>';
             }
             else if ('checkbox' == type)
             {
-                radios = '<span>@Html.Raw(BDictionary.GetCheckboxsByID("' + dictid + '".ToGuid(), "' + id + '", RoadFlow.Platform.Dictionary.OptionValueField.ID, "' + defaultvalue + '", "isflow=\'1\' type1=\'flow_checkbox\'' + eventArrs + '"))' + eventScripts + '</span>';
+                radios = '<span>@Html.Raw(BDictionary.GetCheckboxsByID("' + dictid + '".Convert<Guid>(), "' + id + '", RoadFlow.Platform.Dictionary.OptionValueField.ID, "' + defaultvalue + '", "isflow=\'1\' type1=\'flow_checkbox\'' + eventArrs + '"))' + eventScripts + '</span>';
             }
 
             $control.after(radios);
@@ -178,7 +178,7 @@
             {
                 radios += '<option value=""></option>';
             }
-            radios += '@Html.Raw(BDictionary.GetOptionsByID("' + dictid + '".ToGuid(), RoadFlow.Platform.Dictionary.OptionValueField.ID, "' + defaultvalue + '"))';
+            radios += '@Html.Raw(BDictionary.GetOptionsByID("' + dictid + '".Convert<Guid>(), RoadFlow.Platform.Dictionary.OptionValueField.ID, "' + defaultvalue + '"))';
             radios += '</select>';
             var $radios = $(radios);
             $radios.attr("eventsid", $control.attr("eventsid"));
@@ -253,7 +253,7 @@
         switch (org_rang)
         {
             case "0": //发起者部门
-                rootid = '@BWorkFlowTask.GetFirstSnderDeptID(FlowID.ToGuid(), GroupID.ToGuid())';
+                rootid = '@BWorkFlowTask.GetFirstSnderDeptID(FlowID.Convert<Guid>(), GroupID.Convert<Guid>())';
                 break;
             case "1": //处理者部门
                 rootid = '@RoadFlow.Platform.Users.CurrentDeptID';
@@ -487,7 +487,7 @@
                 {
                     select += '<option value=""></option>';
                 }
-                select += '@Html.Raw(BDictionary.GetOptionsByID("' + rootid + '".ToGuid(), RoadFlow.Platform.Dictionary.OptionValueField.ID, "' + dvalue + '"))';
+                select += '@Html.Raw(BDictionary.GetOptionsByID("' + rootid + '".Convert<Guid>(), RoadFlow.Platform.Dictionary.OptionValueField.ID, "' + dvalue + '"))';
                 break;
             case "select_dssql":
                 var sql = editmode.select_ds_sql;
@@ -520,7 +520,7 @@
         {
             case "checkbox_dsdict":
                 var rootid = editmode.checkbox_ds_dict;
-                checkbox = '<span>@Html.Raw(BDictionary.GetCheckboxsByID("' + rootid + '".ToGuid(), "' + name + '", RoadFlow.Platform.Dictionary.OptionValueField.ID, "' + dvalue + '", "issubflow=\'1\' type1=\'subflow_checkbox\' colname=\'' + colnumJSON.name + '\'"))</span>';
+                checkbox = '<span>@Html.Raw(BDictionary.GetCheckboxsByID("' + rootid + '".Convert<Guid>(), "' + name + '", RoadFlow.Platform.Dictionary.OptionValueField.ID, "' + dvalue + '", "issubflow=\'1\' type1=\'subflow_checkbox\' colname=\'' + colnumJSON.name + '\'"))</span>';
                 break;
             case "checkbox_dssql":
                 var sql = editmode.checkbox_ds_sql;
@@ -545,7 +545,7 @@
         {
             case "radio_dsdict":
                 var rootid = editmode.radio_ds_dict;
-                radio = '<span>@Html.Raw(BDictionary.GetRadiosByID("' + rootid + '".ToGuid(), "' + name + '", RoadFlow.Platform.Dictionary.OptionValueField.ID, "' + dvalue + '", "issubflow=\'1\' type1=\'subflow_radio\' colname=\'' + colnumJSON.name + '\'"))</span>';
+                radio = '<span>@Html.Raw(BDictionary.GetRadiosByID("' + rootid + '".Convert<Guid>(), "' + name + '", RoadFlow.Platform.Dictionary.OptionValueField.ID, "' + dvalue + '", "issubflow=\'1\' type1=\'subflow_radio\' colname=\'' + colnumJSON.name + '\'"))</span>';
                 break;
             case "radio_dssql":
                 var sql = editmode.radio_ds_sql;
@@ -602,7 +602,7 @@
         switch (editmode.org_rang)
         {
             case "0": //发起者部门
-                rootid = '@BWorkFlowTask.GetFirstSnderDeptID(FlowID.ToGuid(), GroupID.ToGuid())';
+                rootid = '@BWorkFlowTask.GetFirstSnderDeptID(FlowID.Convert<Guid>(), GroupID.Convert<Guid>())';
                 break;
             case "1": //处理者部门
                 rootid = '@RoadFlow.Platform.Users.CurrentDeptID';
