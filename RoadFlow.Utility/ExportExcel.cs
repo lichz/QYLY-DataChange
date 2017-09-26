@@ -24,29 +24,31 @@ namespace RoadFlow.Utility
         /// <param name="name">导出Excel文件名</param>
         public static void Export(DataTable dt, string name)
         {
+            //使用NPOI操作Excel表
+            if (dt.Rows.Count <= 0) return;
+
             //创建工作薄
             var workbook = new HSSFWorkbook();
            
-            //使用NPOI操作Excel表
-            if (dt.Rows.Count <= 0) return;
             WorkbookCreateCell(workbook, dt,null);
             WorkbookWrite(name,workbook);
         }
 
         /// <summary>
-        /// 
+        /// 少量数据导出
         /// </summary>
         /// <param name="dt"></param>
         /// <param name="name"></param>
-        /// <param name="endList">结尾的总计数据等</param>
-        public static void Export(DataTable dt, string name, List<List<string>> endList)
+        /// <param name="subtotal">结尾的总计数据等</param>
+        public static void Export(DataTable dt, string name, List<List<string>> subtotal)
         {
+            //使用NPOI操作Excel表
+            if (dt.Rows.Count <= 0) return;
+
             //创建工作薄
             var workbook = new HSSFWorkbook();
 
-            //使用NPOI操作Excel表
-            if (dt.Rows.Count <= 0) return;
-            WorkbookCreateCell(workbook, dt,endList);
+            WorkbookCreateCell(workbook, dt, subtotal);
             WorkbookWrite(name, workbook);
         }
 
@@ -57,6 +59,9 @@ namespace RoadFlow.Utility
         /// <param name="name"></param>
         public static void Export<T>(List<T> list, string name)
         {
+            //使用NPOI操作Excel表
+            if (list.Count <= 0) return;
+
             //创建工作薄
             var workbook = new HSSFWorkbook();
             //Excel的Sheet对象
@@ -66,49 +71,40 @@ namespace RoadFlow.Utility
             style.VerticalAlignment = VerticalAlignment.Center;
             style.WrapText = true;
 
-            //使用NPOI操作Excel表
-            if (list.Count <= 0) return;
             //设置导出字段标题
             var rowZdTitle = sheet.CreateRow(0);
 
-            int col = 0;
-            Type t = typeof(T);
-            T instance = (T)Activator.CreateInstance(t);
-            foreach (PropertyInfo info in t.GetProperties())
-            {
-                object[] objs = info.GetCustomAttributes(typeof(DisplayNameAttribute), true);
-                if (objs == null || objs.Length == 0)
-                {
-                    continue;
-                }
-                DisplayNameAttribute attr = objs[0] as DisplayNameAttribute;
-                var cellZdTitle = rowZdTitle.CreateCell(col++);
-                cellZdTitle.SetCellValue(attr.DisplayName);
+            Tools.GetPropertiesAttribute<T,DisplayNameAttribute>(delegate (int col, DisplayNameAttribute displayName) 
+            {//获取属性特质后续处理
+                var cellZdTitle = rowZdTitle.CreateCell(col);
+                cellZdTitle.SetCellValue(displayName.DisplayName);
                 cellZdTitle.CellStyle = style;
-            }
+            });
 
             //设置导出数据
             int row = 1;
-            col = 0;//重置参数
             foreach (var item in list)
             {
                 var trow = sheet.CreateRow(row++);
-                foreach (PropertyInfo info in t.GetProperties())
-                {
-                    object[] objs = info.GetCustomAttributes(typeof(DisplayNameAttribute), true);
-                    if (objs == null || objs.Length == 0)
-                    {
-                        continue;
-                    }
-                    var v = info.GetValue(item, null);
-                    var cell = trow.CreateCell(col++);
-                    if (v != null)
-                    {
-                        cell.SetCellValue(v.ToString());
-                    }
-                    cell.CellStyle = style;
-                }
-                col = 0;//重置参数
+                Tools.GetPropertiesValue(delegate (PropertyInfo propertyInfo)
+                {//取值前判断，返回是否continue
+                    object[] objs = propertyInfo.GetCustomAttributes(typeof(DisplayNameAttribute), true);
+                     if (objs == null || objs.Length == 0)
+                     {
+                         return true;
+                     }
+                     return false;
+                 }, delegate (int col,object value, PropertyInfo propertyInfo) 
+                 {//取值后处理，返回是否continue
+                     var cell = trow.CreateCell(col);
+                     if (value != null)
+                     {
+                         cell.SetCellValue(value.ToString());
+                     }
+                     cell.CellStyle = style;
+                     return false;
+                 }, item);
+
             }
 
             //保存excel文档
@@ -553,6 +549,8 @@ namespace RoadFlow.Utility
         }
         #endregion
 
-
     }
+
+    #region 模型
+    #endregion
 }

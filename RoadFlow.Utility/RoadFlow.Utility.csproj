@@ -76,7 +76,6 @@
     <Compile Include="HashEncrypt.cs" />
     <Compile Include="HttpHelper.cs" />
     <Compile Include="Keys.cs" />
-    <Compile Include="ModelHandler.cs" />
     <Compile Include="ObjectExpand.cs" />
     <Compile Include="SMS.cs" />
     <Compile Include="Tools.cs" />

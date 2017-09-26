@@ -5,6 +5,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using RoadFlow.Data.Interface;
+using RoadFlow.Utility;
+using System.Linq;
 
 namespace RoadFlow.Data.MSSQL
 {
@@ -61,8 +63,9 @@ namespace RoadFlow.Data.MSSQL
             };
 
             PostModel model=new PostModel();
-            DataTable dr = dbHelper.GetDataTable(sql, para);
-            model = RoadFlow.Utility.ModelHandler<PostModel>.FillModel(dr.Rows[0]);
+            DataTable dt = dbHelper.GetDataTable(sql, para);
+            model = dt.DataTableToList<PostModel>().FirstOrDefault();
+   
             return model;
         }
 

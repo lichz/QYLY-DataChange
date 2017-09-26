@@ -68,16 +68,7 @@ namespace WebMvc.Controllers {
                 string timeArea = Request["timeArea"].Replace("-", "");
                 where.Add(new KeyValuePair<string, RoadFlow.Data.Model.SQLFilterType>("TimeArea", RoadFlow.Data.Model.SQLFilterType.EQUAL), timeArea);
             }
-            //DataTable dt = BLL.GetAll(where);
-            ////导出列
-            //Dictionary<string, string> dicionary = new Dictionary<string, string>();
-            //dicionary.Add("BuildingName", "报送单位");
-            //dicionary.Add("TimeArea", "时间段");
-            //dicionary.Add("Count", "每月信息更新");
-            //dicionary.Add("EnterpriseModifyCount", "入驻企业变更");
-            //dicionary.Add("Score", "评分");
 
-            //ExportExcel.Export(dt.ExportExcelPre(dicionary, true), "报送考核");
             string pager=string.Empty;
             var list = BLL.GetALLOnHouse(where);
             ExportExcel.Export(list, "报送考核");

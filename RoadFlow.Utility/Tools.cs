@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Drawing;
 using System.Web;
-using System.IO;
+using System.Reflection;
 
 namespace RoadFlow.Utility
 {
@@ -91,7 +90,7 @@ namespace RoadFlow.Utility
         {
             string osVersion = System.Web.HttpContext.Current.Request.Browser.Platform;
             string userAgent = System.Web.HttpContext.Current.Request.UserAgent;
-            
+
             if (userAgent.Contains("NT 6.3"))
             {
                 osVersion = "Windows8.1";
@@ -155,91 +154,6 @@ namespace RoadFlow.Utility
             return osVersion;
         }
 
-
-        /// <summary>
-        /// 得到分页HTML
-        /// </summary>
-        /// <param name="recordCount">记录总数</param>
-        /// <param name="pageSize">每页条数</param>
-        /// <param name="pageNumber">当前页</param>
-        /// <param name="queryString">查询字符串</param>
-        /// <returns></returns>
-        public static string GetPagerHtml(long recordCount, int pageSize, int pageNumber, string queryString)
-        {
-
-            //得到共有多少页
-            long PageCount = recordCount <= 0 ? 1 : recordCount % pageSize == 0 ? recordCount / pageSize : recordCount / pageSize + 1;
-
-            long pNumber = pageNumber;
-            if (pNumber < 1)
-            {
-                pNumber = 1;
-            }
-            else if (pNumber > PageCount)
-            {
-                pNumber = PageCount;
-            }
-
-            //如果只有一页则返回空分页字符串
-            if (PageCount <= 1)
-            {
-                return "";
-            }
-
-            StringBuilder ReturnPagerString = new StringBuilder(1500);
-            string JsFunctionName = string.Empty;
-
-            //构造分页字符串
-            int DisplaySize = 10;//中间显示的页数
-            ReturnPagerString.Append("<div>");
-            ReturnPagerString.Append("<span style='margin-right:15px;'>共 " + recordCount.ToString() + " 条  每页 <input type='text' id='tnt_count' title='输入数字可改变每页显示条数' class='pagertxt' onchange=\"javascript:_toPage_" + JsFunctionName + "(" + pNumber.ToString() + ",this.value);\" value='" + pageSize.ToString() + "' /> 条  ");
-            ReturnPagerString.Append("转到 <input type='text' id='paernumbertext' title='输入数字可跳转页' value=\"" + pNumber.ToString() + "\" onchange=\"javascript:_toPage_" + JsFunctionName + "(this.value," + pageSize.ToString() + ");\" class='pagertxt'/> 页</span>");
-            if (pNumber > 1)
-                ReturnPagerString.Append("<a class=\"pager\" href=\"javascript:_toPage_" + JsFunctionName + "(" + (pNumber - 1).ToString() + "," + pageSize.ToString() + ");\"><span class=\"pagerarrow\">«</span></a>");
-            //添加第一页
-            if (pNumber >= DisplaySize / 2 + 3)
-                ReturnPagerString.Append("<a class=\"pager\" href=\"javascript:_toPage_" + JsFunctionName + "(1," + pageSize.ToString() + ");\">1…</a>");
-            else
-                ReturnPagerString.Append("<a class=\"" + (1 == pNumber ? "pagercurrent" : "pager") + "\" href=\"javascript:_toPage_" + JsFunctionName + "(1," + pageSize.ToString() + ");\">1</a>");
-
-            //添加中间数字
-            long star = pNumber - DisplaySize / 2;
-            long end = pNumber + DisplaySize / 2;
-            if (star < 2)
-            {
-                end += 2 - star;
-                star = 2;
-            }
-            if (end > PageCount - 1)
-            {
-                star -= end - (PageCount - 1);
-                end = PageCount - 1;
-            }
-            if (star < 2)
-                star = 2;
-
-            for (long i = star; i <= end; i++)
-                ReturnPagerString.Append("<a class=\"" + (i == pNumber ? "pagercurrent" : "pager") + "\" href=\"javascript:_toPage_" + JsFunctionName + "(" + i.ToString() + "," + pageSize.ToString() + ");\">" + i.ToString() + "</a>");
-            //添加最后页
-            if (pNumber <= PageCount - (DisplaySize / 2))
-                ReturnPagerString.Append("<a class=\"pager\" href=\"javascript:_toPage_" + JsFunctionName + "(" + PageCount.ToString() + "," + pageSize.ToString() + ");\">…" + PageCount.ToString() + "</a>");
-            else if (PageCount > 1)
-                ReturnPagerString.Append("<a class=\"" + (PageCount == pNumber ? "pagercurrent" : "pager") + "\" href=\"javascript:_toPage_" + JsFunctionName + "(" + PageCount.ToString() + "," + pageSize.ToString() + ");\">" + PageCount.ToString() + "</a>");
-            if (pNumber < PageCount)
-                ReturnPagerString.Append("<a class=\"pager\" href=\"javascript:_toPage_" + JsFunctionName + "(" + (pNumber + 1).ToString() + "," + pageSize.ToString() + ");\"><span class=\"pagerarrow\">»</span></a>");
-            ReturnPagerString.Append("</div>");
-            //构造分页JS函数
-            ReturnPagerString.Append("<script type=\"text/javascript\" lanuage=\"javascript\">");
-            ReturnPagerString.Append("function _toPage_" + JsFunctionName + "(page,size){");
-            ReturnPagerString.Append("var par=\"" + queryString + "\";");
-
-            ReturnPagerString.Append("window.location=\"?pagenumber=\"+page+\"&pagesize=\"+size+par;");
-
-            ReturnPagerString.Append("}");
-            ReturnPagerString.Append("</script>");
-            return ReturnPagerString.ToString();
-        }
-
         /// <summary>
         /// 得到页尺寸
         /// </summary>
@@ -262,7 +176,7 @@ namespace RoadFlow.Utility
             return number.IsInt(out number1) ? number1 : 1;
         }
 
-        
+
         /// <summary>
         /// 得到列表项
         /// </summary>
@@ -310,7 +224,7 @@ namespace RoadFlow.Utility
             StringBuilder options = new StringBuilder(items.Length * 50);
             foreach (var item in items)
             {
-                options.AppendFormat("<option value=\"{0}\" {1}>", item.Value.Replace("\"","'"), item.Selected ? "selected=\"selected\"" : "");
+                options.AppendFormat("<option value=\"{0}\" {1}>", item.Value.Replace("\"", "'"), item.Selected ? "selected=\"selected\"" : "");
                 options.Append(item.Text);
                 options.Append("</option>");
             }
@@ -502,13 +416,13 @@ namespace RoadFlow.Utility
             }
             System.IO.FileInfo fi = new System.IO.FileInfo(file);
 
-            return (fi.Length/1000).ToString("###,###");
+            return (fi.Length / 1000).ToString("###,###");
         }
 
         public static string DataTableToJsonString(System.Data.DataTable dt)
         {
             LitJson.JsonData json = new LitJson.JsonData();
-            foreach(System.Data.DataRow dr in dt.Rows)
+            foreach (System.Data.DataRow dr in dt.Rows)
             {
                 LitJson.JsonData drJson = new LitJson.JsonData();
                 for (int i = 0; i < dt.Columns.Count; i++)
@@ -522,22 +436,167 @@ namespace RoadFlow.Utility
             return json.ToJson();
         }
 
+        #region Author L
+        #region 模型反射
         /// <summary>
-        /// 临时日志输出
+        /// 获取属性特质
         /// </summary>
-        public static void WriteLogs(string message)
+        /// <typeparam name="Model">模型类泛型</typeparam>
+        /// <typeparam name="Attribute">特质泛型</typeparam>
+        /// <param name="after">GetPropertiesAttribute获取特质之后的处理</param>
+        public static void GetPropertiesAttribute<Model, Attribute>(AfterGetPropertiesAttribute<Attribute> after) where Attribute : class
         {
-            string path = "D://TempApplicationLogs/";
-            string file = "logs.txt";
-            string filePath = path + file;
-            if (!Directory.Exists(path))
+            Type t = typeof(Model);
+            Model instance = (Model)Activator.CreateInstance(t);
+            int count = 0;//循环计数
+            foreach (PropertyInfo info in t.GetProperties())
             {
-                Directory.CreateDirectory(path);
-            }
-            using (System.IO.StreamWriter sw = new System.IO.StreamWriter(filePath, true, Encoding.UTF8))
-            {
-                sw.WriteLine(message);
+                object[] objs = info.GetCustomAttributes(typeof(Attribute), true);
+                if (objs == null || objs.Length == 0)
+                {
+                    continue;
+                }
+                Attribute attr = objs[0] as Attribute;
+                after(count, attr);
+                count++;
             }
         }
+
+        /// <summary>
+        /// 获取属性值
+        /// </summary>
+        /// <typeparam name="Model">模型类泛型</typeparam>
+        /// <param name="before">取值判断,参数PropertyInfo propertyInfo</param>
+        /// <param name="after">后续处理,参数(int count, object value,PropertyInfo propertyInfo)</param>
+        /// <param name="model"></param>
+        public static void GetPropertiesValue<Model>(BeforeGetPropertiesValue before, AfterGetPropertiesValue after, Model model)
+        {
+            Type t = typeof(Model);
+            int count = 0;//循环计数
+            foreach (PropertyInfo info in t.GetProperties())
+            {
+                //取值判断
+                if (before(info)|| !info.CanRead)
+                {
+                    continue;
+                };
+                var v = info.GetValue(model, null);//取值
+                if (after(count, v, info))
+                {
+                    continue;
+                }//后续处理
+                count++;
+            }
+        }
+
+        /// <summary>
+        /// 获取属性值
+        /// </summary>
+        /// <typeparam name="Model">模型类泛型</typeparam>
+        /// <param name="after">后续处理,参数(int count, object value,PropertyInfo propertyInfo)</param>
+        /// <param name="model"></param>
+        public static void GetPropertiesValue<Model>(AfterGetPropertiesValue after, Model model)
+        {
+            Type t = typeof(Model);
+            int count = 0;//循环计数
+            foreach (PropertyInfo info in t.GetProperties())
+            {
+                if (!info.CanRead)
+                {
+                    continue;
+                }
+                var v = info.GetValue(model, null);//取值
+                if (after(count, v, info))
+                {
+                    continue;
+                };//后续处理
+                count++;
+            }
+        }
+
+        public static void GetPropertiesValueByDynamic(AfterGetPropertiesValueByDynamic after, dynamic model)
+        {
+            Type t = model.GetType();
+            foreach (PropertyInfo info in t.GetProperties())
+            {
+                if (!info.CanRead)
+                {
+                    continue;
+                }
+                var v = info.GetValue(model, null);//取值
+                if (after( v, info))
+                {
+                    continue;
+                };//后续处理
+            }
+        }
+
+        /// <summary>
+        /// 设置属性值
+        /// </summary>
+        /// <typeparam name="Model">模型类泛型</typeparam>
+        public static Model SetPropertiesValue<Model>(SetPropertiesValueOfGetValue getValue)
+        {
+            Type t = typeof(Model);
+            Model result = (Model)Activator.CreateInstance(t);
+
+            foreach (PropertyInfo pi in t.GetProperties())
+            {
+                if (pi.CanWrite)
+                {
+                    var value = getValue(pi);
+                    if (pi.PropertyType.IsGenericType && pi.PropertyType.GetGenericTypeDefinition().Equals(typeof(Nullable<>)) && Nullable.GetUnderlyingType(pi.PropertyType).IsEnum)
+                    {
+                        pi.SetValue(result, Enum.Parse(Nullable.GetUnderlyingType(pi.PropertyType), value.ToString()), null);
+                    }
+                    else
+                    {
+                        pi.SetValue(result, value, null);
+                    }
+                }
+            }
+
+            return result;
+        }
+        #endregion
+
+        #endregion
     }
+
+    /// <summary>
+    /// SetPropertiesValue中的获取value部分
+    /// </summary>
+    /// <param name="propertyInfo"></param>
+    /// <returns></returns>
+    public delegate object SetPropertiesValueOfGetValue(PropertyInfo propertyInfo);
+
+    /// <summary>
+    /// GetPropertiesValue获取值之前的处理
+    /// </summary>
+    /// <param name="propertyInfo">模型属性</param>
+    /// <returns>是否continue</returns>
+    public delegate bool BeforeGetPropertiesValue(PropertyInfo propertyInfo);
+
+    /// <summary>
+    /// GetPropertiesValue获取值之后的处理
+    /// </summary>
+    /// <param name="count">循环计数</param>
+    /// <param name="value">属性值</param>
+    /// <param name="propertyInfo">属性</param>
+    /// <returns>是否continue</returns>
+    public delegate bool AfterGetPropertiesValue(int count, object value,PropertyInfo propertyInfo);
+
+    /// <summary>
+    /// GetPropertiesValueByDynamic获取值之后的处理
+    /// </summary>
+    /// <param name="value">属性值</param>
+    /// <param name="propertyInfo">属性</param>
+    /// <returns>是否continue</returns>
+    public delegate bool AfterGetPropertiesValueByDynamic(object value, PropertyInfo propertyInfo);
+
+    /// <summary>
+    /// GetPropertiesAttribute获取特质之后的处理
+    /// </summary>
+    /// <param name="count">循环计数</param>
+    public delegate void AfterGetPropertiesAttribute<Attribute>(int count, Attribute attribute);
 }
