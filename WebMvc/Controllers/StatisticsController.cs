@@ -26,7 +26,7 @@ namespace WebMvc.Controllers
             StatisticsIndexViewModel viewModel = new StatisticsIndexViewModel();
             string ssjd = Request["ssjd"];
             RoadFlow.Platform.DictionaryBLL DictionaryBLL = new RoadFlow.Platform.DictionaryBLL();
-            viewModel.ParaSSJD = new SelectList(DictionaryBLL.GetListByCode("SSJD").DataTableToList<RoadFlow.Data.Model.DictionaryModel>(), "ID", "Title", ssjd); ;
+            viewModel.ParaSSJD = new SelectList(DictionaryBLL.GetListByCode("SSJD").ToList<RoadFlow.Data.Model.DictionaryModel>(), "ID", "Title", ssjd); ;
             viewModel.List = BuildingsStreetStatisticsBLL.GetBySSJD(ssjd);
             return View(viewModel);
         }
@@ -164,7 +164,7 @@ namespace WebMvc.Controllers
         /// <returns></returns>
         private List<StatisticsHouseAreaViewModel.Temp> BuildingList()
         {
-            var list = BuildingsAndBuildingMonthInfoBLL.GetStatisticsByHouseName(Request["ParaName"]).DataTableToList<StatisticsHouseAreaViewModel.Temp>();
+            var list = BuildingsAndBuildingMonthInfoBLL.GetStatisticsByHouseName(Request["ParaName"]).ToList<StatisticsHouseAreaViewModel.Temp>();
             return list;
         }
 

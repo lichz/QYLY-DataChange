@@ -18,7 +18,7 @@ namespace WebMvc.Controllers {
             DataTable dt = sms.GetDataPage(out pager, query, pageSize, RoadFlow.Utility.Tools.GetPageNumber());
 
             ViewBag.Pager = pager;
-            List<RoadFlow.Data.Model.SMSModel> list = dt.DataTableToList<RoadFlow.Data.Model.SMSModel>();
+            List<RoadFlow.Data.Model.SMSModel> list = dt.ToList<RoadFlow.Data.Model.SMSModel>();
             List<RoadFlow.Data.Model.SMSModel> view = new List<RoadFlow.Data.Model.SMSModel>();
             foreach(var item in list){
 

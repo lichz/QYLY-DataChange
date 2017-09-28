@@ -351,7 +351,7 @@ namespace WebMvc.Controllers
             viewModel.Pager = pager;
             viewModel.Display = GetColItemList();//读取显示字段配置信息
             viewModel.Dictionarys = DictionaryBLL.GetListAll();
-            viewModel.SSJDList = new SelectList(DictionaryBLL.GetListByCode("SSJD").DataTableToList<RoadFlow.Data.Model.DictionaryModel>(), "ID", "Title", viewModel.SSJD);
+            viewModel.SSJDList = new SelectList(DictionaryBLL.GetListByCode("SSJD").ToList<RoadFlow.Data.Model.DictionaryModel>(), "ID", "Title", viewModel.SSJD);
             return viewModel;
         }
 
@@ -359,17 +359,17 @@ namespace WebMvc.Controllers
         {
             BuildingEditViewModel viewModel = new BuildingEditViewModel();
             viewModel.EditModel = BuildingsAndBuildingMonthInfoBLL.Get(id);
-            viewModel.JSJDList = new SelectList(DictionaryBLL.GetListByCode("JSJD").DataTableToList<RoadFlow.Data.Model.DictionaryModel>(), "ID", "Title", viewModel.EditModel.JSJD);
-            viewModel.LYCQQKList = new SelectList(DictionaryBLL.GetListByCode("LYCQQK").DataTableToList<RoadFlow.Data.Model.DictionaryModel>(), "ID", "Title", viewModel.EditModel.LYCQQK);
-            viewModel.LYJBList = new SelectList(DictionaryBLL.GetListByCode("LYJB").DataTableToList<RoadFlow.Data.Model.DictionaryModel>(), "ID", "Title", viewModel.EditModel.LYJB);
-            viewModel.LYLXList = new SelectList(DictionaryBLL.GetListByCode("LYLX").DataTableToList<RoadFlow.Data.Model.DictionaryModel>(), "ID", "Title", viewModel.EditModel.LYLX);
-            viewModel.SSJDList = new SelectList(DictionaryBLL.GetListByCode("SSJD").DataTableToList<RoadFlow.Data.Model.DictionaryModel>(), "ID", "Title", viewModel.EditModel.SSJD);
-            viewModel.TCZSList = new SelectList(DictionaryBLL.GetListByCode("TCZS").DataTableToList<RoadFlow.Data.Model.DictionaryModel>(), "ID", "Title", viewModel.EditModel.TCZS);
-            viewModel.ZYKTList = new SelectList(DictionaryBLL.GetListByCode("ZYKT").DataTableToList<RoadFlow.Data.Model.DictionaryModel>(), "ID", "Title", viewModel.EditModel.ZYKT);
-            viewModel.SY_ZJList = new SelectList(DictionaryBLL.GetListByCode("SY_ZJ").DataTableToList<RoadFlow.Data.Model.DictionaryModel>(), "ID", "Title", viewModel.EditModel.SY_ZJ);
-            viewModel.SW_ZJList = new SelectList(DictionaryBLL.GetListByCode("SW_ZJ").DataTableToList<RoadFlow.Data.Model.DictionaryModel>(), "ID", "Title", viewModel.EditModel.SW_ZJ);
+            viewModel.JSJDList = new SelectList(DictionaryBLL.GetListByCode("JSJD").ToList<RoadFlow.Data.Model.DictionaryModel>(), "ID", "Title", viewModel.EditModel.JSJD);
+            viewModel.LYCQQKList = new SelectList(DictionaryBLL.GetListByCode("LYCQQK").ToList<RoadFlow.Data.Model.DictionaryModel>(), "ID", "Title", viewModel.EditModel.LYCQQK);
+            viewModel.LYJBList = new SelectList(DictionaryBLL.GetListByCode("LYJB").ToList<RoadFlow.Data.Model.DictionaryModel>(), "ID", "Title", viewModel.EditModel.LYJB);
+            viewModel.LYLXList = new SelectList(DictionaryBLL.GetListByCode("LYLX").ToList<RoadFlow.Data.Model.DictionaryModel>(), "ID", "Title", viewModel.EditModel.LYLX);
+            viewModel.SSJDList = new SelectList(DictionaryBLL.GetListByCode("SSJD").ToList<RoadFlow.Data.Model.DictionaryModel>(), "ID", "Title", viewModel.EditModel.SSJD);
+            viewModel.TCZSList = new SelectList(DictionaryBLL.GetListByCode("TCZS").ToList<RoadFlow.Data.Model.DictionaryModel>(), "ID", "Title", viewModel.EditModel.TCZS);
+            viewModel.ZYKTList = new SelectList(DictionaryBLL.GetListByCode("ZYKT").ToList<RoadFlow.Data.Model.DictionaryModel>(), "ID", "Title", viewModel.EditModel.ZYKT);
+            viewModel.SY_ZJList = new SelectList(DictionaryBLL.GetListByCode("SY_ZJ").ToList<RoadFlow.Data.Model.DictionaryModel>(), "ID", "Title", viewModel.EditModel.SY_ZJ);
+            viewModel.SW_ZJList = new SelectList(DictionaryBLL.GetListByCode("SW_ZJ").ToList<RoadFlow.Data.Model.DictionaryModel>(), "ID", "Title", viewModel.EditModel.SW_ZJ);
 
-            viewModel.IsImportantList = new SelectList(DictionaryBLL.GetListByCode("IsImportant").DataTableToList<RoadFlow.Data.Model.DictionaryModel>(), "ID", "Title", viewModel.EditModel.IsImportant);
+            viewModel.IsImportantList = new SelectList(DictionaryBLL.GetListByCode("IsImportant").ToList<RoadFlow.Data.Model.DictionaryModel>(), "ID", "Title", viewModel.EditModel.IsImportant);
             return viewModel;
         }
 

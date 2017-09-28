@@ -53,7 +53,7 @@ namespace WebMvc.Controllers
         private Dictionary<Guid, string> GetPermission(DataTable dt,ElementOrganizeType type)
         {
             Dictionary<Guid, string> permission = new Dictionary<Guid, string>(); //权限列表
-            List<RoadFlow.Data.Model.DictionaryModel> dictionary = new RoadFlow.Platform.DictionaryBLL().GetListByCode("LPMC").DataTableToList<RoadFlow.Data.Model.DictionaryModel>();
+            List<RoadFlow.Data.Model.DictionaryModel> dictionary = new RoadFlow.Platform.DictionaryBLL().GetListByCode("LPMC").ToList<RoadFlow.Data.Model.DictionaryModel>();
             List<string> list = new List<string>();
             foreach (DataRow dr in dt.Rows)
             {

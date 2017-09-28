@@ -1066,183 +1066,12 @@ public static class MyExtensions
         return displayName;
     }
 
-    ///// <summary>
-    ///// 得到分页HTML
-    ///// </summary>
-    ///// <param name="recordCount">记录总数</param>
-    ///// <param name="pageSize">每页条数</param>
-    ///// <param name="pageNumber">当前页</param>
-    ///// <param name="queryString">查询字符串</param>
-    ///// <returns></returns>
-    //public static string GetPagerHtml(long recordCount, int pageSize, int pageNumber) {
-    //    //得到共有多少页
-    //    long PageCount = recordCount <= 0 ? 1 : recordCount % pageSize == 0 ? recordCount / pageSize : recordCount / pageSize + 1;
-
-    //    long pNumber = pageNumber;
-    //    if (pNumber < 1) {
-    //        pNumber = 1;
-    //    } else if (pNumber > PageCount) {
-    //        pNumber = PageCount;
-    //    }
-
-    //    //如果只有一页则返回空分页字符串
-    //    if (PageCount <= 1) {
-    //        return "";
-    //    }
-
-    //    StringBuilder ReturnPagerString = new StringBuilder(1500);
-    //    string JsFunctionName = string.Empty;
-
-    //    //构造分页字符串
-    //    int DisplaySize = 2;//中间显示的页数
-
-    //    ReturnPagerString.Append("<div>");
-    //    ReturnPagerString.Append("<span style='margin-right:15px;'>共 " + recordCount.ToString() + " 条  每页 <input type='text' id='tnt_count' title='输入数字可改变每页显示条数' class='pagertxt' onchange=\"javascript:_toPage_" + JsFunctionName + "(" + pNumber.ToString() + ",this.value);\" value='" + pageSize.ToString() + "' /> 条  ");
-    //    ReturnPagerString.Append("转到 <input type='text' id='paernumbertext' title='输入数字可跳转页' value=\"" + pNumber.ToString() + "\" onchange=\"javascript:_toPage_" + JsFunctionName + "(this.value," + pageSize.ToString() + ");\" class='pagertxt'/> 页</span>");
-    //    if (pNumber > 1) {
-    //        ReturnPagerString.Append("<a class=\"pager\" href=\"javascript:_toPage_" + JsFunctionName + "(" + (pNumber - 1).ToString() + "," + pageSize.ToString() + ");\"><span class=\"pagerarrow\">«</span></a>");
-    //    } else if (pNumber == 1) {
-    //        ReturnPagerString.Append("<a class=\"pager\" href=\"javascript:;\"><span class=\"pagerarrow\">«</span></a>");
-    //    }
-
-    //    //计算中间显示范围。
-    //    long star = pNumber - DisplaySize / 2;
-    //    long end = pNumber + DisplaySize / 2;
-    //    if (star < 2) {
-    //        end += 2 - star;
-    //        star = 2;
-    //    }
-    //    if (end > PageCount - 1) {
-    //        star -= end - (PageCount - 1);
-    //        end = PageCount - 1;
-    //    }
-    //    if (star < 2)
-    //        star = 2;
-
-    //    //添加第一页
-    //    if (star - 1 > 1)
-    //        ReturnPagerString.AppendFormat("<a class=\"pager\" href=\"_toPage_" + JsFunctionName + "(1," + pageSize.ToString() + ");\" data-val=\"{0}\">1…</a>", 1);
-    //    else if (pNumber == 1) {
-    //        ReturnPagerString.AppendFormat("<a class=\"pagercurrent\" href=\"javascript:;\" data-val=\"{0}\">1</a>", 1);
-    //    } else {
-    //        ReturnPagerString.AppendFormat("<a class=\"pager\" href=\"_toPage_" + JsFunctionName + "(1," + pageSize.ToString() + ");\" data-val=\"{0}\">1</a>", 1);
-    //    }
-
-    //    for (long i = star; i <= end; i++) {
-    //        if (pNumber == i) {
-    //            ReturnPagerString.AppendFormat("<a class=\"pagercurrent\" href=\"javascript:;\" data-val=\"{0}\">{0}</a>", i);
-    //        } else {
-    //            ReturnPagerString.AppendFormat("<a class=\"pager\" href=\"_toPage_" + JsFunctionName + "({0}," + pageSize.ToString() + ");\" data-val=\"{0}\">{0}</a>", i);
-    //        }
-
-    //    }
-
-    //    //添加最后页
-    //    if (PageCount > end + 1)
-    //        if (PageCount > 99) {//三位数及以上只显示"..."
-    //            ReturnPagerString.AppendFormat("<a class=\"pager\" href=\"javascript:;\" data-val=\"{0}\">…</a>", PageCount);
-    //        } else {
-    //            ReturnPagerString.AppendFormat("<a class=\"pager\" href=\"javascript:;\" data-val=\"{0}\">…{0}</a>", PageCount);
-    //        } else if (PageCount > 1) {
-    //        if (pNumber == PageCount) {
-    //            ReturnPagerString.AppendFormat("<a class=\"pagercurrent\" href=\"javascript:;\" data-val=\"{0}\">{0}</a>", PageCount);
-    //        } else {
-    //            ReturnPagerString.AppendFormat("<a class=\"pager\" href=\"javascript:;\" data-val=\"{0}\">{0}</a>", PageCount);
-    //        }
-    //    }
-    //    if (pNumber < PageCount) {
-    //        ReturnPagerString.AppendFormat("<a class=\"pager\" href=\"javascript:;\" data-val=\"{0}\"></a>", (pNumber + 1));
-    //    } else if (pNumber == PageCount) {
-    //        ReturnPagerString.AppendFormat("<a class=\"pager\" href=\"javascript:;\" data-val=\"{0}\"></a>", pNumber);
-    //    }
-
-    //    ReturnPagerString.Append("</div>");
-    //    return ReturnPagerString.ToString();
-    //}
-
     /// <summary>
-    /// 得到分页HTML
+    /// DataTable转模型集合
     /// </summary>
-    /// <param name="recordCount">记录总数</param>
-    /// <param name="pageSize">每页条数</param>
-    /// <param name="pageNumber">当前页</param>
-    /// <param name="queryString">查询字符串</param>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="dt"></param>
     /// <returns></returns>
-    //public static string GetPagerHtml(long recordCount, int pageSize, int pageNumber) {
-    //    string queryString = string.Empty;
-
-    //    //得到共有多少页
-    //    long PageCount = recordCount <= 0 ? 1 : recordCount % pageSize == 0 ? recordCount / pageSize : recordCount / pageSize + 1;
-
-    //    long pNumber = pageNumber;
-    //    if (pNumber < 1) {
-    //        pNumber = 1;
-    //    } else if (pNumber > PageCount) {
-    //        pNumber = PageCount;
-    //    }
-
-    //    //如果只有一页则返回空分页字符串
-    //    if (PageCount <= 1) {
-    //        return "";
-    //    }
-
-    //    StringBuilder ReturnPagerString = new StringBuilder(1500);
-    //    string JsFunctionName = string.Empty;
-
-    //    //构造分页字符串
-    //    int DisplaySize = 10;//中间显示的页数
-    //    ReturnPagerString.Append("<div>");
-    //    ReturnPagerString.Append("<span style='margin-right:15px;'>共 " + recordCount.ToString() + " 条  每页 <input type='text' id='tnt_count' title='输入数字可改变每页显示条数' class='pagertxt' onchange=\"javascript:_toPage_" + JsFunctionName + "(" + pNumber.ToString() + ",this.value);\" value='" + pageSize.ToString() + "' /> 条  ");
-    //    ReturnPagerString.Append("转到 <input type='text' id='paernumbertext' title='输入数字可跳转页' value=\"" + pNumber.ToString() + "\" onchange=\"javascript:_toPage_" + JsFunctionName + "(this.value," + pageSize.ToString() + ");\" class='pagertxt'/> 页</span>");
-    //    if (pNumber > 1)
-    //        ReturnPagerString.Append("<a class=\"pager\" href=\"javascript:_toPage_" + JsFunctionName + "(" + (pNumber - 1).ToString() + "," + pageSize.ToString() + ");\"><span class=\"pagerarrow\">«</span></a>");
-    //    //添加第一页
-    //    if (pNumber >= DisplaySize / 2 + 3)
-    //        ReturnPagerString.Append("<a class=\"pager\" href=\"javascript:_toPage_" + JsFunctionName + "(1," + pageSize.ToString() + ");\">1…</a>");
-    //    else
-    //        ReturnPagerString.Append("<a class=\"" + (1 == pNumber ? "pagercurrent" : "pager") + "\" href=\"javascript:_toPage_" + JsFunctionName + "(1," + pageSize.ToString() + ");\">1</a>");
-
-    //    //添加中间数字
-    //    long star = pNumber - DisplaySize / 2;
-    //    long end = pNumber + DisplaySize / 2;
-    //    if (star < 2) {
-    //        end += 2 - star;
-    //        star = 2;
-    //    }
-    //    if (end > PageCount - 1) {
-    //        star -= end - (PageCount - 1);
-    //        end = PageCount - 1;
-    //    }
-    //    if (star < 2)
-    //        star = 2;
-
-    //    for (long i = star; i <= end; i++)
-    //        ReturnPagerString.Append("<a class=\"" + (i == pNumber ? "pagercurrent" : "pager") + "\" href=\"javascript:_toPage_" + JsFunctionName + "(" + i.ToString() + "," + pageSize.ToString() + ");\">" + i.ToString() + "</a>");
-    //    //添加最后页
-    //    if (pNumber <= PageCount - (DisplaySize / 2))
-    //        ReturnPagerString.Append("<a class=\"pager\" href=\"javascript:_toPage_" + JsFunctionName + "(" + PageCount.ToString() + "," + pageSize.ToString() + ");\">…" + PageCount.ToString() + "</a>");
-    //    else if (PageCount > 1)
-    //        ReturnPagerString.Append("<a class=\"" + (PageCount == pNumber ? "pagercurrent" : "pager") + "\" href=\"javascript:_toPage_" + JsFunctionName + "(" + PageCount.ToString() + "," + pageSize.ToString() + ");\">" + PageCount.ToString() + "</a>");
-    //    if (pNumber < PageCount)
-    //        ReturnPagerString.Append("<a class=\"pager\" href=\"javascript:_toPage_" + JsFunctionName + "(" + (pNumber + 1).ToString() + "," + pageSize.ToString() + ");\"><span class=\"pagerarrow\">»</span></a>");
-    //    ReturnPagerString.Append("</div>");
-    //    //构造分页JS函数
-    //    ReturnPagerString.Append("<script type=\"text/javascript\" lanuage=\"javascript\">");
-    //    ReturnPagerString.Append("function _toPage_" + JsFunctionName + "(page,size){");
-    //    //ReturnPagerString.Append("var par=window.location.search;");
-    //    //ReturnPagerString.Append("var par=par.indexOf(\"&pagenumber\")!=-1?par.substring(par.indexOf(\"&pagenumber\"),0):par;");
-    //    //ReturnPagerString.Append("var parPost=$(\"form\").serialize();");
-    //    //ReturnPagerString.Append("window.location=par+\"&pagenumber=\"+page+\"&\"+parPost;");
-    //    ReturnPagerString.Append("$(\"form\").append(\"<input type='hidden' id='pageIndex' name='pageIndex' value='\"+page+\"' />\");$(\"form\").submit();");
-
-    //    //ReturnPagerString.Append("var url = $(\"form\").data(\"getlist\");");
-    //    //ReturnPagerString.Append("$.getJSON(url, { verstion:version,pageIndex:pageIndex,pageSize: pageSize},function(result){if(result.success){$(\".gridbody tbody\").html(result.html);}else{alert(\"查询失败。\");}});");
-
-    //    ReturnPagerString.Append("}");
-    //    ReturnPagerString.Append("</script>");
-    //    return ReturnPagerString.ToString();
-    //}
-
     public static List<T> ToList<T>(this DataTable dt) {
         List<T> list = new List<T>();
         Type t = typeof(T);
@@ -1267,6 +1096,36 @@ public static class MyExtensions
             }
         }
         return list;
+    }
+
+
+    public static List<T> ReaderToList<T>(this IDataReader dr) where T : new()
+    {
+        using (dr)
+        {
+            List<string> field = new List<string>(dr.FieldCount);
+            for (int i = 0; i < dr.FieldCount; i++)
+            {
+                field.Add(dr.GetName(i).ToLower());
+            }
+            List<T> list = new List<T>();
+            while (dr.Read())
+            {
+                T model = Activator.CreateInstance<T>();
+                foreach (PropertyInfo property in model.GetType().GetProperties(BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance))
+                {
+                    if (field.Contains(property.Name.ToLower()))
+                    {
+                        if (!(dr[property.Name] is DBNull))
+                        {
+                            property.SetValue(model, dr[property.Name].Convert(property.PropertyType), null);
+                        }
+                    }
+                }
+                list.Add(model);
+            }
+            return list;
+        }
     }
 
     /// <summary>

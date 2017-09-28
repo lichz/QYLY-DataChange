@@ -64,7 +64,7 @@ namespace RoadFlow.Data.MSSQL
 
             PostModel model=new PostModel();
             DataTable dt = dbHelper.GetDataTable(sql, para);
-            model = dt.DataTableToList<PostModel>().FirstOrDefault();
+            model = dt.ToList<PostModel>().FirstOrDefault();
    
             return model;
         }
