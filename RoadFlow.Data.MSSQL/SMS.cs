@@ -57,7 +57,7 @@ namespace RoadFlow.Data.MSSQL {
 
             SMSModel model = new SMSModel();
             DataTable dt = dbHelper.GetDataTable(sql, para);
-            model = dt.DataTableToList<SMSModel>().FirstOrDefault();
+            model = dt.ToList<SMSModel>().FirstOrDefault();
             return model;
         }
 
@@ -70,7 +70,7 @@ namespace RoadFlow.Data.MSSQL {
 
             SMSModel model = new SMSModel();
             DataTable dt = dbHelper.GetDataTable(sql, para);
-            model = dt.DataTableToList<SMSModel>().FirstOrDefault();
+            model = dt.ToList<SMSModel>().FirstOrDefault();
             return model;
         }
 

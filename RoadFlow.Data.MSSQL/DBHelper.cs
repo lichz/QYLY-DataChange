@@ -739,7 +739,7 @@ namespace RoadFlow.Data.MSSQL
 
         public List<T> GetList<T>(string sql, SqlParameter[] para) {
             //return DataTableToList<T>(GetDataTable(sql, para));
-            return GetDataTable(sql, para).DataTableToList<T>();
+            return GetDataTable(sql, para).ToList<T>();
         }
 
         /// <summary>

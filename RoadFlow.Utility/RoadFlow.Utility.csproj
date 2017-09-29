@@ -68,18 +68,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config.cs" />
-    <Compile Include="DataSetExpand.cs" />
-    <Compile Include="Encryption.cs" />
-    <Compile Include="EncryptionDes.cs" />
     <Compile Include="ExportExcel.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="HashEncrypt.cs" />
     <Compile Include="HttpHelper.cs" />
     <Compile Include="Keys.cs" />
     <Compile Include="New\Encryption.cs" />
     <Compile Include="New\Extensions.cs" />
     <Compile Include="New\Tools.cs" />
-    <Compile Include="ObjectExpand.cs" />
     <Compile Include="SMS.cs" />
     <Compile Include="Tools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

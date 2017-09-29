@@ -119,6 +119,7 @@ namespace RoadFlow.Platform
         public string SaveFlow(string jsonString)
         {
             var jsonData = LitJson.JsonMapper.ToObject(jsonString);
+            //var jsonData = jsonString.JsonConvertObject();
             string id = jsonData["id"].ToString();
             string name = jsonData["name"].ToString();
             string type = jsonData["type"].ToString();

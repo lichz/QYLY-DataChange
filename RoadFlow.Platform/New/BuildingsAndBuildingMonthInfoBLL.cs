@@ -104,7 +104,8 @@ namespace RoadFlow.Platform
         public DataTable OldGetAll(string query)
         {
             List<SqlParameter> parList = new List<SqlParameter>();
-            RoadFlow.Data.Model.Buildings temp = RoadFlow.Utility.ObjectExpand.JsonConvertModel<RoadFlow.Data.Model.Buildings>(query);
+            //RoadFlow.Data.Model.Buildings temp = RoadFlow.Utility.ObjectExpand.JsonConvertModel<RoadFlow.Data.Model.Buildings>(query);
+            RoadFlow.Data.Model.Buildings temp = query.JsonConvertModel<RoadFlow.Data.Model.Buildings>();
             StringBuilder where = new StringBuilder(" 1=1 and Status=" + (int)RoadFlow.Data.Model.Status.Normal);
             SingleLikeBuild("Name", temp.Name, parList, where);
             SingleBuild("SSJD", temp.SSJD, parList, where);//所属街道

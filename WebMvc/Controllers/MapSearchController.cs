@@ -27,9 +27,9 @@ namespace WebMvc.Controllers {
             DataTable dt = new RoadFlow.Platform.BuildingsAndBuildingMonthInfoBLL().OldGetAll(query);
             //dt = ConvertType(dt);
             if (dt == null || dt.Rows.Count < 1) {
-                return RoadFlow.Utility.ObjectExpand.ToJson("");
+                return string.Empty;
             } else {
-                return RoadFlow.Utility.ObjectExpand.ToJson(new { Dt = dt, AllPages = allPages });
+                return new { Dt = dt, AllPages = allPages }.ToJson();
             }
         }
         /// <summary>
@@ -95,7 +95,7 @@ namespace WebMvc.Controllers {
             var info = new RoadFlow.Platform.BuildingsAndBuildingMonthInfoBLL().Get(Guid.Parse(id));//大楼信息
             DataTable ep = new RoadFlow.Platform.EnterpriseAndEnterpriseTaxBLL().GetAllByBuildingID(id);//入驻企业信息
             if (info == null) {
-                return RoadFlow.Utility.ObjectExpand.ToJson("");
+                return string.Empty;
             } else {
                 var dictionarys = new RoadFlow.Platform.DictionaryBLL().GetListAll();
                 info.LYJBName = dictionarys.Find(p => p.ID == info.LYJB.Value) == null ? "" : dictionarys.Find(p => p.ID == info.LYJB.Value).Title;
@@ -110,7 +110,7 @@ namespace WebMvc.Controllers {
                 //info = ConvertType(info);
                 //ep = ConvertType(ep);
                 Dictionary<string, string> columnName = new Dictionary<string, string>();
-                return RoadFlow.Utility.ObjectExpand.ToJson(new { info, ep, columnName });
+                return new { info, ep, columnName }.ToJson();
             }
         }
         #region 公用方法
