@@ -76,7 +76,8 @@ where x.dwname =y.name
         public DataTable GetPagerData(out int allPages, out int count, string query, int pageIndex, int pageSize) {
             StringBuilder where = new StringBuilder();
             List<SqlParameter> parList = new List<SqlParameter>();
-            Temp temp = RoadFlow.Utility.ObjectExpand.JsonConvertModel<Temp>(query);
+            //Temp temp = RoadFlow.Utility.ObjectExpand.JsonConvertModel<Temp>(query);
+            Temp temp = query.JsonConvertModel<Temp>();
             if (temp.TimeBegin.IsNullOrEmpty() && temp.TimeEnd.IsNullOrEmpty()) {
                 table = String.Format(table, string.Empty, string.Empty, string.Empty);
             } else {

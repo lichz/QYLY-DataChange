@@ -8,6 +8,8 @@ using Microsoft.VisualBasic;
 using System.Reflection;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 /// <summary>
 ///ExtString 的摘要说明
@@ -863,44 +865,6 @@ public static class MyExtensions
     }
 
     /// <summary>
-    /// AES加密字符串
-    /// </summary>
-    /// <param name="str"></param>
-    /// <returns></returns>
-    public static string AesEncrypt(this string str)
-    {
-        return RoadFlow.Utility.Encryption.Encrypt(str);
-    }
-    /// <summary>
-    /// AES解密字符串
-    /// </summary>
-    /// <param name="str"></param>
-    /// <returns></returns>
-    public static string AesDecrypt(this string str)
-    {
-        return RoadFlow.Utility.Encryption.Decrypt(str);
-    }
-
-    /// <summary>
-    /// DES加密字符串
-    /// </summary>
-    /// <param name="str"></param>
-    /// <returns></returns>
-    public static string DesEncrypt(this string str)
-    {
-        return RoadFlow.Utility.EncryptionDes.Encrypt(str);
-    }
-    /// <summary>
-    /// DES解密字符串
-    /// </summary>
-    /// <param name="str"></param>
-    /// <returns></returns>
-    public static string DesDecrypt(this string str)
-    {
-        return RoadFlow.Utility.EncryptionDes.Decrypt(str);
-    }
-
-    /// <summary>
     /// 让服务器按钮点击后变灰
     /// </summary>
     /// <param name="button"></param>
@@ -1028,42 +992,9 @@ public static class MyExtensions
           (typeof(Nullable<>)));
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="Html"></param>
-    /// <param name="arr">显示或者隐藏字段</param>
-    /// <param name="arrIsShow">集合是否是显示集合</param>
-    /// <returns></returns>
-    public static Dictionary<string, string> GetModelDispalyName<T>(List<string> list, bool arrIsShow = true) {
-        Dictionary<string, string> displayName = new Dictionary<string, string>();
-        Dictionary<string, string> attribute = new Dictionary<string, string>();
-
-        Type t = typeof(T);
-        foreach (PropertyInfo pi in t.GetProperties()) {
-            if (arrIsShow) {
-                if (list.Contains(pi.Name)) {
-                    object[] objs = pi.GetCustomAttributes(typeof(DisplayAttribute), true);
-                    DisplayAttribute attr = objs[0] as DisplayAttribute;
-                    attribute.Add(pi.Name, attr.Name);
-                }
-            } else {
-                if (!list.Contains(pi.Name)) {
-                    object[] objs = pi.GetCustomAttributes(typeof(DisplayAttribute), true);
-                    DisplayAttribute attr = objs[0] as DisplayAttribute;
-                    displayName.Add(pi.Name, attr.Name);
-                }
-            }
-        }
-
-        if (arrIsShow) {//是显示数组，按照显示数组数据
-            foreach (var item in list) {
-                displayName.Add(item, attribute[item]);
-            }
-        }
-
-        return displayName;
+    public static bool IsNullObj(this object obj)
+    {
+        return obj == null;
     }
 
     /// <summary>
@@ -1126,6 +1057,30 @@ public static class MyExtensions
             }
             return list;
         }
+    }
+
+
+    public static string ToJson(this object obj)
+    {
+        return JsonConvert.SerializeObject(obj, new IsoDateTimeConverter
+        {
+            DateTimeFormat = "yyyy'-'MM'-'dd' 'HH':'mm':'ss"
+        });
+    }
+
+    public static List<T> JsonConvertList<T>(this string str)
+    {
+        return JsonConvert.DeserializeObject<List<T>>(str);
+    }
+
+    public static T JsonConvertModel<T>(this string str)
+    {
+        return JsonConvert.DeserializeObject<T>(str);
+    }
+
+    public static object JsonConvertObject(this string str)
+    {
+        return JsonConvert.DeserializeObject(str);
     }
 
     /// <summary>

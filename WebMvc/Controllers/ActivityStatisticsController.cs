@@ -18,16 +18,16 @@ namespace WebMvc.Controllers
         public ActionResult Index(FormCollection collection) {
             string query = "{}";
             if (!Request["dataBegin"].IsNullOrEmpty() && !Request["dataEnd"].IsNullOrEmpty()) {
-                query = RoadFlow.Utility.ObjectExpand.ToJson(new { TimeBegin = Request["dataBegin"], TimeEnd = Request["dataEnd"] });
+                query = new { TimeBegin = Request["dataBegin"], TimeEnd = Request["dataEnd"] }.ToJson();
                 ViewBag.dataBegin = Request["dataBegin"];
                 ViewBag.dataEnd = Request["dataEnd"];
             } else {
                 if (!Request["dataBegin"].IsNullOrEmpty()) {
-                    query = RoadFlow.Utility.ObjectExpand.ToJson(new { TimeBegin = Request["dataBegin"] });
+                    query = new { TimeBegin = Request["dataBegin"] }.ToJson();
                     ViewBag.dataBegin = Request["dataBegin"];
                 }
                 if (!Request["dataEnd"].IsNullOrEmpty()) {
-                    query = RoadFlow.Utility.ObjectExpand.ToJson(new { TimeEnd = Request["dataEnd"] });
+                    query = new { TimeEnd = Request["dataEnd"] }.ToJson();
                     ViewBag.dataEnd = Request["dataEnd"];
                 }
             }
@@ -51,22 +51,6 @@ namespace WebMvc.Controllers
             //ViewBag.Pager = RoadFlow.Utility.Tools.GetPagerHtml(count, pageSize, pageIndex, null);
             ViewBag.Pager = RoadFlow.Utility.New.Tools.GetPagerHtml(count, pageSize, pageIndex);
             return dt;
-        }
-        
-        /// <summary>
-        /// 获取所有岗位(页面Ajax访问)
-        /// </summary>
-        /// <param name="query">查询参数</param>
-        /// <param name="pageIndex">页标</param>
-        /// <param name="pageSize">每页显示条数</param>
-        /// <returns></returns>
-        public string GetAllToJson(string query, int pageIndex, int pageSize = 30) {
-            RoadFlow.Platform.ActivityStatistics a = new RoadFlow.Platform.ActivityStatistics();
-            int allPage = 0, count = 0;
-            DataTable dt = a.GetPagerData(out allPage, out count, query, pageIndex, pageSize);
-            //ViewBag.Pager = RoadFlow.Utility.Tools.GetPagerHtml(count, pageSize, pageIndex, null);
-            ViewBag.Pager = RoadFlow.Utility.New.Tools.GetPagerHtml(count, pageSize, pageIndex);
-            return RoadFlow.Utility.ObjectExpand.ToJson(dt);
         }
 
     }
