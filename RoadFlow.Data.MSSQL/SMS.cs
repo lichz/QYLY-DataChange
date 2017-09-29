@@ -5,6 +5,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using RoadFlow.Data.Interface;
+using RoadFlow.Utility;
+using System.Linq;
 
 namespace RoadFlow.Data.MSSQL {
     public class SMS : ISMS {
@@ -54,8 +56,8 @@ namespace RoadFlow.Data.MSSQL {
             };
 
             SMSModel model = new SMSModel();
-            DataTable dr = dbHelper.GetDataTable(sql, para);
-            model = RoadFlow.Utility.ModelHandler<SMSModel>.FillModel(dr.Rows[0]);
+            DataTable dt = dbHelper.GetDataTable(sql, para);
+            model = dt.DataTableToList<SMSModel>().FirstOrDefault();
             return model;
         }
 
@@ -67,11 +69,8 @@ namespace RoadFlow.Data.MSSQL {
             };
 
             SMSModel model = new SMSModel();
-            DataTable dr = dbHelper.GetDataTable(sql, para);
-            if(dr.Rows.Count==0){
-                return null;
-            }
-            model = RoadFlow.Utility.ModelHandler<SMSModel>.FillModel(dr.Rows[0]);
+            DataTable dt = dbHelper.GetDataTable(sql, para);
+            model = dt.DataTableToList<SMSModel>().FirstOrDefault();
             return model;
         }
 

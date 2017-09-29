@@ -211,7 +211,7 @@ namespace RoadFlow.Utility
         /// <typeparam name="T"></typeparam>
         /// <param name="dt"></param>
         /// <returns></returns>
-        public static List<T> DataTableToList<T>(this DataTable dt) where T : new()
+        public static List<T> DataTableToList<T>(this DataTable dt)
         {
 
             List<T> ts = new List<T>();// 定义集合
@@ -219,7 +219,7 @@ namespace RoadFlow.Utility
             string tempName = "";
             foreach (DataRow dr in dt.Rows)
             {
-                T t = new T();
+                T t = (T)Activator.CreateInstance(type);
                 PropertyInfo[] propertys = t.GetType().GetProperties();// 获得此模型的公共属性
                 foreach (PropertyInfo pi in propertys)
                 {

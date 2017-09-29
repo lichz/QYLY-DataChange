@@ -242,7 +242,7 @@ namespace WebMvc.Controllers
             //dicionary.Add("LandTax", "地税");
             dicionary.Add("Tax", "税收");
 
-            ExportExcel.Export(dt.ExportExcelPre(dicionary, true), "企业列表");
+            ExportExcel.Export(dt.ExportExcelPre(dicionary), "企业列表");
         }
         #endregion
         #endregion

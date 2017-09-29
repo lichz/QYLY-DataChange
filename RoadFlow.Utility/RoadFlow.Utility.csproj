@@ -69,7 +69,6 @@
   <ItemGroup>
     <Compile Include="Config.cs" />
     <Compile Include="DataSetExpand.cs" />
-    <Compile Include="DateTimeNew.cs" />
     <Compile Include="Encryption.cs" />
     <Compile Include="EncryptionDes.cs" />
     <Compile Include="ExportExcel.cs" />
@@ -77,7 +76,6 @@
     <Compile Include="HashEncrypt.cs" />
     <Compile Include="HttpHelper.cs" />
     <Compile Include="Keys.cs" />
-    <Compile Include="ModelHandler.cs" />
     <Compile Include="New\Encryption.cs" />
     <Compile Include="New\Extensions.cs" />
     <Compile Include="New\Tools.cs" />

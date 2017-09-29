@@ -127,9 +127,9 @@ namespace WebMvc.Controllers
         /// <param name="fields">字段列表</param>
         /// <param name="includeOrExclude">字段列表是包含还是排除列表,true是包含</param>
         /// <returns></returns>
-        public static DataTable ExportExcelPre(this DataTable dt, Dictionary<string, string> fields, bool includeOrExclude)
+        public static DataTable ExportExcelPre(this DataTable dt, Dictionary<string, string> fields)
         {
-            return dt.ToNewDataTable(fields, includeOrExclude);
+            return dt.ToNewDataTable(fields);
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace WebMvc.Controllers
         /// <param name="dt"></param>
         /// <param name="name">查询配置列表显示名称</param>
         /// <returns></returns>
-        public static DataTable ExportExcelPre(this DataTable dt, string name)
+        public static DataTable ExportExcelPreByName(this DataTable dt, string name)
         {
             #region 导出列
             Dictionary<string, string> fields = new Dictionary<string, string>();
@@ -159,37 +159,23 @@ namespace WebMvc.Controllers
         /// 将数据处理充填到新的dataTable中。
         /// </summary>
         /// <returns></returns>
-        private static DataTable ToNewDataTable(this DataTable dt, Dictionary<string, string> fields, bool includeOrExclude = true)
+        private static DataTable ToNewDataTable(this DataTable dt, Dictionary<string, string> fields)
         {
             DataTable table = new DataTable("export");
             DataColumn column;
             DataRow row;
             #region 处理导出列
-            if (includeOrExclude)
-            {//包含
-                foreach (var item in fields)
+            foreach (var item in fields)
+            {
+                column = new DataColumn
                 {
-                    column = new DataColumn();
-                    column.DataType = dt.Columns[item.Key].DataType.ToType();
-                    column.ColumnName = item.Key;
-                    column.Caption = item.Value;
-                    table.Columns.Add(column);
-                }
+                    DataType = dt.Columns[item.Key].DataType.ToType(),
+                    ColumnName = item.Key,
+                    Caption = item.Value
+                };
+                table.Columns.Add(column);
             }
-            else
-            { //排除
-                foreach (DataColumn item in dt.Columns)
-                {
-                    if (!fields.Keys.Contains(item.ColumnName))
-                    {
-                        column = new DataColumn();
-                        column.DataType = item.DataType.ToType();
-                        column.ColumnName = item.ColumnName;
-                        column.Caption = fields[item.ColumnName];
-                        table.Columns.Add(column);
-                    }
-                }
-            }
+           
             #endregion
             #region 处理导出行
             foreach (DataRow dr in dt.Rows)

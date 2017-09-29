@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Collections.Generic;
 using System.Reflection;
+using RoadFlow.Utility;
 
 namespace RoadFlow.Data.MSSQL
 {
@@ -77,13 +78,13 @@ namespace RoadFlow.Data.MSSQL
 
                 }
             }
-            catch (Exception ex) 
-            { 
-                throw ex; 
-            } 
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
-        public IDataAdapter GetDataAdapter(string sql, IDataParameter[] parameter){
+        public IDataAdapter GetDataAdapter(string sql, IDataParameter[] parameter) {
             IDbDataAdapter dataAdapter = null;
             SqlConnection conn = new SqlConnection(ConnectionString);
             conn.Open();
@@ -95,7 +96,7 @@ namespace RoadFlow.Data.MSSQL
             }
             return dataAdapter;
         }
-        
+
 
         /// <summary>
         /// 得到一个DataTable 
@@ -327,7 +328,7 @@ namespace RoadFlow.Data.MSSQL
         {
             return ExecuteScalar(sql, parameter);
         }
-        
+
         /// <summary>
         /// 获取一个sql的字段名称
         /// </summary>
@@ -437,7 +438,7 @@ namespace RoadFlow.Data.MSSQL
             string sql = string.Format("select {0},ROW_NUMBER() OVER(ORDER BY {1}) as PagerAutoRowNumber from {2} {3}", fileds, order, table, where2);
             string count1 = GetFieldValue(string.Format("select count(*) from {0} {1}", table, where2), param);
             #endregion
-   
+
             //#region Modify L after
             //string sql = string.Empty;
             //string count1= string.Empty;
@@ -474,7 +475,7 @@ namespace RoadFlow.Data.MSSQL
         /// </summary>
         /// <param name="sql"></param>
         /// <returns></returns>
-        public string GetPaerSql1(string table, string fileds,string namelist, string where, string order, int size, int number, out long count, SqlParameter[] param = null)
+        public string GetPaerSql1(string table, string fileds, string namelist, string where, string order, int size, int number, out long count, SqlParameter[] param = null)
         {
             string where1 = string.Empty;
             if (where.IsNullOrEmpty())
@@ -511,21 +512,7 @@ namespace RoadFlow.Data.MSSQL
 
 
         #region author L
-        public T GetDataTable<T>(string sql, SqlParameter[] parameter) {
-            Type t = typeof(T);
-            T instance =  (T)Activator.CreateInstance(t);
-            //foreach(PropertyInfo info in t.GetProperties()){
-            //    //SqlDataReader reader = GetDataReader(sql, parameter);
-            //    DataTable dt = GetDataTable(sql, parameter);
-            //    foreach(DataRowCollection item in dt.Rows){
-            //        if (dt.Rows.Contains(info.Name)) {
-            //            info.SetValue(instance,item[, null);
-            //        }
-            //    }
-            //    //info.Name
-            //}
-            return instance;
-        }
+
         /// <summary>
         /// 执行存储过程
         /// </summary>
@@ -643,7 +630,7 @@ namespace RoadFlow.Data.MSSQL
                 if (item.Operator == Model.SQLFilterType.MIN)
                 {//大于小于这里很可能两个过滤参数，但是关键字只有一个。因为都是关于一个字段的筛选。
                     parameters.Add(new SqlParameter("@" + item.FieldName + item.Operator, item.Value));
-                    whereStr.AppendFormat(" And [{0}]>=@{1}",item.FieldName, item.FieldName + item.Operator);
+                    whereStr.AppendFormat(" And [{0}]>=@{1}", item.FieldName, item.FieldName + item.Operator);
                 }
                 else if (item.Operator == Model.SQLFilterType.MINNotEqual)
                 {
@@ -713,21 +700,7 @@ namespace RoadFlow.Data.MSSQL
             StringBuilder whereStr = new StringBuilder();
             List<SqlParameter> parameters = new List<SqlParameter>();
 
-            Type t = para.GetType();
-            foreach (PropertyInfo pi in t.GetProperties())
-            {
-                if (!pi.CanRead)
-                {
-                    continue;
-                }
-                object v = pi.GetValue(para, null);
-                if (v == null)
-                {
-                    continue;
-                }
-                parameters.Add(new SqlParameter("@" + pi.Name, v));
-                whereStr.AppendFormat(" And [{0}]=@{0}", pi.Name);
-            }
+            DynamicParaToSqlPraAndWhere(whereStr, parameters, para);
 
             if (isAutoNormal)
             {
@@ -739,7 +712,7 @@ namespace RoadFlow.Data.MSSQL
             return result;
         }
 
-        public T GetModel<T>(string tableName,string order, params KeyValuePair<string, object>[] para) {
+        public T GetModel<T>(string tableName, string order, params KeyValuePair<string, object>[] para) {
             StringBuilder where = new StringBuilder("where 1=1 ");
             List<SqlParameter> parameter = new List<SqlParameter>();
 
@@ -749,37 +722,24 @@ namespace RoadFlow.Data.MSSQL
                 parameter.Add(new SqlParameter("@" + item.Key, item.Value));
             }
 
-            return GetModelByWhereAndSqlParameter<T>(tableName, where.ToString(), parameter.ToArray(),order);
+            return GetModelByWhereAndSqlParameter<T>(tableName, where.ToString(), parameter.ToArray(), order);
         }
 
-        public T GetByPara<T>(string tableName,string order, dynamic para)
+        public T GetByPara<T>(string tableName, string order, dynamic para)
         {
             StringBuilder where = new StringBuilder("where 1=1 ");
             List<SqlParameter> parameter = new List<SqlParameter>();
 
             #region 反射回去过滤参数并生成where语句和SqlParameter
-            Type paraType = para.GetType();
-            foreach (PropertyInfo pi in paraType.GetProperties())
-            {
-                if (!pi.CanRead)
-                {
-                    continue;
-                }
-                object v = pi.GetValue(para, null);
-                if (v == null)
-                {
-                    continue;
-                }
-                parameter.Add(new SqlParameter("@" + pi.Name, v));
-                where.AppendFormat(" And [{0}]=@{0}", pi.Name);
-            }
+            DynamicParaToSqlPraAndWhere(where, parameter, para);
             #endregion
 
-            return GetModelByWhereAndSqlParameter<T>(tableName, where.ToString(), parameter.ToArray(),order);
+            return GetModelByWhereAndSqlParameter<T>(tableName, where.ToString(), parameter.ToArray(), order);
         }
 
         public List<T> GetList<T>(string sql, SqlParameter[] para) {
-            return DataTableToList<T>(GetDataTable(sql, para));
+            //return DataTableToList<T>(GetDataTable(sql, para));
+            return GetDataTable(sql, para).DataTableToList<T>();
         }
 
         /// <summary>
@@ -788,32 +748,32 @@ namespace RoadFlow.Data.MSSQL
         /// <typeparam name="T"></typeparam>
         /// <param name="model"></param>
         /// <returns></returns>
-        public int AddModel<T>(T model, string tableName="") {
+        public int AddModel<T>(T model, string tableName = "") {
             Type t = typeof(T);
             StringBuilder valuesName = new StringBuilder();
             List<SqlParameter> parameters = new List<SqlParameter>();
             StringBuilder column = new StringBuilder();
             StringBuilder sql = new StringBuilder();
-            foreach (PropertyInfo pi in t.GetProperties()) {
-                if (!pi.CanRead) {
-                    continue;
-                }
-                object v = pi.GetValue(model, null);
-                if (v == null) {
-                    continue;
+
+            RoadFlow.Utility.Tools.GetPropertiesValue(delegate (int col,object value,PropertyInfo propertyInfo)
+            {
+                if (value==null)
+                {
+                    return true;
                 }
 
-                column.Append(",[").Append(pi.Name).Append("]");
-                parameters.Add(new SqlParameter("@" + pi.Name, v));
-                valuesName.Append(",@").Append(pi.Name);
-            }
+                column.Append(",[").Append(propertyInfo.Name).Append("]");
+                parameters.Add(new SqlParameter("@" + propertyInfo.Name, value));
+                valuesName.Append(",@").Append(propertyInfo.Name);
+                return false;
+            }, model);
 
             if (column.ToString().IsNullOrEmpty()) {//没有添加任何列
                 return 0;
             } else {
                 column.Remove(0, 1);//移除首个"，"
                 valuesName.Remove(0, 1);//移除首个"，"
-                if(tableName.IsNullOrEmpty()){
+                if (tableName.IsNullOrEmpty()) {
                     sql.AppendFormat("insert into [{0}]({1}) values({2})", t.Name, column.ToString(), valuesName.ToString());
                 } else {
                     sql.AppendFormat("insert into [{0}]({1}) values({2})", tableName, column.ToString(), valuesName.ToString());
@@ -834,17 +794,8 @@ namespace RoadFlow.Data.MSSQL
             List<SqlParameter> parameters = new List<SqlParameter>();
             StringBuilder column = new StringBuilder();
             StringBuilder sql = new StringBuilder();
-            foreach (PropertyInfo pi in t.GetProperties()) {
-                if (!pi.CanRead) {
-                    continue;
-                }
-                object v = pi.GetValue(model, null);
-                if (v == null) {
-                    continue;
-                }
-                parameters.Add(new SqlParameter("@" + pi.Name, v));
-                values.Append(",[").Append(pi.Name).Append("]=@").Append(pi.Name);
-            }
+
+            UpdateModelOfGetPropertiesValue(values, parameters, model);
 
             if (values.ToString().IsNullOrEmpty()) {//没有添加任何列
                 return 0;
@@ -853,10 +804,10 @@ namespace RoadFlow.Data.MSSQL
 
                 StringBuilder where2 = new StringBuilder(" where 1=1");
                 foreach (var item in where) {
-                    where2.Append(" And "+item.Key+"=@"+item.Key+"Where");
+                    where2.Append(" And " + item.Key + "=@" + item.Key + "Where");
                     parameters.Add(new SqlParameter("@" + item.Key + "Where", item.Value));//加"where"是为了让筛选条件和更新参数不冲突
                 }
-                if(tableName.IsNullOrEmpty()){
+                if (tableName.IsNullOrEmpty()) {
                     sql.AppendFormat("update [{0}] set {1} {2}", t.Name, values.ToString(), where2.ToString());
                 } else {
                     sql.AppendFormat("update [{0}] set {1} {2}", tableName, values.ToString(), where2.ToString());
@@ -877,17 +828,8 @@ namespace RoadFlow.Data.MSSQL
             List<SqlParameter> parameters = new List<SqlParameter>();
             StringBuilder column = new StringBuilder();
             StringBuilder sql = new StringBuilder();
-            foreach (PropertyInfo pi in t.GetProperties()) {
-                if (!pi.CanRead) {
-                    continue;
-                }
-                object v = pi.GetValue(model, null);
-                if (v == null) {
-                    continue;
-                }
-                parameters.Add(new SqlParameter("@" + pi.Name, v));
-                values.Append(",[").Append(pi.Name).Append("]=@").Append(pi.Name);
-            }
+
+            UpdateModelOfGetPropertiesValue(values, parameters, model);
 
             if (string.IsNullOrWhiteSpace(values.ToString())) {//没有添加任何列
                 return 0;
@@ -906,55 +848,24 @@ namespace RoadFlow.Data.MSSQL
         }
 
         #region 公共方法
-        public T GetModelByWhereAndSqlParameter<T>(string tableName, string where, SqlParameter[] parameter,string order)
+        private T GetModelByWhereAndSqlParameter<T>(string tableName, string where, SqlParameter[] parameter, string order)
         {
-            Type t = typeof(T);
             T result = default(T);
 
             //生成sql
-            string sql = string.Empty;
-            if (string.IsNullOrWhiteSpace(tableName))
-            {
-                sql = "select * from [" + t.Name.Replace("Model", "") + "] " + where +" order by "+ order;
-            }
-            else
-            {
-                sql = "select * from [" + tableName + "] " + where + " order by " + order;
-            }
+            string sql = "select * from [" + tableName + "] " + where + " order by " + order;
 
             //反射生成对象
             DataTable dt = GetDataTable(sql, parameter);
             if (dt.Rows.Count > 0)
             {
-                result = (T)Activator.CreateInstance(t);
-                foreach (PropertyInfo pi in t.GetProperties())
-                {
-                    if (dt.Columns.Contains(pi.Name) && pi.CanWrite)
-                    {
-                        if (dt.Rows[0][pi.Name] is DBNull)
-                        {
-                            pi.SetValue(result, null, null);
-                        }
-                        else
-                        {
-                            if (pi.PropertyType.IsGenericType && pi.PropertyType.GetGenericTypeDefinition().Equals(typeof(Nullable<>)) && Nullable.GetUnderlyingType(pi.PropertyType).IsEnum)
-                            {//nullable枚举
-                                pi.SetValue(result, Enum.Parse(Nullable.GetUnderlyingType(pi.PropertyType), dt.Rows[0][pi.Name].ToString()), null);
-                            }
-                            else
-                            {
-                                pi.SetValue(result, dt.Rows[0][pi.Name], null);
-                            }
-
-
-                        }
-
-                    }
-                }
+                result = RoadFlow.Utility.Tools.SetPropertiesValue<T>(delegate (PropertyInfo propertyInfo)
+                {//获取设置的值
+                    return GetValueByPropertyNameFromDataTable(dt, propertyInfo);
+                });
             }
             return result;
         }
-
 
         /// <summary>
         /// 
@@ -966,25 +877,63 @@ namespace RoadFlow.Data.MSSQL
             if (dt.Rows.Count > 0) {
                 //循环充填模型对象。
                 foreach (DataRow dr in dt.Rows) {
-                    T instance = (T)Activator.CreateInstance(t);
-                    foreach (PropertyInfo pi in t.GetProperties()) {
-                        if (dt.Columns.Contains(pi.Name) && pi.CanWrite) {
-                            if (dr[pi.Name] is DBNull) {
-                                pi.SetValue(instance, null, null);
-                            } else {
-                                if (pi.PropertyType.IsGenericType && pi.PropertyType.GetGenericTypeDefinition().Equals(typeof(Nullable<>)) && Nullable.GetUnderlyingType(pi.PropertyType).IsEnum) {//nullable枚举
-                                    pi.SetValue(instance, Enum.Parse(Nullable.GetUnderlyingType(pi.PropertyType), dr[pi.Name].ToString()), null);
-                                } else {
-                                    pi.SetValue(instance, dr[pi.Name], null);
-                                }
-                            }
-                        }
-                    }
+                    T instance = RoadFlow.Utility.Tools.SetPropertiesValue<T>(delegate (PropertyInfo propertyInfo)
+                    {//获取设置的值
+                        return GetValueByPropertyNameFromDataTable(dt,propertyInfo);
+                    });
                     list.Add(instance);
                 }
             }
             return list;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="propertyInfo"></param>
+        /// <returns></returns>
+        private object GetValueByPropertyNameFromDataTable(DataTable dt,PropertyInfo propertyInfo)
+        {
+            if (dt.Columns.Contains(propertyInfo.Name) && !(dt.Rows[0][propertyInfo.Name] is DBNull))
+            {
+                return dt.Rows[0][propertyInfo.Name];
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// UpdateModel的获取属性值并拼接参数
+        /// </summary>
+        private void UpdateModelOfGetPropertiesValue<T>(StringBuilder values,List<SqlParameter> parameters,T model)
+        {
+            RoadFlow.Utility.Tools.GetPropertiesValue(delegate (int col, object value, PropertyInfo propertyInfo)
+            {
+                if (value == null)
+                {//continue
+                    return true;
+                }
+                parameters.Add(new SqlParameter("@" + propertyInfo.Name, value));
+                values.Append(",[").Append(propertyInfo.Name).Append("]=@").Append(propertyInfo.Name);
+                return false;
+            }, model);
+        }
+
+        private void DynamicParaToSqlPraAndWhere(StringBuilder where,List<SqlParameter> parameter,dynamic para)
+        {
+            RoadFlow.Utility.AfterGetPropertiesValueByDynamic action = delegate (object value, PropertyInfo propertyInfo)
+            {
+                if (value == null)
+                {
+                    return true;
+                }
+                parameter.Add(new SqlParameter("@" + propertyInfo.Name, value));
+                where.AppendFormat(" And [{0}]=@{0}", propertyInfo.Name);
+                return false;
+            };
+            RoadFlow.Utility.Tools.GetPropertiesValueByDynamic(action, para);
+        }
+        
         #endregion
         #endregion
 
