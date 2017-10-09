@@ -2,92 +2,79 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using RoadFlow.Data.Interface;
+using RoadFlow.Data.Factory;
 
 namespace RoadFlow.Platform
 {
     public class AppLibrary
     {
-        private string cacheKey = RoadFlow.Utility.Keys.CacheKeys.AppLibrary.ToString();
-        private RoadFlow.Data.Interface.IAppLibrary dataAppLibrary;
-        public AppLibrary()
-        {
-            this.dataAppLibrary = Data.Factory.Factory.GetAppLibrary();
-        }
+        //private string cacheKey = RoadFlow.Utility.Keys.CacheKeys.AppLibrary.ToString();
+        //private RoadFlow.Data.Interface.IAppLibrary dataAppLibrary;
+
+        private static string _tableName = "AppLibrary";
+        private static string _order = "[ID]";
+
+        private IBase BaseDb = Factory.GetBase(_tableName,_order);
+
+        //public AppLibrary()
+        //{
+        //    this.dataAppLibrary = Data.Factory.Factory.GetAppLibrary();
+        //}
         /// <summary>
         /// 新增
         /// </summary>
-        public int Add(RoadFlow.Data.Model.AppLibrary model)
+        public int Add(RoadFlow.Data.Model.AppLibraryModel model)
         {
-            return dataAppLibrary.Add(model);
+            //return dataAppLibrary.Add(model);
+            return BaseDb.Add(model);
         }
         /// <summary>
         /// 更新
         /// </summary>
-        public int Update(RoadFlow.Data.Model.AppLibrary model)
+        public int Update(RoadFlow.Data.Model.AppLibraryModel model)
         {
-            return dataAppLibrary.Update(model);
+            //return dataAppLibrary.Update(model);
+            var id = model.ID.Value;
+            model.ID = null;
+            //return BaseDb.Update(model,new KeyValuePair<string, object>("ID",id));
+            //return BaseDb.Update
         }
-        /// <summary>
-        /// 查询所有记录
-        /// </summary>
-        public List<RoadFlow.Data.Model.AppLibrary> GetAll(bool fromCache=false)
-        {
-            if (!fromCache)
-            {
-                return dataAppLibrary.GetAll();
-            }
-            else
-            {
-                object obj = RoadFlow.Cache.IO.Opation.Get(cacheKey);
-                if (obj != null)
-                {
-                    return obj as List<RoadFlow.Data.Model.AppLibrary>;
-                }
-                else
-                {
-                    var list = dataAppLibrary.GetAll();
-                    RoadFlow.Cache.IO.Opation.Set(cacheKey, list);
-                    return list;
-                }
-            }
-        }
+
         /// <summary>
         /// 查询单条记录
         /// </summary>
-        public RoadFlow.Data.Model.AppLibrary Get(Guid id, bool fromCache=false)
+        public RoadFlow.Data.Model.AppLibraryModel Get(Guid id, bool fromCache=false)
         {
-            if (!fromCache)
-            {
-                return dataAppLibrary.Get(id);
-            }
-            else
-            {
-                var all = GetAll(true);
-                var app = all.Find(p => p.ID == id);
-                return app == null ? dataAppLibrary.Get(id) : app;
-            }
+            //if (!fromCache)
+            //{
+            //    return dataAppLibrary.Get(id);
+            //}
+            //else
+            //{
+            //    var all = GetAll(true);
+            //    var app = all.Find(p => p.ID == id);
+            //    return app == null ? dataAppLibrary.Get(id) : app;
+            //}
+            return BaseDb.Get<RoadFlow.Data.Model.AppLibraryModel>(new KeyValuePair<string, object>("ID", id));
         }
         /// <summary>
         /// 清除缓存
         /// </summary>
-        public void ClearCache()
-        {
-            RoadFlow.Cache.IO.Opation.Remove(cacheKey);
-        }
+        //public void ClearCache()
+        //{
+        //    RoadFlow.Cache.IO.Opation.Remove(cacheKey);
+        //}
+
         /// <summary>
         /// 删除
         /// </summary>
         public int Delete(Guid id)
         {
-            return dataAppLibrary.Delete(id);
+            //return dataAppLibrary.Delete(id);
+            return BaseDb.DeleteByPara(new { id });
         }
-        /// <summary>
-        /// 查询记录条数
-        /// </summary>
-        public long GetCount()
-        {
-            return dataAppLibrary.GetCount();
-        }
+        
 
         /// <summary>
         /// 得到一页数据
@@ -103,8 +90,9 @@ namespace RoadFlow.Platform
         /// <returns></returns>
         public List<RoadFlow.Data.Model.AppLibrary> GetPagerData(out string pager, string query = "", string title = "", string type = "", string address = "")
         {
-            return dataAppLibrary.GetPagerData(out pager, query, "Type,Title", RoadFlow.Utility.Tools.GetPageSize(),
-                RoadFlow.Utility.Tools.GetPageNumber(), title, type, address);
+            //return dataAppLibrary.GetPagerData(out pager, query, "Type,Title", RoadFlow.Utility.Tools.GetPageSize(),
+            //    RoadFlow.Utility.Tools.GetPageNumber(), title, type, address);
+            return BaseDb.QueryPaging();
         }
         /// <summary>
         /// 查询一个类别下所有记录

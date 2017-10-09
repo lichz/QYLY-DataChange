@@ -285,6 +285,23 @@ namespace RoadFlow.Data.MSSQL
             return result;
         }
 
+        public virtual Result<int> UpdateByPara(dynamic para)
+        {
+            Result<int> result = new Result<int>();
+       
+            try
+            {
+                result.Data = dbHelper.UpdateModel<int>(_tableName, _order, para);
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                result.ErrMSG = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
+
         public virtual int DeleteByPara(dynamic para)
         {
             var where = dbHelper.DynamicToWhereString(para, false);

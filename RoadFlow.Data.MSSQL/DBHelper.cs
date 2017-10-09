@@ -730,9 +730,7 @@ namespace RoadFlow.Data.MSSQL
             StringBuilder where = new StringBuilder("where 1=1 ");
             List<SqlParameter> parameter = new List<SqlParameter>();
 
-            #region 反射回去过滤参数并生成where语句和SqlParameter
             DynamicParaToSqlPraAndWhere(where, parameter, para);
-            #endregion
 
             return GetModelByWhereAndSqlParameter<T>(tableName, where.ToString(), parameter.ToArray(), order);
         }
@@ -847,6 +845,16 @@ namespace RoadFlow.Data.MSSQL
             }
         }
 
+        public int UpdateByPara<T>(string tableName,T model,dynamic para)
+        {
+            StringBuilder where = new StringBuilder("where 1=1 ");
+            List<SqlParameter> parameter = new List<SqlParameter>();
+
+            DynamicParaToSqlPraAndWhere(where, parameter, para);
+
+
+        }
+
         #region 公共方法
         private T GetModelByWhereAndSqlParameter<T>(string tableName, string where, SqlParameter[] parameter, string order)
         {
@@ -919,6 +927,12 @@ namespace RoadFlow.Data.MSSQL
             }, model);
         }
 
+        /// <summary>
+        /// 反射回去过滤参数并生成where语句和SqlParameter
+        /// </summary>
+        /// <param name="where"></param>
+        /// <param name="parameter"></param>
+        /// <param name="para"></param>
         private void DynamicParaToSqlPraAndWhere(StringBuilder where,List<SqlParameter> parameter,dynamic para)
         {
             RoadFlow.Utility.AfterGetPropertiesValueByDynamic action = delegate (object value, PropertyInfo propertyInfo)

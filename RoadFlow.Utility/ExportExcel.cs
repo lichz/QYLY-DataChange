@@ -99,7 +99,7 @@ namespace RoadFlow.Utility
                      var cell = trow.CreateCell(col);
                      if (value != null)
                      {
-                         cell.SetCellValue(value.ToString());
+                         SetCellValue(cell, value);
                      }
                      cell.CellStyle = style;
                      return false;
@@ -435,18 +435,7 @@ namespace RoadFlow.Utility
                 {
                     var cell = trow.CreateCell(col);
                     var temp = dt.Rows[row][col];
-                    if (temp.GetType() == typeof(decimal))
-                    {
-                        cell.SetCellValue((double)(decimal)temp);
-                    }
-                    else if (temp.GetType() == typeof(int))
-                    {
-                        cell.SetCellValue((double)(int)temp);
-                    }
-                    else
-                    {
-                        cell.SetCellValue(temp.ToString());
-                    }
+                    cell = SetCellValue(cell, temp);
 
                     cell.CellStyle = style;
                 }
@@ -546,6 +535,27 @@ namespace RoadFlow.Utility
             {
                 return cell.ToString();
             }
+        }
+
+        /// <summary>
+        /// 数据导出前的类型判断和转换
+        /// </summary>
+        /// <returns></returns>
+        private static ICell SetCellValue(ICell cell, object value)
+        {
+            if (value.GetType() == typeof(decimal))
+            {
+                cell.SetCellValue((double)(decimal)value);
+            }
+            else if (value.GetType() == typeof(int))
+            {
+                cell.SetCellValue((double)(int)value);
+            }
+            else
+            {
+                cell.SetCellValue(value.ToString());
+            }
+            return cell;
         }
         #endregion
 
