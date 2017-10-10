@@ -1,4 +1,4 @@
-﻿@model IEnumerable<RoadFlow.Data.Model.AppLibrary>
+﻿@model IEnumerable<RoadFlow.Data.Model.AppLibraryModel>
 @{
     ViewBag.Title = "List";
 }
@@ -35,7 +35,7 @@
             <td><input type="checkbox" value="@app.ID" name="checkbox_app" /></td>
             <td>@app.Title</td>
             <td>@app.Address</td>
-            <td>@bdict.GetTitle(app.Type)</td>
+            <td>@bdict.GetTitle(app.Type.Value)</td>
             <td><a class="editlink" href="javascript:void(0);" onclick="edit('@app.ID');return false;">编辑</a></td>
         </tr>
     }    

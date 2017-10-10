@@ -53,7 +53,7 @@ namespace RoadFlow.Data.Interface {
         /// <summary>
         /// 查询所有记录(和getall参数方式不同，建议基于“=”的用此方法。)
         /// </summary>
-        /// <param name="top">前边几条</param>
+        /// <param name="top">前边几条,0表示所有</param>
         /// <param name="para">参数数组</param>
         /// <returns></returns>
         Result<DataTable> QueryByPara(int top, dynamic para, bool isAutoStatus = true);
@@ -61,8 +61,16 @@ namespace RoadFlow.Data.Interface {
         /// <summary>
         /// 根据条件查询一条记录
         /// </summary>
-        Result<T> GetByPara<T>(dynamic para);
+        Result<T> Query<T>(dynamic para);
 
+        /// <summary>
+        /// 更新 【注意：model中ID带有值，会尝试将ID更新。所以传入model前注意赋值为空】
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="model"></param>
+        /// <param name="para">筛选条件</param>
+        /// <returns></returns>
+        Result<int> UpdateByPara<T>(T model, dynamic para);
 
 
         int DeleteByPara(dynamic para);

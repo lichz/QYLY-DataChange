@@ -7,7 +7,7 @@ using RoadFlow.Data.Factory;
 
 namespace RoadFlow.Platform
 {
-    public class AppLibrary
+    public class AppLibraryBLL
     {
         //private string cacheKey = RoadFlow.Utility.Keys.CacheKeys.AppLibrary.ToString();
         //private RoadFlow.Data.Interface.IAppLibrary dataAppLibrary;
@@ -34,11 +34,15 @@ namespace RoadFlow.Platform
         /// </summary>
         public int Update(RoadFlow.Data.Model.AppLibraryModel model)
         {
-            //return dataAppLibrary.Update(model);
             var id = model.ID.Value;
-            model.ID = null;
-            //return BaseDb.Update(model,new KeyValuePair<string, object>("ID",id));
-            //return BaseDb.Update
+            model.ID = null;//model中ID带有值，会尝试将ID更新。所以这里赋值为空
+            var result = BaseDb.UpdateByPara(model, new { id });
+            if (result.Success)
+            {
+                return result.Data;
+            }
+
+            return 0;
         }
 
         /// <summary>
@@ -46,16 +50,6 @@ namespace RoadFlow.Platform
         /// </summary>
         public RoadFlow.Data.Model.AppLibraryModel Get(Guid id, bool fromCache=false)
         {
-            //if (!fromCache)
-            //{
-            //    return dataAppLibrary.Get(id);
-            //}
-            //else
-            //{
-            //    var all = GetAll(true);
-            //    var app = all.Find(p => p.ID == id);
-            //    return app == null ? dataAppLibrary.Get(id) : app;
-            //}
             return BaseDb.Get<RoadFlow.Data.Model.AppLibraryModel>(new KeyValuePair<string, object>("ID", id));
         }
         /// <summary>
@@ -88,22 +82,71 @@ namespace RoadFlow.Platform
         /// <param name="type"></param>
         /// <param name="address"></param>
         /// <returns></returns>
-        public List<RoadFlow.Data.Model.AppLibrary> GetPagerData(out string pager, string query = "", string title = "", string type = "", string address = "")
+        public List<RoadFlow.Data.Model.AppLibraryModel> GetPagerData(out string pager, string query = "", string title = "", string type = "", string address = "")
         {
             //return dataAppLibrary.GetPagerData(out pager, query, "Type,Title", RoadFlow.Utility.Tools.GetPageSize(),
             //    RoadFlow.Utility.Tools.GetPageNumber(), title, type, address);
-            return BaseDb.QueryPaging();
+
+            List<string> typeList = type.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            var where = new List<Data.Model.Predicates>();
+
+            #region 筛选条件
+            if (!title.IsNullOrEmpty())
+            {
+                where.Add(new Data.Model.Predicates()
+                {
+                    FieldName = "Title",
+                    Operator = Data.Model.SQLFilterType.CHARINDEX,
+                    Value = title
+                });
+            }
+
+            if (!address.IsNullOrEmpty())
+            {
+                where.Add(new Data.Model.Predicates()
+                {
+                    FieldName = "Address",
+                    Operator = Data.Model.SQLFilterType.CHARINDEX,
+                    Value = address
+                });
+            }
+
+            if (typeList.Count > 0)
+            {
+                where.Add(new Data.Model.Predicates()
+                {
+                    FieldName = "Type",
+                    Operator = Data.Model.SQLFilterType.IN,
+                    Value = typeList
+                });
+            }
+
+            #endregion
+
+            var result = BaseDb.QueryListPaging<RoadFlow.Data.Model.AppLibraryModel>(out pager, RoadFlow.Utility.Tools.GetPageSize(), RoadFlow.Utility.Tools.GetPageNumber(), where);
+            if (result.Success)
+            {
+                return result.Data;
+            }
+            return new List<Data.Model.AppLibraryModel>();
         }
         /// <summary>
         /// 查询一个类别下所有记录
         /// </summary>
-        public List<RoadFlow.Data.Model.AppLibrary> GetAllByType(Guid type)
+        public List<RoadFlow.Data.Model.AppLibraryModel> GetAllByType(Guid type)
         {
             if (type.IsEmptyGuid())
             {
-                return new List<RoadFlow.Data.Model.AppLibrary>();
+                return new List<RoadFlow.Data.Model.AppLibraryModel>();
             }
-            return dataAppLibrary.GetAllByType(GetAllChildsIDString(type)).OrderBy(p=>p.Title).ToList();
+            //return dataAppLibrary.GetAllByType(GetAllChildsIDString(type)).OrderBy(p=>p.Title).ToList();
+            var result = BaseDb.QueryByPara(0, new { type });
+            if (result.Success)
+            {
+                return result.Data.ToList<RoadFlow.Data.Model.AppLibraryModel>();
+            }
+            return new List<Data.Model.AppLibraryModel>();
         }
 
         /// <summary>
@@ -111,14 +154,20 @@ namespace RoadFlow.Platform
         /// </summary>
         public int Delete(string[] idArray)
         {
-            return dataAppLibrary.Delete(idArray);
+            //return dataAppLibrary.Delete(idArray);
+            int count = 0;
+            foreach (var item in idArray)
+            {
+                count += BaseDb.DeleteByPara(new { id=item });
+            }
+            return count;
         }
         /// <summary>
         /// 删除记录
         /// </summary>
         public int Delete(string idstring)
         {
-            return idstring.IsNullOrEmpty() ? 0 : dataAppLibrary.Delete(idstring.Split(','));
+            return idstring.IsNullOrEmpty() ? 0 : BaseDb.DeleteByPara(new { id = idstring });
         }
         /// <summary>
         /// 得到类型选择项
@@ -173,9 +222,20 @@ namespace RoadFlow.Platform
         /// <summary>
         /// 根据代码查询一条记录
         /// </summary>
-        public RoadFlow.Data.Model.AppLibrary GetByCode(string code)
+        public RoadFlow.Data.Model.AppLibraryModel GetByCode(string code)
         {
-            return code.IsNullOrEmpty() ? null : dataAppLibrary.GetByCode(code.Trim());
+            if (code.IsNullOrEmpty())
+            {
+                return null;
+            }
+
+            var result = BaseDb.Query<RoadFlow.Data.Model.AppLibraryModel>(new { code = code.Trim() });
+            if (result.Success)
+            {
+                return result.Data;
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -183,7 +243,7 @@ namespace RoadFlow.Platform
         /// </summary>
         /// <param name="app"></param>
         /// <returns></returns>
-        public string GetFlowRunAddress(RoadFlow.Data.Model.AppLibrary app, string query="")
+        public string GetFlowRunAddress(RoadFlow.Data.Model.AppLibraryModel app, string query="")
         {
             StringBuilder sb = new StringBuilder();
             if (app.Params.IsNullOrEmpty())
@@ -228,41 +288,47 @@ namespace RoadFlow.Platform
         public List<Guid> UpdateUseMemberCache(Guid appid)
         {
             string key = RoadFlow.Utility.Keys.CacheKeys.AppLibraryUseMember.ToString();
-            var obj = RoadFlow.Cache.IO.Opation.Get(key);
-            Dictionary<Guid, List<Guid>> dict;
-            if (obj != null && obj is Dictionary<Guid, List<Guid>>)
-            {
-                dict = obj as Dictionary<Guid, List<Guid>>;
-            }
-            else
-            {
-                dict = new Dictionary<Guid, List<Guid>>();
-            }
-            var app = new AppLibrary().Get(appid);
+            //var obj = RoadFlow.Cache.IO.Opation.Get(key);
+            Dictionary<Guid, List<Guid>> dict = new Dictionary<Guid, List<Guid>>();
+            //if (obj != null && obj is Dictionary<Guid, List<Guid>>)
+            //{
+            //    dict = obj as Dictionary<Guid, List<Guid>>;
+            //}
+            //else
+            //{
+            //    dict = new Dictionary<Guid, List<Guid>>();
+            //}
+            var app = Get(appid);
             if (app == null)
             {
                 return new List<Guid>();
             }
-            if (dict.ContainsKey(appid))
-            {
-                if (app.UseMember.IsNullOrEmpty())
-                {
-                    dict.Remove(appid);
-                    return new List<Guid>();
-                }
-                else
-                {
-                    var userIDs = new Organize().GetAllUsersIdList(app.UseMember);
-                    dict[appid] = userIDs;
-                    return userIDs;
-                }
-            }
-            else if(!app.UseMember.IsNullOrEmpty())
+            if(!app.UseMember.IsNullOrEmpty())
             {
                 var userIDs = new Organize().GetAllUsersIdList(app.UseMember);
                 dict.Add(appid, userIDs);
                 return userIDs;
             }
+            //if (dict.ContainsKey(appid))
+            //{
+            //    if (app.UseMember.IsNullOrEmpty())
+            //    {
+            //        dict.Remove(appid);
+            //        return new List<Guid>();
+            //    }
+            //    else
+            //    {
+            //        var userIDs = new Organize().GetAllUsersIdList(app.UseMember);
+            //        dict[appid] = userIDs;
+            //        return userIDs;
+            //    }
+            //}
+            //else if(!app.UseMember.IsNullOrEmpty())
+            //{
+            //    var userIDs = new Organize().GetAllUsersIdList(app.UseMember);
+            //    dict.Add(appid, userIDs);
+            //    return userIDs;
+            //}
             return new List<Guid>();
         }
         /// <summary>
@@ -282,7 +348,7 @@ namespace RoadFlow.Platform
                     return dict[appid];
                 }
             }
-            var app = new AppLibrary().Get(appid);
+            var app = new AppLibraryBLL().Get(appid);
             if (app == null || app.UseMember.IsNullOrEmpty())
             {
                 return new List<Guid>();

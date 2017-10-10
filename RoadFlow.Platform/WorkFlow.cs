@@ -211,13 +211,13 @@ namespace RoadFlow.Platform
                         wfInstalled.Status = 2;
 
                         #region 添加到应用程序库
-                        RoadFlow.Platform.AppLibrary bappLibrary = new AppLibrary();
-                        RoadFlow.Data.Model.AppLibrary app = bappLibrary.GetByCode(wfInstalled.ID.ToString());
+                        RoadFlow.Platform.AppLibraryBLL bappLibrary = new AppLibraryBLL();
+                        RoadFlow.Data.Model.AppLibraryModel app = bappLibrary.GetByCode(wfInstalled.ID.ToString());
                         bool isAdd = false;
                         if (app == null)
                         {
                             isAdd = true;
-                            app = new RoadFlow.Data.Model.AppLibrary();
+                            app = new RoadFlow.Data.Model.AppLibraryModel();
                             app.ID = Guid.NewGuid();
                         }
                         app.Address = isMvc ? "WorkFlowRun/Index" : "Platform/WorkFlowRun/Default.aspx";
@@ -235,7 +235,7 @@ namespace RoadFlow.Platform
                         {
                             bappLibrary.Update(app);
                         }
-                        bappLibrary.ClearCache();
+                        //bappLibrary.ClearCache();
                         new RoadFlow.Platform.RoleApp().ClearAllDataTableCache();
                         #endregion
                         RoadFlow.Cache.IO.Opation.Set(getCacheKey(wfInstalled.ID), wfInstalled);

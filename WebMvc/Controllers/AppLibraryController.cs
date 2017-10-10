@@ -25,13 +25,13 @@ namespace WebMvc.Controllers
         {
             string title1 = Request.QueryString["title1"];
             string address = Request.QueryString["address"];
-            return query(title1, address);
+            return Query(title1, address);
         }
 
         [HttpPost]
         public RedirectToRouteResult Delete()
         {
-            RoadFlow.Platform.AppLibrary bappLibrary = new RoadFlow.Platform.AppLibrary();
+            RoadFlow.Platform.AppLibraryBLL bappLibrary = new RoadFlow.Platform.AppLibraryBLL();
             string deleteID = Request.Form["checkbox_app"];
             System.Text.StringBuilder delxml = new System.Text.StringBuilder();
             foreach (string id in deleteID.Split(','))
@@ -56,17 +56,17 @@ namespace WebMvc.Controllers
         {
             string title1 = collection["title1"];
             string address = collection["address"];
-            return query(title1, address);
+            return Query(title1, address);
         }
 
-        private ActionResult query(string title1, string address)
+        private ActionResult Query(string title1, string address)
         {
             string pager;
             string appid = Request.QueryString["appid"];
             string tabid = Request.QueryString["tabid"];
             string typeid = Request.QueryString["typeid"];
             RoadFlow.Platform.Dictionary bdict = new RoadFlow.Platform.Dictionary();
-            RoadFlow.Platform.AppLibrary bapp = new RoadFlow.Platform.AppLibrary();
+            RoadFlow.Platform.AppLibraryBLL bapp = new RoadFlow.Platform.AppLibraryBLL();
             string typeidstring = typeid.IsGuid() ? bapp.GetAllChildsIDString(typeid.Convert<Guid>()) : "";
             string query = string.Format("&appid={0}&tabid={1}&title1={2}&typeid={3}&address={4}",
                         Request.QueryString["appid"],
@@ -74,7 +74,7 @@ namespace WebMvc.Controllers
                         title1.UrlEncode(), typeid, address.UrlEncode()
                         );
             string query1 = string.Format("{0}&pagesize={1}&pagenumber={2}", query, Request.QueryString["pagesize"], Request.QueryString["pagenumber"]);
-            List<RoadFlow.Data.Model.AppLibrary> appList = bapp.GetPagerData(out pager, query, title1, typeidstring, address);
+            List<RoadFlow.Data.Model.AppLibraryModel> appList = bapp.GetPagerData(out pager, query, title1, typeidstring, address);
             ViewBag.Pager = pager;
             ViewBag.AppID = appid;
             ViewBag.TabID = tabid;
@@ -97,8 +97,8 @@ namespace WebMvc.Controllers
             string editID = Request.QueryString["id"];
             string type = Request.QueryString["typeid"];
 
-            RoadFlow.Platform.AppLibrary bappLibrary = new RoadFlow.Platform.AppLibrary();
-            RoadFlow.Data.Model.AppLibrary appLibrary = null;
+            RoadFlow.Platform.AppLibraryBLL bappLibrary = new RoadFlow.Platform.AppLibraryBLL();
+            RoadFlow.Data.Model.AppLibraryModel appLibrary = null;
             if (editID.IsGuid())
             {
                 appLibrary = bappLibrary.Get(editID.Convert<Guid>());
@@ -107,15 +107,15 @@ namespace WebMvc.Controllers
             string oldXML = string.Empty;
             if (appLibrary == null)
             {
-                appLibrary = new RoadFlow.Data.Model.AppLibrary();
+                appLibrary = new RoadFlow.Data.Model.AppLibraryModel();
                 appLibrary.ID = Guid.NewGuid();
-                ViewBag.TypeOptions = new RoadFlow.Platform.AppLibrary().GetTypeOptions(type);
+                ViewBag.TypeOptions = new RoadFlow.Platform.AppLibraryBLL().GetTypeOptions(type);
                 ViewBag.OpenOptions = new RoadFlow.Platform.Dictionary().GetOptionsByCode("appopenmodel", value: "");
             }
             else
             {
                 oldXML = appLibrary.Serialize();
-                ViewBag.TypeOptions = new RoadFlow.Platform.AppLibrary().GetTypeOptions(appLibrary.Type.ToString());
+                ViewBag.TypeOptions = new RoadFlow.Platform.AppLibraryBLL().GetTypeOptions(appLibrary.Type.ToString());
                 ViewBag.OpenOptions = new RoadFlow.Platform.Dictionary().GetOptionsByCode("appopenmodel", value: appLibrary.OpenMode.ToString());
             }
 
@@ -161,9 +161,9 @@ namespace WebMvc.Controllers
                     RoadFlow.Platform.Log.Add("修改了应用程序库", "", RoadFlow.Platform.Log.Types.角色应用, oldXML, appLibrary.Serialize());
                     ViewBag.Script = "alert('修改成功!');new RoadUI.Window().reloadOpener();new RoadUI.Window().close();";
                 }
-                bappLibrary.UpdateUseMemberCache(appLibrary.ID);
-                bappLibrary.ClearCache();
-                new RoadFlow.Platform.RoleApp().ClearAllDataTableCache();
+                //bappLibrary.UpdateUseMemberCache(appLibrary.ID.Value);
+                //bappLibrary.ClearCache();
+                //new RoadFlow.Platform.RoleApp().ClearAllDataTableCache();
             }
             return View(appLibrary);
         }

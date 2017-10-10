@@ -269,7 +269,7 @@ namespace RoadFlow.Data.MSSQL
         /// <summary>
         /// 根据条件查询一条记录
         /// </summary>
-        public virtual Result<T> GetByPara<T>(dynamic para)
+        public virtual Result<T> Query<T>(dynamic para)
         {
             Result<T> result = new Result<T>();
             try
@@ -285,13 +285,13 @@ namespace RoadFlow.Data.MSSQL
             return result;
         }
 
-        public virtual Result<int> UpdateByPara(dynamic para)
+        public virtual Result<int> UpdateByPara<T>(T model,dynamic para)
         {
             Result<int> result = new Result<int>();
        
             try
             {
-                result.Data = dbHelper.UpdateModel<int>(_tableName, _order, para);
+                result.Data = dbHelper.UpdateByPara(model,_tableName, para);
                 result.Success = true;
             }
             catch (Exception ex)
@@ -302,6 +302,11 @@ namespace RoadFlow.Data.MSSQL
             return result;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="para">筛选条件</param>
+        /// <returns></returns>
         public virtual int DeleteByPara(dynamic para)
         {
             var where = dbHelper.DynamicToWhereString(para, false);

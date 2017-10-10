@@ -600,7 +600,7 @@ namespace WebMvc.Controllers
                     }
                     RoadFlow.Platform.Log.Add("删除了用户", user.Serialize(), RoadFlow.Platform.Log.Types.组织机构);
                     ViewBag.Script = "alert('删除成功');parent.frames[0].reLoad('" + refreshID + "');window.location='" + url + "'";
-                    new RoadFlow.Platform.AppLibrary().ClearUseMemberCache();
+                    new RoadFlow.Platform.AppLibraryBLL().ClearUseMemberCache();
                 }
 
                 //初始化密码
@@ -648,7 +648,7 @@ namespace WebMvc.Controllers
                         }
 
                         RoadFlow.Platform.Log.Add(("1" == movetostationjz ? "兼职" : "全职") + "调动了人员的岗位", "将人员调往岗位(" + moveto + ")", RoadFlow.Platform.Log.Types.组织机构);
-                        new RoadFlow.Platform.AppLibrary().ClearUseMemberCache();
+                        new RoadFlow.Platform.AppLibraryBLL().ClearUseMemberCache();
                     }
                 }
             }

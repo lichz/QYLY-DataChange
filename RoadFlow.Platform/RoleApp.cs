@@ -227,7 +227,7 @@ namespace RoadFlow.Platform
         {
             RoleApp RoleApp = new RoadFlow.Platform.RoleApp();
             UsersApp UsersApp = new Platform.UsersApp();
-            AppLibrary Applibary = new AppLibrary();
+            AppLibraryBLL Applibary = new AppLibraryBLL();
             System.Data.DataTable roleAppDt = RoleApp.GetAllDataTableFromCache();
             System.Data.DataTable appDt = CloneDataTable(roleAppDt);
             UsersApp.AppendUserApps(userID, appDt);
@@ -296,7 +296,7 @@ namespace RoadFlow.Platform
         {
             RoleApp roleApp = new RoadFlow.Platform.RoleApp();
             UsersApp UsersApp = new Platform.UsersApp();
-            AppLibrary Applibary = new AppLibrary();
+            AppLibraryBLL Applibary = new AppLibraryBLL();
             DataTable roleAppDt = roleApp.GetAllDataTableFromCache();
             DataTable appDt1 = CloneDataTable(roleAppDt);
             UsersApp.AppendUserApps(userID, appDt1);

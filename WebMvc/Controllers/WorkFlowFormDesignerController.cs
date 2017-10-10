@@ -287,12 +287,12 @@ namespace WebMvc.Controllers
 
             string attr = wff.Attribute;
             string appType = LitJson.JsonMapper.ToObject(attr)["apptype"].ToString();
-            RoadFlow.Platform.AppLibrary App = new RoadFlow.Platform.AppLibrary();
+            RoadFlow.Platform.AppLibraryBLL App = new RoadFlow.Platform.AppLibraryBLL();
             var app = App.GetByCode(id);
             bool isAdd = false;
             if (app == null)
             {
-                app = new RoadFlow.Data.Model.AppLibrary();
+                app = new RoadFlow.Data.Model.AppLibraryModel();
                 app.ID = Guid.NewGuid();
                 app.Code = id;
                 isAdd = true;

@@ -845,14 +845,25 @@ namespace RoadFlow.Data.MSSQL
             }
         }
 
-        public int UpdateByPara<T>(string tableName,T model,dynamic para)
+        public int UpdateByPara<T>(T model, string tableName,dynamic para)
         {
             StringBuilder where = new StringBuilder("where 1=1 ");
             List<SqlParameter> parameter = new List<SqlParameter>();
+            StringBuilder values = new StringBuilder();
 
+            UpdateModelOfGetPropertiesValue(values, parameter, model);
             DynamicParaToSqlPraAndWhere(where, parameter, para);
 
+            if (string.IsNullOrWhiteSpace(values.ToString()))
+            {//没有添加任何列
+                return 0;
+            }
+            else
+            {
+                values.Remove(0, 1);//移除首个"，"
 
+                return Execute(string.Format("update [{0}] set {1} {2}", tableName, values.ToString(), where.ToString()), parameter.ToArray());
+            }
         }
 
         #region 公共方法
