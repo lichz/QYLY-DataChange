@@ -141,7 +141,7 @@ namespace RoadFlow.Platform
                 return new List<RoadFlow.Data.Model.AppLibraryModel>();
             }
             //return dataAppLibrary.GetAllByType(GetAllChildsIDString(type)).OrderBy(p=>p.Title).ToList();
-            var result = BaseDb.QueryByPara(0, new { type });
+            var result = BaseDb.QueryByPara(new { type });
             if (result.Success)
             {
                 return result.Data.ToList<RoadFlow.Data.Model.AppLibraryModel>();
@@ -175,7 +175,7 @@ namespace RoadFlow.Platform
         /// <returns></returns>
         public string GetTypeOptions(string value="")
         {
-            return new Dictionary().GetOptionsByCode("AppLibraryTypes", Dictionary.OptionValueField.ID, value);
+            return new DictionaryBLL().GetOptionsByCode("AppLibraryTypes", DictionaryBLL.OptionValueField.ID, value);
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace RoadFlow.Platform
         /// <returns></returns>
         public string GetAllChildsIDString(Guid id, bool isSelf = true)
         {
-            return new Dictionary().GetAllChildsIDString(id, true);
+            return new DictionaryBLL().GetAllChildsIDString(id, true);
         }
 
         /// <summary>

@@ -1,6 +1,4 @@
-﻿@model RoadFlow.Data.Model.ArticleModel
-@using RoadFlow.Data.Model
-@using RoadFlow.Utility;
+﻿@model RoadFlow.Web.Model.ArticleIndexViewModel
 @{ViewBag.Title = "Send"; Page.CheckApp = false;}
 <link type="text/css" rel="stylesheet" href="/Scripts/FlowRun/Forms/flowform.css">
 <form method="post" action="@Url.Action("Index")">
@@ -24,9 +22,9 @@
                 <td>
                     <select style="width:100px" id="Type" name="Type" isflow="1" type1="flow_select">
                         <option value=""></option>
-                        @foreach (System.Data.DataRow dr in (ViewBag.Type).Rows)
+                        @foreach (var item in Model.ArticleTypes)
                         {
-                            <option value="@dr["ID"]">@dr["Title"]</option>
+                            <option value="@item.ID">@item.Title</option>
                         }
                     </select>
                 </td>

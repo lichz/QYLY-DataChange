@@ -48,7 +48,7 @@
     <Compile Include="AppLibrary.cs" />
     <Compile Include="Column.cs" />
     <Compile Include="DBConnection.cs" />
-    <Compile Include="Dictionary.cs" />
+    <None Include="Dictionary.cs" />
     <Compile Include="Buildings.cs" />
     <Compile Include="New\AppLibraryModel.cs" />
     <Compile Include="New\EnterpriseAndEnterpriseTaxModel.cs" />

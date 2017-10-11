@@ -13,7 +13,7 @@ namespace WebMvc.Areas.Controls.Controllers
 
         public ActionResult Index()
         {
-            RoadFlow.Platform.Dictionary Dict = new RoadFlow.Platform.Dictionary();
+            RoadFlow.Platform.DictionaryBLL Dict = new RoadFlow.Platform.DictionaryBLL();
 
             string values = Request.QueryString["values"];
             string rootid = Request.QueryString["rootid"];
@@ -40,11 +40,11 @@ namespace WebMvc.Areas.Controls.Controllers
         public string GetNames()
         {
             string values = Request.QueryString["values"];
-            RoadFlow.Platform.Dictionary Dict = new RoadFlow.Platform.Dictionary();
+            RoadFlow.Platform.DictionaryBLL Dict = new RoadFlow.Platform.DictionaryBLL();
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             foreach (string value in values.Split(','))
             {
-                var dict = Dict.Get(value.Convert<Guid>(), true);
+                var dict = Dict.Get(value.Convert<Guid>());
                 if (dict != null)
                 {
                     sb.Append(dict.Title);
@@ -61,7 +61,7 @@ namespace WebMvc.Areas.Controls.Controllers
             string note = "";
             if (id.IsGuid(out gid))
             {
-                var dict = new RoadFlow.Platform.Dictionary().Get(gid, true);
+                var dict = new RoadFlow.Platform.DictionaryBLL().Get(gid);
                 if (dict != null)
                 {
                     note = dict.Note;

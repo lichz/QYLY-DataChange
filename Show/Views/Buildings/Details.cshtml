@@ -17,20 +17,20 @@
         <div class="show_info2 clearfix">
             <div class="txMovie fl">
                 <ul class="focus_pic" id="focus_pic_list">
-                   @{
-                       var xgt = Model.Building.XGT;
-                       string[] images = xgt.Split('|');
-                       foreach (var item in images)
-                       {
-                        <li><img src="@(Show.Controllers.ControllersExtentstions.GetFullPath(item))" /></li>
-                       }
-                }
+                    @{
+                        var xgt = Model.Building.XGT;
+                        string[] images = xgt.Split('|');
+                        foreach (var item in images)
+                        {
+                            <li><img src="@(Show.Controllers.ControllersExtentstions.GetFullPath(item))" /></li>
+                        }
+                    }
                 </ul>
                 <div class="focus_nav">
                     <ul id="focus_smaillPic_list">
                         @foreach (var item in images)
                         {
-                        <li><img src="@(Show.Controllers.ControllersExtentstions.GetFullPath(item))" /></li>
+                            <li><img src="@(Show.Controllers.ControllersExtentstions.GetFullPath(item))" /></li>
                         }
                     </ul>
                     <a href="javascript:;" title="上一个" class="navPrev"></a>
@@ -40,35 +40,52 @@
             <div class="text_info fr">
                 <h3>@Model.Building.Name</h3>
                 <div>
-                    <span class="span0">租     金：</span><span class="span1">@Model.Building.SYZJ.Title</span>元/㎡ · 月
-                </div>
-                <div>
-                    <span class="span0">街道办：</span><span class="span2">@Model.Building.SSJDS.Title</span>
-                </div>
-                <div>
-                    <span class="span0">地址：</span><span class="span2">@Model.Building.LYXXDZ</span>
-                </div>
-                <div>
-                    <span class="span0">所属楼盘：</span><span class="span2">@Model.Building.HouseIDS.Title</span>
+                    <span class="span0">地址：</span><span class="span1">@Model.Building.LYXXDZ</span>
                 </div>
                 <div>
                     <span class="span0">竣工日期：</span><span class="span2">@(((DateTime)Model.Building.JGSJ).ToString("yyyy-MM-dd"))</span>
                 </div>
                 <div>
-                    <span class="span0">开发商：</span><span class="span2">@Model.Building.LYGLYYF</span>
+                    <span class="span0">管理公司：</span><span class="span2">@Model.Building.LYGLYYF</span>
                 </div>
                 <div>
-                    <span class="span0">面积：</span><span class="span2">@Model.Building.ZJZMJ㎡</span>
+                    <span class="span0">联系电话：</span><span class="span2">@Model.Building.ChinaMerchantsTel</span>
                 </div>
                 <div>
-                    <span class="span0">发布日期：</span><span class="span2">@(((DateTime)Model.Building.CreateTime).ToString("yyyy-MM-dd"))</span>
+                    <span class="span0">商业面积：</span><span class="span2">@Model.Building.SY_ZMJ</span>
                 </div>
-                <p class="tel_info">400-890-8745</p>
+                <div>
+                    <span class="span0">商业空置面积：</span><span class="span2">@Model.Building.SY_KZ_ZMJ㎡</span>
+                </div>
+                <div>
+                    <span class="span0">商业租金：</span><span class="span2">@Model.Building.SYZJ.Title 元/㎡ · 月</span>
+                </div>
+                <div>
+                    <span class="span0">商业销售均价：</span><span class="span2">@Model.Building.SY_XSJJ 元/㎡</span>
+                </div>
+                <div>
+                    <span class="span0">商业物管费：</span><span class="span2">@Model.Building.SY_WGF 元/㎡ · 月</span>
+                </div>
+                <div>
+                    <span class="span0">商务面积：</span><span class="span2">@Model.Building.SW_ZMJ</span>
+                </div>
+                <div>
+                    <span class="span0">商务空置面积：</span><span class="span2">@Model.Building.SW_KZ_ZMJ㎡</span>
+                </div>
+                <div>
+                    <span class="span0">商务租金：</span><span class="span2">@Model.Building.SWZJ.Title 元/㎡ · 月</span>
+                </div>
+                <div>
+                    <span class="span0">商务销售均价：</span><span class="span2">@Model.Building.SW_XSJJ 元/㎡</span>
+                </div>
+                <div>
+                    <span class="span0">商务物管费：</span><span class="span2">@Model.Building.SW_WGF 元/㎡ · 月</span>
+                </div>
             </div>
             <div class="floor_introduction fl">
                 <h3>楼宇简介</h3>
                 <div class="intro_wrap">
-                   @Html.Raw(Model.Building.Note)
+                    @Html.Raw(Model.Building.Note)
                 </div>
             </div>
         </div>

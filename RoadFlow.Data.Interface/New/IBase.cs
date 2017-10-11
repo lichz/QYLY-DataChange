@@ -10,7 +10,7 @@ namespace RoadFlow.Data.Interface {
     public interface IBase {
         #region get
         DataTable GetPagerData(out string pager, int size, int number, Dictionary<KeyValuePair<string, RoadFlow.Data.Model.SQLFilterType>, object> where);
-        List<T> GetListPagerData<T>(out string pager, int size, int number, Dictionary<KeyValuePair<string, RoadFlow.Data.Model.SQLFilterType>, object> where);
+        List<T> GetListPagerData<T>(out string pager, int size, int number, Dictionary<KeyValuePair<string, RoadFlow.Data.Model.SQLFilterType>, object> where) where T:new();
         /// <summary>
         /// 
         /// </summary>
@@ -41,7 +41,7 @@ namespace RoadFlow.Data.Interface {
         /// <summary>
         /// 查询列表(带翻页)
         /// </summary>
-        Result<List<T>> QueryListPaging<T>(out string pager, int size, int number, List<Predicates> predicates, bool isAutoStatus = true);
+        Result<List<T>> QueryListPaging<T>(out string pager, int size, int number, List<Predicates> predicates, bool isAutoStatus = true) where T:new();
         /// <summary>
         /// 查询所有记录(top重载，为0则取所有)
         /// </summary>
@@ -49,14 +49,14 @@ namespace RoadFlow.Data.Interface {
         /// <param name="predicates"></param>
         /// <param name="isAutoStatus">是否自动增加状态筛选</param>
         /// <returns></returns>
-        Result<DataTable> QueryAll(int top, List<Predicates> predicates, bool isAutoStatus = true);
+        Result<DataTable> QueryAll(List<Predicates> predicates, int top=0, bool isAutoStatus = true);
         /// <summary>
         /// 查询所有记录(和getall参数方式不同，建议基于“=”的用此方法。)
         /// </summary>
         /// <param name="top">前边几条,0表示所有</param>
         /// <param name="para">参数数组</param>
         /// <returns></returns>
-        Result<DataTable> QueryByPara(int top, dynamic para, bool isAutoStatus = true);
+        Result<DataTable> QueryByPara(dynamic para, int top=0, bool isAutoStatus = true);
 
         /// <summary>
         /// 根据条件查询一条记录

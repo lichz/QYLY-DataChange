@@ -170,6 +170,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ViewModels\ArticleViewModel.cs" />
     <Compile Include="Models\ViewModels\StatisticsViewModel.cs" />
     <Compile Include="Models\ViewModels\BuildingViewModel.cs" />
     <Compile Include="Models\ViewModels\BuildingEnterpriseViewModel.cs" />
@@ -1647,7 +1648,6 @@
     <None Include="Properties\PublishProfiles\release.pubxml" />
     <Content Include="Views\QueryDesign\DisplayItem.cshtml" />
     <Content Include="Views\QueryDesign\Item.cshtml" />
-    <Content Include="Views\QtatisticalAnalysis\index.cshtml" />
     <Content Include="Views\Statistics\Index.cshtml" />
     <Content Include="Views\MapSearch\Index.cshtml" />
     <Content Include="Views\ActivityStatistics\Index.cshtml" />

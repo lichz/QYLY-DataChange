@@ -150,7 +150,7 @@ namespace RoadFlow.Platform
                 wf.InstanceManager = jsonData["instanceManager"].ToString();
                 wf.Manager = jsonData["manager"].ToString();
                 wf.Name = name.Trim();
-                wf.Type = type.IsGuid() ? type.Convert<Guid>() : new Dictionary().GetIDByCode("FlowTypes");
+                wf.Type = type.IsGuid() ? type.Convert<Guid>() : new DictionaryBLL().GetIDByCode("FlowTypes");
                 try
                 {
                     if (isAdd)
@@ -226,7 +226,7 @@ namespace RoadFlow.Platform
                         app.OpenMode = 0;
                         app.Params = "flowid=" + wfInstalled.ID.ToString();
                         app.Title = wfInstalled.Name;
-                        app.Type = wfInstalled.Type.IsGuid() ? wfInstalled.Type.Convert<Guid>() : new Dictionary().GetIDByCode("FlowTypes");
+                        app.Type = wfInstalled.Type.IsGuid() ? wfInstalled.Type.Convert<Guid>() : new DictionaryBLL().GetIDByCode("FlowTypes");
                         if (isAdd)
                         {
                             bappLibrary.Add(app);
@@ -426,7 +426,7 @@ namespace RoadFlow.Platform
             }
 
             string type = json["type"].ToString();
-            wfInstalled.Type = type.IsNullOrEmpty() ? new Dictionary().GetIDByCode("FlowTypes").ToString() : type.Trim();
+            wfInstalled.Type = type.IsNullOrEmpty() ? new DictionaryBLL().GetIDByCode("FlowTypes").ToString() : type.Trim();
 
 
             string manager = json["manager"].ToString();
@@ -2000,7 +2000,7 @@ namespace RoadFlow.Platform
         /// <returns></returns>
         public string GetAllChildsIDString(Guid id, bool isSelf = true)
         {
-            return new Dictionary().GetAllChildsIDString(id, true);
+            return new DictionaryBLL().GetAllChildsIDString(id, true);
         }
 
         /// <summary>
@@ -2009,7 +2009,7 @@ namespace RoadFlow.Platform
         /// <returns></returns>
         public string GetTypeOptions(string value = "")
         {
-            return new Dictionary().GetOptionsByCode("FlowTypes", Dictionary.OptionValueField.ID, value);
+            return new DictionaryBLL().GetOptionsByCode("FlowTypes", DictionaryBLL.OptionValueField.ID, value);
         }
 
         /// <summary>

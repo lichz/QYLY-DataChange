@@ -302,7 +302,7 @@ namespace WebMvc.Controllers
             app.OpenMode = 0;
             app.Params = "";
             app.Title = name.Trim();
-            app.Type = appType.IsGuid() ? appType.Convert<Guid>() : new RoadFlow.Platform.Dictionary().GetIDByCode("FormTypes");
+            app.Type = appType.IsGuid() ? appType.Convert<Guid>() : new RoadFlow.Platform.DictionaryBLL().GetIDByCode("FormTypes");
             if (isAdd)
             {
                 App.Add(app);

@@ -1,4 +1,4 @@
-﻿@model System.Data.DataTable
+﻿@model RoadFlow.Web.Model.ArticleManageIndexViewModel
 @{
     ViewBag.Title = "Index";
 }
@@ -17,13 +17,13 @@
         <table cellpadding="0" cellspacing="0" border="0" width="100%">
             <tr>
                 <td>
-                    标题：<input type="text" name="Name" id="Name" style="width:150px;" value="@ViewBag.Name" />
+                    标题：<input type="text" name="Name" id="Name" style="width:150px;" value="@Model.Title" />
                     类型：
                     <select style="width:100px" id="typeID" name="typeID"  isflow="1" type1="flow_select">
                         <option value=""></option>
-                        @foreach (System.Data.DataRow dr in (ViewBag.Type).Rows)
+                        @foreach (var item in Model.ArticleTypes)
                         {
-                            <option value="@dr["ID"]">@dr["Title"]</option>
+                            <option value="@item.ID">@item.Title</option>
                         }
                     </select>
                     <input type="submit" name="Search" value="&nbsp;&nbsp;查&nbsp;询&nbsp;&nbsp;" class="mybutton" />
@@ -43,7 +43,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (System.Data.DataRow dr in Model.Rows)
+        @foreach (System.Data.DataRow dr in Model.Articles.Rows)
         {
             <tr>
                 <td>
@@ -51,11 +51,13 @@
                 </td>
                 @{
                     string typeID = dr["Type"].ToString();
-                    System.Data.DataTable dt = new RoadFlow.Platform.Dictionary().GetByID(typeID.Convert<Guid>());
-                    foreach (System.Data.DataRow item in dt.Rows)
+                    //System.Data.DataTable dt = new RoadFlow.Platform.DictionaryBLL().GetByID(typeID.Convert<Guid>());
+                    var dictionary = new RoadFlow.Platform.DictionaryBLL().GetByID(typeID.Convert<Guid>());
+                    <td>@dictionary.Title</td>
+                    @*foreach (System.Data.DataRow item in dt.Rows)
                     {
                         <td>@item["Title"]</td>
-                    }
+                    }*@
                 }
                 <td>@(((DateTime)dr["PublishTime"]).ToString("yyyy-MM-dd"))</td>
                 <td>

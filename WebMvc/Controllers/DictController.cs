@@ -18,7 +18,7 @@ namespace WebMvc.Controllers
 
         public string Tree1()
         {
-            RoadFlow.Platform.Dictionary BDict = new RoadFlow.Platform.Dictionary();
+            RoadFlow.Platform.DictionaryBLL BDict = new RoadFlow.Platform.DictionaryBLL();
 
             string rootid = Request.QueryString["root"];
             Guid rootID = Guid.Empty;
@@ -29,7 +29,7 @@ namespace WebMvc.Controllers
                     var dict = BDict.GetByCode(rootid);
                     if (dict != null)
                     {
-                        rootID = dict.ID;
+                        rootID = dict.ID.Value;
                     }
                 }
             }
@@ -41,10 +41,10 @@ namespace WebMvc.Controllers
             json.AppendFormat("\"parentID\":\"{0}\",", root.ParentID);
             json.AppendFormat("\"title\":\"{0}\",", root.Title);
             json.AppendFormat("\"ico\":\"{0}\",", Url.Content("~/images/ico/role.gif"));
-            json.AppendFormat("\"hasChilds\":\"{0}\",", BDict.HasChilds(root.ID) ? "1" : "0");
+            json.AppendFormat("\"hasChilds\":\"{0}\",", BDict.HasChilds(root.ID.Value) ? "1" : "0");
             json.Append("\"childs\":[");
 
-            var childs = BDict.GetChilds(root.ID);
+            var childs = BDict.GetChilds(root.ID.Value);
             int i = 0;
             int count = childs.Count;
             foreach (var child in childs)
@@ -54,7 +54,7 @@ namespace WebMvc.Controllers
                 json.AppendFormat("\"parentID\":\"{0}\",", child.ParentID);
                 json.AppendFormat("\"title\":\"{0}\",", child.Title);
                 json.AppendFormat("\"ico\":\"{0}\",", "");
-                json.AppendFormat("\"hasChilds\":\"{0}\",", BDict.HasChilds(child.ID) ? "1" : "0");
+                json.AppendFormat("\"hasChilds\":\"{0}\",", BDict.HasChilds(child.ID.Value) ? "1" : "0");
                 json.Append("\"childs\":[");
                 json.Append("]");
                 json.Append("}");
@@ -79,7 +79,7 @@ namespace WebMvc.Controllers
                 Response.Write("[]");
             }
             System.Text.StringBuilder json = new System.Text.StringBuilder("[", 1000);
-            RoadFlow.Platform.Dictionary BDict = new RoadFlow.Platform.Dictionary();
+            RoadFlow.Platform.DictionaryBLL BDict = new RoadFlow.Platform.DictionaryBLL();
             var childs = BDict.GetChilds(gid).OrderBy(p => p.Sort);
             int i = 0;
             int count = childs.Count();
@@ -90,7 +90,7 @@ namespace WebMvc.Controllers
                 json.AppendFormat("\"parentID\":\"{0}\",", child.ParentID);
                 json.AppendFormat("\"title\":\"{0}\",", child.Title);
                 json.AppendFormat("\"ico\":\"{0}\",", "");
-                json.AppendFormat("\"hasChilds\":\"{0}\",", BDict.HasChilds(child.ID) ? "1" : "0");
+                json.AppendFormat("\"hasChilds\":\"{0}\",", BDict.HasChilds(child.ID.Value) ? "1" : "0");
                 json.Append("\"childs\":[");
                 json.Append("]");
                 json.Append("}");
@@ -118,8 +118,8 @@ namespace WebMvc.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Body(FormCollection collection)
         {
-            RoadFlow.Platform.Dictionary bdict = new RoadFlow.Platform.Dictionary();
-            RoadFlow.Data.Model.Dictionary dict = null;
+            RoadFlow.Platform.DictionaryBLL bdict = new RoadFlow.Platform.DictionaryBLL();
+            RoadFlow.Data.Model.DictionaryModel dict = null;
             string id = Request.QueryString["id"];
             if (id.IsGuid())
             {
@@ -136,8 +136,8 @@ namespace WebMvc.Controllers
                 //删除
                 if (!Request.Form["Delete"].IsNullOrEmpty())
                 {
-                    int i = bdict.DeleteAndAllChilds(dict.ID);
-                    bdict.RefreshCache();
+                    int i = bdict.DeleteAndAllChilds(dict.ID.Value);
+                    //bdict.RefreshCache();
                     RoadFlow.Platform.Log.Add("删除了数据字典及其下级共" + i.ToString() + "项", dict.Serialize(), RoadFlow.Platform.Log.Types.数据字典);
                     ViewBag.Script = "alert('删除成功!');parent.frames[0].reLoad('" + refreshID + "');window.location='Body?id=" + dict.ParentID.ToString() + "&appid=" + Request.QueryString["appid"] + "';";
                     return View(dict);
@@ -157,7 +157,7 @@ namespace WebMvc.Controllers
                 dict.Value = values.IsNullOrEmpty() ? null : values.Trim();
 
                 bdict.Update(dict);
-                bdict.RefreshCache();
+                //bdict.RefreshCache();
                 RoadFlow.Platform.Log.Add("修改了数据字典项", "", RoadFlow.Platform.Log.Types.数据字典, oldXML, dict.Serialize());
                 ViewBag.Script = "alert('保存成功!');parent.frames[0].reLoad('" + refreshID + "');";
             }
@@ -169,7 +169,7 @@ namespace WebMvc.Controllers
         { 
             string code = Request.Form["value"];
             string id = Request["id"];
-            return new RoadFlow.Platform.Dictionary().HasCode(code, id) ? "唯一代码重复" : "1";
+            return new RoadFlow.Platform.DictionaryBLL().HasCode(code, id) ? "唯一代码重复" : "1";
         }
 
         public ActionResult Add()
@@ -186,8 +186,8 @@ namespace WebMvc.Controllers
 
         public ActionResult add1(FormCollection collection)
         {
-            RoadFlow.Data.Model.Dictionary dict = new RoadFlow.Data.Model.Dictionary();
-            RoadFlow.Platform.Dictionary bdict = new RoadFlow.Platform.Dictionary();
+            RoadFlow.Data.Model.DictionaryModel dict = new RoadFlow.Data.Model.DictionaryModel();
+            RoadFlow.Platform.DictionaryBLL bdict = new RoadFlow.Platform.DictionaryBLL();
             string id = Request.QueryString["id"];
             if (!id.IsGuid())
             {
@@ -217,7 +217,7 @@ namespace WebMvc.Controllers
                 dict.Value = values.IsNullOrEmpty() ? null : values.Trim();
 
                 bdict.Add(dict);
-                bdict.RefreshCache();
+                //bdict.RefreshCache();
                 RoadFlow.Platform.Log.Add("添加了数据字典项", dict.Serialize(), RoadFlow.Platform.Log.Types.数据字典);
                 ViewBag.Script = "alert('添加成功!');parent.frames[0].reLoad('" + id + "');";
             }
@@ -234,17 +234,17 @@ namespace WebMvc.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Sort(FormCollection collection)
         {
-            RoadFlow.Platform.Dictionary BDict = new RoadFlow.Platform.Dictionary();
+            RoadFlow.Platform.DictionaryBLL BDict = new RoadFlow.Platform.DictionaryBLL();
             string id = Request.QueryString["id"];
             string refreshID = "";
             Guid dictid;
-            List<RoadFlow.Data.Model.Dictionary> dicts = new List<RoadFlow.Data.Model.Dictionary>();
+            List<RoadFlow.Data.Model.DictionaryModel> dicts = new List<RoadFlow.Data.Model.DictionaryModel>();
             if (id.IsGuid(out dictid))
             {
                 var dict = BDict.Get(dictid);
                 if (dict != null)
                 {
-                    dicts = BDict.GetChilds(dict.ParentID);
+                    dicts = BDict.GetChilds(dict.ParentID.Value);
                     refreshID = dict.ParentID.ToString();
                 }
             }
@@ -267,7 +267,7 @@ namespace WebMvc.Controllers
                         BDict.UpdateSort(gid, i++);
                     }
                 }
-                BDict.RefreshCache();
+                //BDict.RefreshCache();
 
                 RoadFlow.Platform.Log.Add("保存了数据字典排序", "保存了ID为：" + id + "的同级排序", RoadFlow.Platform.Log.Types.数据字典);
                 ViewBag.Script = "parent.frames[0].reLoad('" + refreshID + "');";

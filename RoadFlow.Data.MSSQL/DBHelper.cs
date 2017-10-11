@@ -735,7 +735,7 @@ namespace RoadFlow.Data.MSSQL
             return GetModelByWhereAndSqlParameter<T>(tableName, where.ToString(), parameter.ToArray(), order);
         }
 
-        public List<T> GetList<T>(string sql, SqlParameter[] para) {
+        public List<T> GetList<T>(string sql, SqlParameter[] para) where T:new() {
             //return DataTableToList<T>(GetDataTable(sql, para));
             return GetDataTable(sql, para).ToList<T>();
         }

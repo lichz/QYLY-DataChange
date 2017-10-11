@@ -62,7 +62,6 @@
     <Compile Include="New\AppLibraryBLL.cs" />
     <Compile Include="ActivityStatistics.cs" />
     <Compile Include="DBConnection.cs" />
-    <Compile Include="Dictionary.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="New\BLLCommon.cs" />
     <Compile Include="New\BuildingsStreetStatisticsBLL.cs" />

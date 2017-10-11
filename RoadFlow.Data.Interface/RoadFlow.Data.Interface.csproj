@@ -44,10 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IAppLibrary.cs" />
+    <None Include="IAppLibrary.cs" />
     <Compile Include="IActivityStatistics.cs" />
     <Compile Include="IDBConnection.cs" />
-    <Compile Include="IDictionary.cs" />
+    <None Include="IDictionary.cs" />
     <Compile Include="ILog.cs" />
     <Compile Include="IOrganize.cs" />
     <Compile Include="ISMS.cs" />

@@ -65,7 +65,7 @@ namespace WebMvc.Controllers
             string appid = Request.QueryString["appid"];
             string tabid = Request.QueryString["tabid"];
             string typeid = Request.QueryString["typeid"];
-            RoadFlow.Platform.Dictionary bdict = new RoadFlow.Platform.Dictionary();
+            RoadFlow.Platform.DictionaryBLL bdict = new RoadFlow.Platform.DictionaryBLL();
             RoadFlow.Platform.AppLibraryBLL bapp = new RoadFlow.Platform.AppLibraryBLL();
             string typeidstring = typeid.IsGuid() ? bapp.GetAllChildsIDString(typeid.Convert<Guid>()) : "";
             string query = string.Format("&appid={0}&tabid={1}&title1={2}&typeid={3}&address={4}",
@@ -110,13 +110,13 @@ namespace WebMvc.Controllers
                 appLibrary = new RoadFlow.Data.Model.AppLibraryModel();
                 appLibrary.ID = Guid.NewGuid();
                 ViewBag.TypeOptions = new RoadFlow.Platform.AppLibraryBLL().GetTypeOptions(type);
-                ViewBag.OpenOptions = new RoadFlow.Platform.Dictionary().GetOptionsByCode("appopenmodel", value: "");
+                ViewBag.OpenOptions = new RoadFlow.Platform.DictionaryBLL().GetOptionsByCode("appopenmodel", value: "");
             }
             else
             {
                 oldXML = appLibrary.Serialize();
                 ViewBag.TypeOptions = new RoadFlow.Platform.AppLibraryBLL().GetTypeOptions(appLibrary.Type.ToString());
-                ViewBag.OpenOptions = new RoadFlow.Platform.Dictionary().GetOptionsByCode("appopenmodel", value: appLibrary.OpenMode.ToString());
+                ViewBag.OpenOptions = new RoadFlow.Platform.DictionaryBLL().GetOptionsByCode("appopenmodel", value: appLibrary.OpenMode.ToString());
             }
 
             if (collection != null)

@@ -1,6 +1,6 @@
 ﻿@{
     ViewBag.Title = "Open_Tree";
-    string rootid = new RoadFlow.Platform.Dictionary().GetIDByCode("FlowTypes").ToString();
+    string rootid = new RoadFlow.Platform.DictionaryBLL().GetIDByCode("FlowTypes").ToString();
 }
 <form id="form1">
     <div id="tree"></div>

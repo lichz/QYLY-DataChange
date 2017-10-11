@@ -1,7 +1,7 @@
 ﻿<%@ Page Language="C#" %>
 <%
     string query = "appid=" + Request.QueryString["appid"] + "&tabid=" + Request.QueryString["appid"];
-    string rootid = new RoadFlow.Platform.Dictionary().GetIDByCode("FormTypes").ToString();
+    string rootid = new RoadFlow.Platform.DictionaryBLL().GetIDByCode("FormTypes").ToString();
     WebMvc.Common.Tools.CheckLogin();
 %>
 <!DOCTYPE html>

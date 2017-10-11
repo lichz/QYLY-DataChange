@@ -1,5 +1,4 @@
-﻿@model RoadFlow.Data.Model.ArticleModel
-@using RoadFlow.Utility;
+﻿@model RoadFlow.Web.Model.ArticleManageEditViewModel
 @{ViewBag.Title = "Edit"; Page.CheckApp = false;}
 <link type="text/css" rel="stylesheet" href="/Scripts/FlowRun/Forms/flowform.css">
 <form method="post" action="@Url.Action("Edit", new { appid = Request["appid"] })">
@@ -7,7 +6,7 @@
     <table class="flowformtable" cellspacing="1" cellpadding="0" data-sort="sortDisabled" style="">
         <tbody>
             <tr>
-                <td><input type="hidden" name="ID" value="@Model.Id" /></td>
+                <td><input type="hidden" name="ID" value="@Model.ArticleModel.Id" /></td>
                 <td>
                     <input class="button2" type="submit" value="保存" style="margin:0;" title="保存">
                     <input class="button2" type="button" value="取消" style="margin-left:20px;" title="取消" onclick="new RoadUI.Window().close();">
@@ -16,13 +15,13 @@
             <tr>
                 <td style="vertical-align:top; width:60px;">文章标题：</td>
                 <td>
-                    <input style="width:400px" type="text" name="Title" id="Title" value="@Model.Title" validate="empty" />
+                    <input style="width:400px" type="text" name="Title" id="Title" value="@Model.ArticleModel.Title" validate="empty" />
                 </td>
             </tr>
             <tr>
                 <td>发布时间：</td>
                 <td>
-                    <input class="mycalendar" isflow="1" type1="flow_datetime" value="@(((DateTime)Model.PublishTime).ToString("yyyy-MM-dd"))" id="PublishTime" name="PublishTime" style="width:150px" istime="1" daybefor="0" dayafter="0" currentmonth="0" type="text" validate="empty">
+                    <input class="mycalendar" isflow="1" type1="flow_datetime" value="@(((DateTime)Model.ArticleModel.PublishTime).ToString("yyyy-MM-dd"))" id="PublishTime" name="PublishTime" style="width:150px" istime="1" daybefor="0" dayafter="0" currentmonth="0" type="text" validate="empty">
                 </td>
             </tr>
             <tr>
@@ -30,15 +29,15 @@
                 <td>
                     <select style="width:100px" id="Type" name="Type" isflow="1" type1="flow_select">
                         <option value=""></option>
-                        @foreach (System.Data.DataRow dr in (ViewBag.Type).Rows)
+                        @foreach (var item in Model.ArticleTypes)
                         {
-                            if (dr["ID"].ToString() == Model.Type.ToString())
+                            if (item.ID.ToString() == Model.ArticleModel.Type.ToString())
                             {
-                                <option value="@dr["ID"]" selected="selected">@dr["Title"]</option>
+                                <option value="@item.ID" selected="selected">@item.Title</option>
                             }
                             else
                             {
-                                <option value="@dr["ID"]">@dr["Title"]</option>
+                                <option value="@item.ID">@item.Title</option>
                             }
                         }
                     </select>
@@ -55,7 +54,7 @@
                 <td>
                     <div id="editorDiv" style="width:1100px;height:400px;">
                         <script id="container" name="content" type="text/plain" validate="empty" style="width:98%; height:300px;">
-                            @(Html.Raw(Model.Content))
+                            @(Html.Raw(Model.ArticleModel.Content))
                         </script>
                     </div>
                 </td>
@@ -70,9 +69,9 @@
     <script type="text/javascript">
     var ue = UE.getEditor('container');
     var validate = new RoadUI.Validate();
-    $(function () {
-        @Html.Raw(ViewBag.Script)
-        $("#BriefIntroduction").val("@Model.BriefIntroduction");
+        $(function () {
+        @Html.Raw(Model.Script)
+        $("#BriefIntroduction").val("@Model.ArticleModel.BriefIntroduction");
     });
     </script>
 

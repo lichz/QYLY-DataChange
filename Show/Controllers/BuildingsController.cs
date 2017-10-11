@@ -61,9 +61,11 @@ namespace Show.Controllers
         }
         public BuildingDetailViewModel InitDetail(Guid id)
         {
-            BuildingDetailViewModel viewModel = new BuildingDetailViewModel();
-            viewModel.Building = db.BuildingsAndBuildingMonthInfo.Include(p => p.SYZJ).Include(p => p.SSJDS).Include(p => p.HouseIDS).FirstOrDefault(p => p.ID == id);
-            viewModel.HotBuilding = db.BuildingsAndBuildingMonthInfo.Where(p=>p.IsImportant!=null && p.Status == Status.Normal).Take(3).OrderByDescending(p => p.CreateTime).Include(p=>p.SYZJ);
+            BuildingDetailViewModel viewModel = new BuildingDetailViewModel
+            {
+                Building = db.BuildingsAndBuildingMonthInfo.Include(p => p.SYZJ).Include(p => p.SSJDS).Include(p => p.HouseIDS).Include(p => p.SYZJ).Include(p => p.SWZJ).FirstOrDefault(p => p.ID == id),
+                HotBuilding = db.BuildingsAndBuildingMonthInfo.Where(p => p.IsImportant != null && p.Status == Status.Normal).Take(3).OrderByDescending(p => p.CreateTime).Include(p => p.SYZJ)
+            };
             return viewModel;
         }
         #endregion
