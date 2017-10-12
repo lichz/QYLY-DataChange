@@ -580,7 +580,7 @@ namespace RoadFlow.Platform
         /// <returns></returns>
         public string GetAllChildsIDString(Guid id, bool isSelf = true)
         {
-            return new Dictionary().GetAllChildsIDString(id, true);
+            return new DictionaryBLL().GetAllChildsIDString(id, true);
         }
 
         /// <summary>
@@ -597,7 +597,7 @@ namespace RoadFlow.Platform
         /// <returns></returns>
         public string GetTypeOptions(string value = "")
         {
-            return new Dictionary().GetOptionsByCode("FormTypes", Dictionary.OptionValueField.ID, value);
+            return new DictionaryBLL().GetOptionsByCode("FormTypes", DictionaryBLL.OptionValueField.ID, value);
         }
 
     }

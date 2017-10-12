@@ -6,9 +6,9 @@ using System.Reflection;
 
 namespace RoadFlow.Data.Factory {
     public class Factory {
-        public static Data.Interface.IAppLibrary GetAppLibrary() {
-            return new Data.MSSQL.AppLibrary();
-        }
+        //public static Data.Interface.IAppLibrary GetAppLibrary() {
+        //    return new Data.MSSQL.AppLibrary();
+        //}
 
         public static Data.Interface.IQueryDesign GetQueryDesign() {
             return new Data.MSSQL.QueryDesign();
@@ -18,9 +18,9 @@ namespace RoadFlow.Data.Factory {
             return new Data.MSSQL.DBConnection();
         }
 
-        public static Data.Interface.IDictionary GetDictionary() {
-            return new Data.MSSQL.Dictionary();
-        }
+        //public static Data.Interface.IDictionary GetDictionary() {
+        //    return new Data.MSSQL.Dictionary();
+        //}
 
         public static Data.Interface.ILog GetLog() {
             return new Data.MSSQL.Log();

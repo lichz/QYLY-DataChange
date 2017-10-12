@@ -293,7 +293,7 @@ namespace WebMvc.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Body(FormCollection collection)
         {
-            RoadFlow.Platform.AppLibrary bappLibrary = new RoadFlow.Platform.AppLibrary();
+            RoadFlow.Platform.AppLibraryBLL bappLibrary = new RoadFlow.Platform.AppLibraryBLL();
             RoadFlow.Platform.RoleApp broleApp = new RoadFlow.Platform.RoleApp();
             RoadFlow.Data.Model.RoleApp roleApp = null;
             string id = Request.QueryString["id"];
@@ -353,7 +353,7 @@ namespace WebMvc.Controllers
             }
             if (roleApp != null && roleApp.AppID.HasValue)
             {
-                var app = new RoadFlow.Platform.AppLibrary().Get(roleApp.AppID.Value);
+                var app = new RoadFlow.Platform.AppLibraryBLL().Get(roleApp.AppID.Value);
                 if (app != null)
                 {
                     type = app.Type.ToString();
@@ -368,7 +368,7 @@ namespace WebMvc.Controllers
         {
             string type = Request.Form["type"];
             string appid = Request.Form["value"];
-            return new RoadFlow.Platform.AppLibrary().GetAppsOptions(type.Convert<Guid>(), appid);
+            return new RoadFlow.Platform.AppLibraryBLL().GetAppsOptions(type.Convert<Guid>(), appid);
         }
 
 
@@ -381,7 +381,7 @@ namespace WebMvc.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddApp(FormCollection collection)
         {
-            RoadFlow.Platform.AppLibrary bappLibrary = new RoadFlow.Platform.AppLibrary();
+            RoadFlow.Platform.AppLibraryBLL bappLibrary = new RoadFlow.Platform.AppLibraryBLL();
             RoadFlow.Platform.RoleApp broleApp = new RoadFlow.Platform.RoleApp();
             RoadFlow.Data.Model.RoleApp roleApp = null;
 

@@ -1003,7 +1003,7 @@ public static class MyExtensions
     /// <typeparam name="T"></typeparam>
     /// <param name="dt"></param>
     /// <returns></returns>
-    public static List<T> ToList<T>(this DataTable dt) {
+    public static List<T> ToList<T>(this DataTable dt) where T:new() {
         List<T> list = new List<T>();
         Type t = typeof(T);
         if (dt.Rows.Count > 0) {

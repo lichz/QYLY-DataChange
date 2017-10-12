@@ -379,7 +379,7 @@ namespace WebMvc.Controllers
             {
                 Building = BuildingsAndBuildingMonthInfoBLL.Get(buildingID),
                 Enterprises = new RoadFlow.Platform.EnterpriseAndEnterpriseTaxBLL().GetAllByBuildingID(buildingID.ToString()),
-                Dictionarys = new RoadFlow.Platform.Dictionary().GetAllChilds("Type", false)
+                Dictionarys = new RoadFlow.Platform.DictionaryBLL().GetAllChilds("Type")
             };
             return viewModel;
         }
@@ -389,7 +389,7 @@ namespace WebMvc.Controllers
             BuildingEditEnterpriseViewModel viewModel = new BuildingEditEnterpriseViewModel()
             {
                 Enterprise = new RoadFlow.Platform.EnterpriseAndEnterpriseTaxBLL().Get(enterpriseID),
-                Dictionarys = new RoadFlow.Platform.Dictionary().GetAllChilds("Type", false)
+                Dictionarys = new RoadFlow.Platform.DictionaryBLL().GetAllChilds("Type")
             };
             return viewModel;
         }

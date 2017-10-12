@@ -222,7 +222,7 @@ namespace WebMvc.Common
         /// <returns></returns>
         public static DataTable DictionaryIdToName(DataTable dt) {
             Dictionary<string, string> piName = new Dictionary<string, string>();
-            var list = new RoadFlow.Platform.Dictionary().GetAll();
+            var list = new RoadFlow.Platform.DictionaryBLL().GetAll();
 
             //编码转换
             for (int i = 0; i < dt.Rows.Count; i++) {
@@ -232,7 +232,7 @@ namespace WebMvc.Common
                     } else {
                         if (list.FindAll(x => x.Code == dt.Columns[j].ColumnName).Count > 0) {
                             string temp = Convert.ToString(dt.Rows[i][j]);
-                            RoadFlow.Data.Model.Dictionary dictionary = list.Find(p => p.ID.ToString().ToUpper() == temp.ToUpper());
+                            RoadFlow.Data.Model.DictionaryModel dictionary = list.Find(p => p.ID.ToString().ToUpper() == temp.ToUpper());
                             if (dictionary != null) {
                                 dt.Rows[i][j] = dictionary.Title;
                             } else {

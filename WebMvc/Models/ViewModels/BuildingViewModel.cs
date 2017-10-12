@@ -47,7 +47,7 @@ namespace RoadFlow.Web.Model {
 
         public DataTable Enterprises { get; set; }
 
-        public List<Dictionary> Dictionarys { get; set; }
+        public List<DictionaryModel> Dictionarys { get; set; }
 
     }
 
@@ -58,7 +58,7 @@ namespace RoadFlow.Web.Model {
         /// <summary>
         /// 企业类型
         /// </summary>
-        public List<Dictionary> Dictionarys { get; set; }
+        public List<DictionaryModel> Dictionarys { get; set; }
     }
 
 

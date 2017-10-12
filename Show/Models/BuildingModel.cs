@@ -91,6 +91,26 @@ namespace Show.Models
         [DisplayName("总建筑面积（m2）")]
         public decimal? ZJZMJ { get; set; }
         /// <summary>
+        /// 商业总面积
+        /// </summary>
+        [DisplayName("商业总面积")]
+        public decimal? SY_ZMJ { get; set; }
+        /// <summary>
+        /// 商务总面积
+        /// </summary>
+        [DisplayName("商务总面积")]
+        public decimal? SW_ZMJ { get; set; }
+        /// <summary>
+        /// 商业空置总面积
+        /// </summary>
+        [DisplayName("商业空置面积")]
+        public decimal? SY_KZ_ZMJ { get; set; }
+        /// <summary>
+        /// 商务空置总面积
+        /// </summary>
+        [DisplayName("商务空置面积")]
+        public decimal? SW_KZ_ZMJ { get; set; }
+        /// <summary>
         /// 商业销售均价
         /// </summary>
         [DisplayName("商业销售均价")]
@@ -100,6 +120,16 @@ namespace Show.Models
         /// </summary>
         [DisplayName("商务销售均价")]
         public decimal? SW_XSJJ { get; set; }
+        /// <summary>
+        /// 物管费(商业)
+        /// </summary>
+        [DisplayName("物管费(商业)")]
+        public decimal? SY_WGF { get; set; }
+        /// <summary>
+        /// 物管费(商务)
+        /// </summary>
+        [DisplayName("物管费(商务)")]
+        public decimal? SW_WGF { get; set; }
         /// <summary>
         /// 商业租金
         /// </summary>

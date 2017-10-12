@@ -45,7 +45,7 @@ namespace RoadFlow.Data.MSSQL
         /// 获取数据列表(带翻页)
         /// </summary>
         /// <returns></returns>
-        public virtual List<T> GetListPagerData<T>(out string pager, int size, int number, Dictionary<KeyValuePair<string, SQLFilterType>, object> where) {
+        public virtual List<T> GetListPagerData<T>(out string pager, int size, int number, Dictionary<KeyValuePair<string, SQLFilterType>, object> where) where T:new() {
             Dictionary<string, object> dictionary = dbHelper.KeysToWhereString(where);
             SqlParameter[] parameters = dictionary["para"] as SqlParameter[];
             long count = 0;
@@ -167,7 +167,7 @@ namespace RoadFlow.Data.MSSQL
         /// <summary>
         /// 查询列表(带翻页)
         /// </summary>
-        public virtual Result<List<T>> QueryListPaging<T>(out string pager, int size, int number, List<Predicates> predicates, bool isAutoStatus = true)
+        public virtual Result<List<T>> QueryListPaging<T>(out string pager, int size, int number, List<Predicates> predicates, bool isAutoStatus = true) where T:new()
         {
             Result<List<T>> result = new Result<List<T>>();
             long count = 0;
@@ -198,7 +198,7 @@ namespace RoadFlow.Data.MSSQL
         /// <param name="predicates"></param>
         /// <param name="isAutoStatus">是否自动增加状态筛选</param>
         /// <returns></returns>
-        public virtual Result<DataTable> QueryAll(int top, List<Predicates> predicates, bool isAutoStatus = true)
+        public virtual Result<DataTable> QueryAll( List<Predicates> predicates, int top=0, bool isAutoStatus = true)
         {
             Result<DataTable> result = new Result<DataTable>();
 
@@ -234,7 +234,7 @@ namespace RoadFlow.Data.MSSQL
         /// <param name="top">前边几条</param>
         /// <param name="para">参数数组</param>
         /// <returns></returns>
-        public virtual Result<DataTable> QueryByPara(int top, dynamic para, bool isAutoStatus = true)
+        public virtual Result<DataTable> QueryByPara(dynamic para, int top = 0, bool isAutoStatus = true)
         {
             Result<DataTable> result = new Result<DataTable>();
 
@@ -269,7 +269,7 @@ namespace RoadFlow.Data.MSSQL
         /// <summary>
         /// 根据条件查询一条记录
         /// </summary>
-        public virtual Result<T> GetByPara<T>(dynamic para)
+        public virtual Result<T> Query<T>(dynamic para)
         {
             Result<T> result = new Result<T>();
             try
@@ -285,6 +285,28 @@ namespace RoadFlow.Data.MSSQL
             return result;
         }
 
+        public virtual Result<int> UpdateByPara<T>(T model,dynamic para)
+        {
+            Result<int> result = new Result<int>();
+       
+            try
+            {
+                result.Data = dbHelper.UpdateByPara(model,_tableName, para);
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                result.ErrMSG = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="para">筛选条件</param>
+        /// <returns></returns>
         public virtual int DeleteByPara(dynamic para)
         {
             var where = dbHelper.DynamicToWhereString(para, false);

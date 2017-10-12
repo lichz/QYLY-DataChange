@@ -150,7 +150,7 @@ namespace RoadFlow.Platform
                 wf.InstanceManager = jsonData["instanceManager"].ToString();
                 wf.Manager = jsonData["manager"].ToString();
                 wf.Name = name.Trim();
-                wf.Type = type.IsGuid() ? type.Convert<Guid>() : new Dictionary().GetIDByCode("FlowTypes");
+                wf.Type = type.IsGuid() ? type.Convert<Guid>() : new DictionaryBLL().GetIDByCode("FlowTypes");
                 try
                 {
                     if (isAdd)
@@ -211,13 +211,13 @@ namespace RoadFlow.Platform
                         wfInstalled.Status = 2;
 
                         #region 添加到应用程序库
-                        RoadFlow.Platform.AppLibrary bappLibrary = new AppLibrary();
-                        RoadFlow.Data.Model.AppLibrary app = bappLibrary.GetByCode(wfInstalled.ID.ToString());
+                        RoadFlow.Platform.AppLibraryBLL bappLibrary = new AppLibraryBLL();
+                        RoadFlow.Data.Model.AppLibraryModel app = bappLibrary.GetByCode(wfInstalled.ID.ToString());
                         bool isAdd = false;
                         if (app == null)
                         {
                             isAdd = true;
-                            app = new RoadFlow.Data.Model.AppLibrary();
+                            app = new RoadFlow.Data.Model.AppLibraryModel();
                             app.ID = Guid.NewGuid();
                         }
                         app.Address = isMvc ? "WorkFlowRun/Index" : "Platform/WorkFlowRun/Default.aspx";
@@ -226,7 +226,7 @@ namespace RoadFlow.Platform
                         app.OpenMode = 0;
                         app.Params = "flowid=" + wfInstalled.ID.ToString();
                         app.Title = wfInstalled.Name;
-                        app.Type = wfInstalled.Type.IsGuid() ? wfInstalled.Type.Convert<Guid>() : new Dictionary().GetIDByCode("FlowTypes");
+                        app.Type = wfInstalled.Type.IsGuid() ? wfInstalled.Type.Convert<Guid>() : new DictionaryBLL().GetIDByCode("FlowTypes");
                         if (isAdd)
                         {
                             bappLibrary.Add(app);
@@ -235,7 +235,7 @@ namespace RoadFlow.Platform
                         {
                             bappLibrary.Update(app);
                         }
-                        bappLibrary.ClearCache();
+                        //bappLibrary.ClearCache();
                         new RoadFlow.Platform.RoleApp().ClearAllDataTableCache();
                         #endregion
                         RoadFlow.Cache.IO.Opation.Set(getCacheKey(wfInstalled.ID), wfInstalled);
@@ -426,7 +426,7 @@ namespace RoadFlow.Platform
             }
 
             string type = json["type"].ToString();
-            wfInstalled.Type = type.IsNullOrEmpty() ? new Dictionary().GetIDByCode("FlowTypes").ToString() : type.Trim();
+            wfInstalled.Type = type.IsNullOrEmpty() ? new DictionaryBLL().GetIDByCode("FlowTypes").ToString() : type.Trim();
 
 
             string manager = json["manager"].ToString();
@@ -2000,7 +2000,7 @@ namespace RoadFlow.Platform
         /// <returns></returns>
         public string GetAllChildsIDString(Guid id, bool isSelf = true)
         {
-            return new Dictionary().GetAllChildsIDString(id, true);
+            return new DictionaryBLL().GetAllChildsIDString(id, true);
         }
 
         /// <summary>
@@ -2009,7 +2009,7 @@ namespace RoadFlow.Platform
         /// <returns></returns>
         public string GetTypeOptions(string value = "")
         {
-            return new Dictionary().GetOptionsByCode("FlowTypes", Dictionary.OptionValueField.ID, value);
+            return new DictionaryBLL().GetOptionsByCode("FlowTypes", DictionaryBLL.OptionValueField.ID, value);
         }
 
         /// <summary>

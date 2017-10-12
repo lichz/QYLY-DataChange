@@ -61,7 +61,7 @@ namespace WebMvc.Controllers {
         /// <returns></returns>
         public string TypeFilterRefining(string keyword, int beginNum, int col = 4) {
             StringBuilder content = new StringBuilder();
-            List<RoadFlow.Data.Model.Dictionary> list = new RoadFlow.Platform.Dictionary().GetAllChilds(keyword, false);
+            List<RoadFlow.Data.Model.DictionaryModel> list = new RoadFlow.Platform.DictionaryBLL().GetAllChilds(keyword);
             if (keyword == "TCZS") {
                 content.AppendFormat("<table data-name=\"{1}\" num=\"{0}\" style=\"width:50%;\" ><tr>", beginNum, keyword);
             } else {
@@ -121,7 +121,7 @@ namespace WebMvc.Controllers {
         /// <returns></returns>
         public DataTable ConvertType(DataTable dt) {
             //取得编码字典
-            var list = new RoadFlow.Platform.Dictionary().GetAll();
+            var list = new RoadFlow.Platform.DictionaryBLL().GetAll();
             //编码转换
             for (int i = 0; i < dt.Rows.Count; i++) {
                 for (int j = 0; j < dt.Columns.Count; j++) {

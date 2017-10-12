@@ -156,7 +156,7 @@ namespace WebMvc.Controllers
 
         public ActionResult Body()
         {
-            RoadFlow.Platform.AppLibrary bappLibrary = new RoadFlow.Platform.AppLibrary();
+            RoadFlow.Platform.AppLibraryBLL bappLibrary = new RoadFlow.Platform.AppLibraryBLL();
             RoadFlow.Platform.RoleApp broleApp = new RoadFlow.Platform.RoleApp();
             RoadFlow.Data.Model.RoleApp roleApp = null;
             string id = Request.QueryString["id"];
@@ -199,7 +199,7 @@ namespace WebMvc.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddApp(FormCollection collection)
         {
-            RoadFlow.Platform.AppLibrary bappLibrary = new RoadFlow.Platform.AppLibrary();
+            RoadFlow.Platform.AppLibraryBLL bappLibrary = new RoadFlow.Platform.AppLibraryBLL();
             RoadFlow.Platform.UsersApp busersApp = new RoadFlow.Platform.UsersApp();
             RoadFlow.Platform.RoleApp broleApp = new RoadFlow.Platform.RoleApp();
             RoadFlow.Data.Model.UsersApp usersApp = null;
@@ -262,7 +262,7 @@ namespace WebMvc.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Body1(FormCollection collection)
         {
-            RoadFlow.Platform.AppLibrary bappLibrary = new RoadFlow.Platform.AppLibrary();
+            RoadFlow.Platform.AppLibraryBLL bappLibrary = new RoadFlow.Platform.AppLibraryBLL();
             RoadFlow.Platform.RoleApp broleApp = new RoadFlow.Platform.RoleApp();
             RoadFlow.Platform.UsersApp buserApp = new RoadFlow.Platform.UsersApp();
             RoadFlow.Data.Model.UsersApp usersApp = null;

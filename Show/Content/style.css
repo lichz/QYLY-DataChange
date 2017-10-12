@@ -213,8 +213,8 @@ height:40px;line-height:40px;line-height:44px\9;+line-height:44px;_line-height:4
 .txMovie .focus_nav li b{display:none}
 .text_info{width: 415px;padding-top: 25px;}
 .text_info h3{font-size: 28px;color: #000;height: 45px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width: 100%;line-height: 1;}
-.text_info .span0{font-size: 12px;color: #666;width: 60px;height: 24px;display: inline-block;text-align: right;}
-.text_info div{color: #666;font-size: 15px;}
+.text_info .span0{font-size: 12px;color: #666;width: 86px;height: 16px;display: inline-block;text-align: right;}
+.text_info div{color: #666;/*font-size: 15px;*/}
 .text_info .span1{font-size: 19px;color: #ff1d1d;}
 .text_info .span2{font-size: 12px;color: #000;}
 .text_info .tel_info{font-size: 20px;color: #32b16c;padding-left: 30px;background: url(../images/tel_coin.png) no-repeat left center;margin-top: 5px;}
