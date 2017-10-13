@@ -31,8 +31,8 @@ namespace WebMvc.Areas.Controls.Controllers
                 return "";
             }
             RoadFlow.Platform.Organize borg = new RoadFlow.Platform.Organize();
-            RoadFlow.Platform.Users buser = new RoadFlow.Platform.Users();
-            if (id.StartsWith(RoadFlow.Platform.Users.PREFIX))
+            RoadFlow.Platform.UsersBLL buser = new RoadFlow.Platform.UsersBLL();
+            if (id.StartsWith(RoadFlow.Platform.UsersBLL.PREFIX))
             {
                 Guid uid = buser.RemovePrefix1(id).Convert<Guid>();
                 return string.Concat(borg.GetAllParentNames(buser.GetMainStation(uid)), " / ", buser.GetName(uid));

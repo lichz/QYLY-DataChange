@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace RoadFlow.Data.Model
 {
     [Serializable]
-    public class Users
+    public class UsersModel
     {
         /// <summary>
         /// ID

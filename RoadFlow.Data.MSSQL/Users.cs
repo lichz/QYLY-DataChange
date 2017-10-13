@@ -20,7 +20,7 @@ namespace RoadFlow.Data.MSSQL
         /// </summary>
         /// <param name="model">RoadFlow.Data.Model.Users实体类</param>
         /// <returns>操作所影响的行数</returns>
-        public int Add(RoadFlow.Data.Model.Users model)
+        public int Add(RoadFlow.Data.Model.UsersModel model)
         {
             string sql = @"INSERT INTO Users
 				(ID,Name,Account,Password,Status,Sort,Tell,Note) 
@@ -41,7 +41,7 @@ namespace RoadFlow.Data.MSSQL
         /// 更新记录
         /// </summary>
         /// <param name="model">RoadFlow.Data.Model.Users实体类</param>
-        public int Update(RoadFlow.Data.Model.Users model)
+        public int Update(RoadFlow.Data.Model.UsersModel model)
         {
             string sql = @"UPDATE Users SET 
 				Name=@Name,Account=@Account,Password=@Password,Status=@Status,Sort=@Sort,Tell=@Tell,Note=@Note
@@ -72,13 +72,13 @@ namespace RoadFlow.Data.MSSQL
         /// <summary>
         /// 将DataRedar转换为List
         /// </summary>
-        private List<RoadFlow.Data.Model.Users> DataReaderToList(SqlDataReader dataReader)
+        private List<RoadFlow.Data.Model.UsersModel> DataReaderToList(SqlDataReader dataReader)
         {
-            List<RoadFlow.Data.Model.Users> List = new List<RoadFlow.Data.Model.Users>();
-            RoadFlow.Data.Model.Users model = null;
+            List<RoadFlow.Data.Model.UsersModel> List = new List<RoadFlow.Data.Model.UsersModel>();
+            RoadFlow.Data.Model.UsersModel model = null;
             while (dataReader.Read())
             {
-                model = new RoadFlow.Data.Model.Users();
+                model = new RoadFlow.Data.Model.UsersModel();
                 model.ID = dataReader.GetGuid(0);
                 model.Name = dataReader.GetString(1);
                 model.Account = dataReader.GetString(2);
@@ -96,11 +96,11 @@ namespace RoadFlow.Data.MSSQL
         /// <summary>
         /// 查询所有记录
         /// </summary>
-        public List<RoadFlow.Data.Model.Users> GetAll()
+        public List<RoadFlow.Data.Model.UsersModel> GetAll()
         {
             string sql = "SELECT * FROM Users";
             SqlDataReader dataReader = dbHelper.GetDataReader(sql);
-            List<RoadFlow.Data.Model.Users> List = DataReaderToList(dataReader);
+            List<RoadFlow.Data.Model.UsersModel> List = DataReaderToList(dataReader);
             dataReader.Close();
             return List;
         }
@@ -109,13 +109,13 @@ namespace RoadFlow.Data.MSSQL
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public List<RoadFlow.Data.Model.Users> GetUsers(string ids)
+        public List<RoadFlow.Data.Model.UsersModel> GetUsers(string ids)
         {
             try
             {
                 string sql = string.Format("SELECT * FROM Users where ID IN({0})", ids);
                 SqlDataReader dataReader = dbHelper.GetDataReader(sql);
-                List<RoadFlow.Data.Model.Users> List = DataReaderToList(dataReader);
+                List<RoadFlow.Data.Model.UsersModel> List = DataReaderToList(dataReader);
                 dataReader.Close();
                 return List;
             }
@@ -136,14 +136,14 @@ namespace RoadFlow.Data.MSSQL
         /// <summary>
         /// 根据主键查询一条记录
         /// </summary>
-        public RoadFlow.Data.Model.Users Get(Guid id)
+        public RoadFlow.Data.Model.UsersModel Get(Guid id)
         {
             string sql = "SELECT * FROM Users WHERE ID=@ID";
             SqlParameter[] parameters = new SqlParameter[]{
 				new SqlParameter("@ID", SqlDbType.UniqueIdentifier){ Value = id }
 			};
             SqlDataReader dataReader = dbHelper.GetDataReader(sql, parameters);
-            List<RoadFlow.Data.Model.Users> List = DataReaderToList(dataReader);
+            List<RoadFlow.Data.Model.UsersModel> List = DataReaderToList(dataReader);
             dataReader.Close();
             return List.Count > 0 ? List[0] : null;
         }
@@ -151,14 +151,14 @@ namespace RoadFlow.Data.MSSQL
         /// <summary>
         /// 根据帐号查询一条记录
         /// </summary>
-        public RoadFlow.Data.Model.Users GetByAccount(string account)
+        public RoadFlow.Data.Model.UsersModel GetByAccount(string account)
         {
             string sql = "SELECT * FROM Users WHERE Account=@Account";
             SqlParameter[] parameters = new SqlParameter[]{
 				new SqlParameter("@Account", SqlDbType.VarChar, 255){ Value = account }
 			};
             SqlDataReader dataReader = dbHelper.GetDataReader(sql, parameters);
-            List<RoadFlow.Data.Model.Users> List = DataReaderToList(dataReader);
+            List<RoadFlow.Data.Model.UsersModel> List = DataReaderToList(dataReader);
             dataReader.Close();
             return List.Count > 0 ? List[0] : null;
         }
@@ -168,14 +168,14 @@ namespace RoadFlow.Data.MSSQL
         /// </summary>
         /// <param name="organizeID"></param>
         /// <returns></returns>
-        public List<Model.Users> GetAllByOrganizeID(Guid organizeID)
+        public List<Model.UsersModel> GetAllByOrganizeID(Guid organizeID)
         {
             string sql = "SELECT * FROM Users WHERE ID in(SELECT UserID FROM UsersRelation WHERE OrganizeID=@OrganizeID) ORDER BY Sort";
             SqlParameter[] parameters = new SqlParameter[]{
 				new SqlParameter("@OrganizeID", SqlDbType.UniqueIdentifier){ Value = organizeID }
 			};
             SqlDataReader dataReader = dbHelper.GetDataReader(sql, parameters);
-            List<RoadFlow.Data.Model.Users> List = DataReaderToList(dataReader);
+            List<RoadFlow.Data.Model.UsersModel> List = DataReaderToList(dataReader);
             dataReader.Close();
             return List;
         }
@@ -184,15 +184,15 @@ namespace RoadFlow.Data.MSSQL
         /// </summary>
         /// <param name="organizeID"></param>
         /// <returns></returns>
-        public List<Model.Users> GetAllByOrganizeIDArray(Guid[] organizeIDArray)
+        public List<Model.UsersModel> GetAllByOrganizeIDArray(Guid[] organizeIDArray)
         {
             if (organizeIDArray == null || organizeIDArray.Length == 0)
             {
-                return new List<Model.Users>();
+                return new List<Model.UsersModel>();
             }
             string sql = "SELECT * FROM Users WHERE ID in(SELECT UserID FROM UsersRelation WHERE OrganizeID in(" + RoadFlow.Utility.Tools.GetSqlInString(organizeIDArray) + ")) ORDER BY Sort";
             SqlDataReader dataReader = dbHelper.GetDataReader(sql);
-            List<RoadFlow.Data.Model.Users> List = DataReaderToList(dataReader);
+            List<RoadFlow.Data.Model.UsersModel> List = DataReaderToList(dataReader);
             dataReader.Close();
             return List;
         }

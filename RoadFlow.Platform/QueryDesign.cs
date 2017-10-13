@@ -61,7 +61,7 @@ namespace RoadFlow.Platform
         }
 
         public List<ColItem> GetColItemList(string name) {
-            RoadFlow.Data.Model.QueryDesign Display = new RoadFlow.Platform.QueryDesign().Get(name, RoadFlow.Platform.Users.CurrentUserID);
+            RoadFlow.Data.Model.QueryDesign Display = new RoadFlow.Platform.QueryDesign().Get(name, RoadFlow.Platform.UsersBLL.CurrentUserID);
             List<ColItem> lst = Display.DisplayItem.IsNullOrEmpty() == true ? null : Display.DisplayItem.JsonConvertModel<List<ColItem>>();
 
             if (!lst.IsNullObj()) {

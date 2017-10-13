@@ -85,7 +85,7 @@ namespace WebMvc.Controllers
 
 
             //可管理的流程ID数组
-            var flows = bworkFlow.GetInstanceManageFlowIDList(RoadFlow.Platform.Users.CurrentUserID, typeid);
+            var flows = bworkFlow.GetInstanceManageFlowIDList(RoadFlow.Platform.UsersBLL.CurrentUserID, typeid);
             List<Guid> flowids = new List<Guid>();
             foreach (var flow in flows.OrderBy(p => p.Value))
             {
@@ -96,7 +96,7 @@ namespace WebMvc.Controllers
             string flowOptions = bworkFlow.GetOptions(flows, typeid, flowid);
 
             var taskList = bworkFlowTask.GetInstances(manageFlows, new Guid[] { },
-                sender.IsNullOrEmpty() ? new Guid[] { } : new Guid[] { sender.Replace(RoadFlow.Platform.Users.PREFIX, "").Convert<Guid>() },
+                sender.IsNullOrEmpty() ? new Guid[] { } : new Guid[] { sender.Replace(RoadFlow.Platform.UsersBLL.PREFIX, "").Convert<Guid>() },
                 out pager, query1, title, flowid, date1, date2, status.Convert<int>());
 
             ViewBag.Query = query;
@@ -218,7 +218,7 @@ namespace WebMvc.Controllers
                 Request.QueryString["appid"], Request.QueryString["tabid"], title.UrlEncode(), flowid, sender, date1, date2);
             string pager;
 
-            var taskList = bworkFlowTask.GetTasks(RoadFlow.Platform.Users.CurrentUserID,
+            var taskList = bworkFlowTask.GetTasks(RoadFlow.Platform.UsersBLL.CurrentUserID,
                out pager, query, title, flowid, sender, date1, date2);
             ViewBag.query = query;
             ViewBag.flowOptions = bworkFlow.GetOptions(flowid);
@@ -278,7 +278,7 @@ namespace WebMvc.Controllers
 
             string pager;
 
-            var taskList = bworkFlowTask.GetTasks(RoadFlow.Platform.Users.CurrentUserID,
+            var taskList = bworkFlowTask.GetTasks(RoadFlow.Platform.UsersBLL.CurrentUserID,
                out pager, query2, title, flowid, sender, date1, date2, 1);
             ViewBag.pager = pager;
             ViewBag.flowOptions = bworkFlow.GetOptions(flowid);

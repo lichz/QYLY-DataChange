@@ -2,7 +2,7 @@
     ViewBag.Title = "Index";
     bool isOneSelf = "1" == Request.QueryString["isoneself"];
     RoadFlow.Platform.Organize borganize = new RoadFlow.Platform.Organize();
-    RoadFlow.Platform.Users busers = new RoadFlow.Platform.Users();
+    RoadFlow.Platform.UsersBLL busers = new RoadFlow.Platform.UsersBLL();
     RoadFlow.Platform.WorkFlow bworkFlow = new RoadFlow.Platform.WorkFlow();
 }
 @model IEnumerable<RoadFlow.Data.Model.WorkFlowDelegation>

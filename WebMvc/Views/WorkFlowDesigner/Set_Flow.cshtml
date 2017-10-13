@@ -7,7 +7,7 @@
     bool isAdd = "1" == Request.QueryString["isadd"];
 
     string flowID = Request.QueryString["flowid"].IsGuid() && !isAdd ? Request.QueryString["flowid"] : Guid.NewGuid().ToString();
-    string defaultManager = RoadFlow.Platform.Users.PREFIX + RoadFlow.Platform.Users.CurrentUserID.ToString();
+    string defaultManager = RoadFlow.Platform.UsersBLL.PREFIX + RoadFlow.Platform.UsersBLL.CurrentUserID.ToString();
 }
 <form method="post">
 <div id="tabdiv">

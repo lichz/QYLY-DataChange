@@ -22,7 +22,7 @@ namespace WebMvc.Controllers
         {
             RoadFlow.Platform.WorkFlowDelegation bworkFlowDelegation = new RoadFlow.Platform.WorkFlowDelegation();
             RoadFlow.Platform.Organize borganize = new RoadFlow.Platform.Organize();
-            RoadFlow.Platform.Users busers = new RoadFlow.Platform.Users();
+            RoadFlow.Platform.UsersBLL busers = new RoadFlow.Platform.UsersBLL();
             RoadFlow.Platform.WorkFlow bworkFlow = new RoadFlow.Platform.WorkFlow();
             IEnumerable<RoadFlow.Data.Model.WorkFlowDelegation> workFlowDelegationList;
 
@@ -56,7 +56,7 @@ namespace WebMvc.Controllers
             bool isOneSelf = "1" == Request.QueryString["isoneself"];
             if (isOneSelf)
             {
-                workFlowDelegationList = bworkFlowDelegation.GetPagerData(out pager, query1, RoadFlow.Platform.Users.CurrentUserID.ToString(), startTime, endTime);
+                workFlowDelegationList = bworkFlowDelegation.GetPagerData(out pager, query1, RoadFlow.Platform.UsersBLL.CurrentUserID.ToString(), startTime, endTime);
             }
             else
             {
@@ -114,7 +114,7 @@ namespace WebMvc.Controllers
                     workFlowDelegation = new RoadFlow.Data.Model.WorkFlowDelegation();
                     workFlowDelegation.ID = Guid.NewGuid();
                 }
-                workFlowDelegation.UserID = isOneSelf ? RoadFlow.Platform.Users.CurrentUserID : RoadFlow.Platform.Users.RemovePrefix(UserID).Convert<Guid>();
+                workFlowDelegation.UserID = isOneSelf ? RoadFlow.Platform.UsersBLL.CurrentUserID : RoadFlow.Platform.UsersBLL.RemovePrefix(UserID).Convert<Guid>();
                 workFlowDelegation.EndTime = EndTime.Convert<DateTime>();
                 if (FlowID.IsGuid())
                 {
@@ -122,7 +122,7 @@ namespace WebMvc.Controllers
                 }
                 workFlowDelegation.Note = Note.IsNullOrEmpty() ? null : Note;
                 workFlowDelegation.StartTime = StartTime.Convert<DateTime>();
-                workFlowDelegation.ToUserID = RoadFlow.Platform.Users.RemovePrefix(ToUserID).Convert<Guid>();
+                workFlowDelegation.ToUserID = RoadFlow.Platform.UsersBLL.RemovePrefix(ToUserID).Convert<Guid>();
                 workFlowDelegation.WriteTime = DateTime.Now;
 
 
@@ -141,7 +141,7 @@ namespace WebMvc.Controllers
                 ViewBag.Script = "alert('保存成功!');new RoadUI.Window().reloadOpener();new RoadUI.Window().close();";
             }
             ViewBag.FlowOptions = new RoadFlow.Platform.WorkFlow().GetOptions(FlowID);
-            return View(workFlowDelegation == null ? new RoadFlow.Data.Model.WorkFlowDelegation() { UserID = RoadFlow.Platform.Users.CurrentUserID } : workFlowDelegation);
+            return View(workFlowDelegation == null ? new RoadFlow.Data.Model.WorkFlowDelegation() { UserID = RoadFlow.Platform.UsersBLL.CurrentUserID } : workFlowDelegation);
         }
 
     }

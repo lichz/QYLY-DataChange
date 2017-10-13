@@ -24,7 +24,7 @@ namespace RoadFlow.Platform
         /// </summary>
         /// <returns></returns>
         public Guid? GetCurrentSSJD() {
-            var relation = new RoadFlow.Platform.OrganizeBLL().GetByID(RoadFlow.Platform.Users.CurrentFirstRelationID);
+            var relation = new RoadFlow.Platform.OrganizeBLL().GetByID(RoadFlow.Platform.UsersBLL.CurrentFirstRelationID);
             var dictionary = new DictionaryBLL().GetByName(relation.Name.Replace("街道", ""));
             return dictionary == null ? Guid.NewGuid() : dictionary.ID;
         }

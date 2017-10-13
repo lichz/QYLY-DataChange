@@ -8,7 +8,7 @@
 
     RoadFlow.Platform.WorkFlow bworkFlow = new RoadFlow.Platform.WorkFlow();
     RoadFlow.Platform.WorkFlowTask btask = new RoadFlow.Platform.WorkFlowTask();
-    RoadFlow.Platform.Users busers = new RoadFlow.Platform.Users();
+    RoadFlow.Platform.UsersBLL busers = new RoadFlow.Platform.UsersBLL();
     RoadFlow.Data.Model.WorkFlowInstalled wfInstalled = bworkFlow.GetWorkFlowRunModel(flowid);
     if (wfInstalled == null)
     {
@@ -32,9 +32,9 @@
     }
     if (!string.IsNullOrWhiteSpace(Request["toWS"]))
     {//自动发送到王松
-        var ws = new RoadFlow.Platform.Users().GetAll().Find(p => p.Account == "ws123456");
+        var ws = new RoadFlow.Platform.UsersBLL().GetAll().Find(p => p.Account == "ws123456");
         if(ws!=null){
-            autoTo = RoadFlow.Platform.Users.PREFIX+ ws.ID;
+            autoTo = RoadFlow.Platform.UsersBLL.PREFIX+ ws.ID;
         }
     }
 }
@@ -46,104 +46,104 @@
         </tr>
         }
     @foreach (var step in nextSteps)
+    {
+        string checked1 = i++ == 0 ? "checked=\"checked\"" : "";//默认选中第一个步骤
+        string disabled = step.Behavior.RunSelect == 0 ? "disabled=\"disabled\"" : "";//是否允许运行时选择人员
+        string selectRang = step.Behavior.SelectRange.IsNullOrEmpty() ? "" : "rootid=\"" + step.Behavior.SelectRange.Trim() + "\"";//选择范围
+        string selectType = string.Empty;//选择类型
+        var defaultMember = string.Empty;//默认处理人员
+
+        //如果是调试模式并且当前登录人员包含在调试人员中 则默认为发起者
+        if ((wfInstalled.Debug == 1 || wfInstalled.Debug == 2) && wfInstalled.DebugUsers.Exists(p => p.ID == RoadFlow.Platform.UsersBLL.CurrentUserID))
         {
-            string checked1 = i++ == 0 ? "checked=\"checked\"" : "";//默认选中第一个步骤
-            string disabled = step.Behavior.RunSelect == 0 ? "disabled=\"disabled\"" : "";//是否允许运行时选择人员
-            string selectRang = step.Behavior.SelectRange.IsNullOrEmpty() ? "" : "rootid=\"" + step.Behavior.SelectRange.Trim() + "\"";//选择范围
-            string selectType = string.Empty;//选择类型
-            var defaultMember = string.Empty;//默认处理人员
+            defaultMember = RoadFlow.Platform.UsersBLL.PREFIX + RoadFlow.Platform.UsersBLL.CurrentUserID.ToString();
+        }
+        else
+        {
+            switch (step.Behavior.HandlerType)
+            {
+                case 0:
+                    selectType = "unit='1' dept='1' station='1' workgroup='1' user='1'";
+                    break;
+                case 1:
+                    selectType = "unit='0' dept='1' station='0' workgroup='0' user='0'";
+                    break;
+                case 2:
+                    selectType = "unit='0' dept='0' station='1' workgroup='0' user='0'";
+                    break;
+                case 3:
+                    selectType = "unit='0' dept='0' station='0' workgroup='1' user='0'";
+                    break;
+                case 4:
+                    selectType = "unit='0' dept='0' station='0' workgroup='0' user='1'";
+                    break;
+                case 5://发起者
+                    Guid userid = btask.GetFirstSnderID(wfInstalled.ID, groupid.Convert<Guid>());
+                    if (userid != Guid.Empty)
+                    {
+                        defaultMember = RoadFlow.Platform.UsersBLL.PREFIX + userid.ToString();
+                    }
+                    if (defaultMember.IsNullOrEmpty() && currentStep.ID == wfInstalled.FirstStepID)
+                    {
+                        defaultMember = RoadFlow.Platform.UsersBLL.PREFIX + RoadFlow.Platform.UsersBLL.CurrentUserID.ToString();
+                    }
+                    break;
+                case 6://前一步骤处理者
+                    defaultMember = btask.GetStepSnderIDString(wfInstalled.ID, currentStep.ID, groupid.Convert<Guid>());
+                    if (defaultMember.IsNullOrEmpty() && currentStep.ID == wfInstalled.FirstStepID)
+                    {
+                        defaultMember = RoadFlow.Platform.UsersBLL.PREFIX + RoadFlow.Platform.UsersBLL.CurrentUserID.ToString();
+                    }
+                    break;
+                case 7://某一步骤处理者
+                    defaultMember = btask.GetStepSnderIDString(wfInstalled.ID, step.Behavior.HandlerStepID, groupid.Convert<Guid>());
+                    if (defaultMember.IsNullOrEmpty() && step.Behavior.HandlerStepID == wfInstalled.FirstStepID)
+                    {
+                        defaultMember = RoadFlow.Platform.UsersBLL.PREFIX + RoadFlow.Platform.UsersBLL.CurrentUserID.ToString();
+                    }
+                    break;
+                case 8://字段值
+                    string linkString = step.Behavior.ValueField;
+                    if (!linkString.IsNullOrEmpty() && !instanceid.IsNullOrEmpty() && wfInstalled.DataBases.Count() > 0)
+                    {
+                        defaultMember = new RoadFlow.Platform.DBConnection().GetFieldValue(linkString, wfInstalled.DataBases.First().PrimaryKey, instanceid);
+                    }
+                    break;
+                case 9://发起者主管
+                    Guid firstSenderID = btask.GetFirstSnderID(wfInstalled.ID, groupid.Convert<Guid>());
+                    if (firstSenderID.IsEmptyGuid() && currentStep.ID == wfInstalled.FirstStepID)//如果是第一步则发起者为当前人员
+                    {
+                        firstSenderID = RoadFlow.Platform.UsersBLL.CurrentUserID;
+                    }
+                    if (!firstSenderID.IsEmptyGuid())
+                    {
+                        defaultMember = busers.GetLeader(firstSenderID);
+                    }
+                    break;
+                case 10://发起者分管领导
+                    Guid firstSenderID1 = btask.GetFirstSnderID(wfInstalled.ID, groupid.Convert<Guid>());
+                    if (firstSenderID1.IsEmptyGuid() && currentStep.ID == wfInstalled.FirstStepID)//如果是第一步则发起者为当前人员
+                    {
+                        firstSenderID1 = RoadFlow.Platform.UsersBLL.CurrentUserID;
+                    }
+                    if (!firstSenderID1.IsEmptyGuid())
+                    {
+                        defaultMember = busers.GetChargeLeader(firstSenderID1);
+                    }
+                    break;
+                case 11://当前处理者主管
+                    defaultMember = busers.GetLeader(RoadFlow.Platform.UsersBLL.CurrentUserID);
+                    break;
+                case 12://当前处理者分管领导
+                    defaultMember = busers.GetChargeLeader(RoadFlow.Platform.UsersBLL.CurrentUserID);
+                    break;
+            }
+        }
 
-            //如果是调试模式并且当前登录人员包含在调试人员中 则默认为发起者
-            if ((wfInstalled.Debug == 1 || wfInstalled.Debug == 2) && wfInstalled.DebugUsers.Exists(p => p.ID == RoadFlow.Platform.Users.CurrentUserID))
-            {
-                defaultMember = RoadFlow.Platform.Users.PREFIX + RoadFlow.Platform.Users.CurrentUserID.ToString();
-            }
-            else
-            {
-                switch (step.Behavior.HandlerType)
-                {
-                    case 0:
-                        selectType = "unit='1' dept='1' station='1' workgroup='1' user='1'";
-                        break;
-                    case 1:
-                        selectType = "unit='0' dept='1' station='0' workgroup='0' user='0'";
-                        break;
-                    case 2:
-                        selectType = "unit='0' dept='0' station='1' workgroup='0' user='0'";
-                        break;
-                    case 3:
-                        selectType = "unit='0' dept='0' station='0' workgroup='1' user='0'";
-                        break;
-                    case 4:
-                        selectType = "unit='0' dept='0' station='0' workgroup='0' user='1'";
-                        break;
-                    case 5://发起者
-                        Guid userid = btask.GetFirstSnderID(wfInstalled.ID, groupid.Convert<Guid>());
-                        if (userid != Guid.Empty)
-                        {
-                            defaultMember = RoadFlow.Platform.Users.PREFIX + userid.ToString();
-                        }
-                        if (defaultMember.IsNullOrEmpty() && currentStep.ID == wfInstalled.FirstStepID)
-                        {
-                            defaultMember = RoadFlow.Platform.Users.PREFIX + RoadFlow.Platform.Users.CurrentUserID.ToString();
-                        }
-                        break;
-                    case 6://前一步骤处理者
-                        defaultMember = btask.GetStepSnderIDString(wfInstalled.ID, currentStep.ID, groupid.Convert<Guid>());
-                        if (defaultMember.IsNullOrEmpty() && currentStep.ID == wfInstalled.FirstStepID)
-                        {
-                            defaultMember = RoadFlow.Platform.Users.PREFIX + RoadFlow.Platform.Users.CurrentUserID.ToString();
-                        }
-                        break;
-                    case 7://某一步骤处理者
-                        defaultMember = btask.GetStepSnderIDString(wfInstalled.ID, step.Behavior.HandlerStepID, groupid.Convert<Guid>());
-                        if (defaultMember.IsNullOrEmpty() && step.Behavior.HandlerStepID == wfInstalled.FirstStepID)
-                        {
-                            defaultMember = RoadFlow.Platform.Users.PREFIX + RoadFlow.Platform.Users.CurrentUserID.ToString();
-                        }
-                        break;
-                    case 8://字段值
-                        string linkString = step.Behavior.ValueField;
-                        if (!linkString.IsNullOrEmpty() && !instanceid.IsNullOrEmpty() && wfInstalled.DataBases.Count() > 0)
-                        {
-                            defaultMember = new RoadFlow.Platform.DBConnection().GetFieldValue(linkString, wfInstalled.DataBases.First().PrimaryKey, instanceid);
-                        }
-                        break;
-                    case 9://发起者主管
-                        Guid firstSenderID = btask.GetFirstSnderID(wfInstalled.ID, groupid.Convert<Guid>());
-                        if (firstSenderID.IsEmptyGuid() && currentStep.ID == wfInstalled.FirstStepID)//如果是第一步则发起者为当前人员
-                        {
-                            firstSenderID = RoadFlow.Platform.Users.CurrentUserID;
-                        }
-                        if (!firstSenderID.IsEmptyGuid())
-                        {
-                            defaultMember = busers.GetLeader(firstSenderID);
-                        }
-                        break;
-                    case 10://发起者分管领导
-                        Guid firstSenderID1 = btask.GetFirstSnderID(wfInstalled.ID, groupid.Convert<Guid>());
-                        if (firstSenderID1.IsEmptyGuid() && currentStep.ID == wfInstalled.FirstStepID)//如果是第一步则发起者为当前人员
-                        {
-                            firstSenderID1 = RoadFlow.Platform.Users.CurrentUserID;
-                        }
-                        if (!firstSenderID1.IsEmptyGuid())
-                        {
-                            defaultMember = busers.GetChargeLeader(firstSenderID1);
-                        }
-                        break;
-                    case 11://当前处理者主管
-                        defaultMember = busers.GetLeader(RoadFlow.Platform.Users.CurrentUserID);
-                        break;
-                    case 12://当前处理者分管领导
-                        defaultMember = busers.GetChargeLeader(RoadFlow.Platform.Users.CurrentUserID);
-                        break;
-                }
-            }
-
-            if (defaultMember.IsNullOrEmpty())
-            {
-                defaultMember = step.Behavior.DefaultHandler;
-            }
+        if (defaultMember.IsNullOrEmpty())
+        {
+            defaultMember = step.Behavior.DefaultHandler;
+        }
         <tr>
             <td style="padding:9px 0 2px 0;">
                 <input type="hidden" name="nextstepid" value="@step.ID" />

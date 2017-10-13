@@ -31,8 +31,8 @@
                 wff.Name = name.Trim();
                 wff.CreateTime = DateTime.Now;
                 wff.LastModifyTime = wff.CreateTime;
-                wff.CreateUserID = RoadFlow.Platform.Users.CurrentUserID;
-                wff.CreateUserName = RoadFlow.Platform.Users.CurrentUserName;
+                wff.CreateUserID = RoadFlow.Platform.UsersBLL.CurrentUserID;
+                wff.CreateUserName = RoadFlow.Platform.UsersBLL.CurrentUserName;
                 wff.Status = 0;
 
                 var json = LitJson.JsonMapper.ToObject(wff.Attribute);

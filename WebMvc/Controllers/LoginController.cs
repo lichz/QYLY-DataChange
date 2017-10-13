@@ -52,7 +52,7 @@ namespace WebMvc.Controllers
             }
             else
             {
-                RoadFlow.Platform.Users busers = new RoadFlow.Platform.Users();
+                RoadFlow.Platform.UsersBLL busers = new RoadFlow.Platform.UsersBLL();
                 var user = busers.GetByAccount(account.Trim());
                 if (user == null || string.Compare(user.Password, busers.GetUserEncryptionPassword(user.ID.ToString(), password.Trim()), false) != 0)
                 {
@@ -111,7 +111,7 @@ namespace WebMvc.Controllers
 
         public ActionResult Quit()
         {
-            new RoadFlow.Platform.OnlineUsers().Remove(RoadFlow.Platform.Users.CurrentUserID);
+            new RoadFlow.Platform.OnlineUsers().Remove(RoadFlow.Platform.UsersBLL.CurrentUserID);
             Session.RemoveAll();
             return RedirectToAction("Index");
         }

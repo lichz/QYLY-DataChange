@@ -256,7 +256,7 @@
                 rootid = '@BWorkFlowTask.GetFirstSnderDeptID(FlowID.Convert<Guid>(), GroupID.Convert<Guid>())';
                 break;
             case "1": //处理者部门
-                rootid = '@RoadFlow.Platform.Users.CurrentDeptID';
+                rootid = '@RoadFlow.Platform.UsersBLL.CurrentDeptID';
                 break;
             case "2": //自定义
                 rootid = $control.attr("org_rang1");
@@ -605,7 +605,7 @@
                 rootid = '@BWorkFlowTask.GetFirstSnderDeptID(FlowID.Convert<Guid>(), GroupID.Convert<Guid>())';
                 break;
             case "1": //处理者部门
-                rootid = '@RoadFlow.Platform.Users.CurrentDeptID';
+                rootid = '@RoadFlow.Platform.UsersBLL.CurrentDeptID';
                 break;
             case "2": //自定义
                 rootid = editmode.org_rang1;

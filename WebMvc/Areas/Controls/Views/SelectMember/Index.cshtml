@@ -2,7 +2,7 @@
     ViewBag.Title = "Index";
     Page.CheckApp = false;
     RoadFlow.Platform.Organize borganizename = new RoadFlow.Platform.Organize();
-    string userPrefix = RoadFlow.Platform.Users.PREFIX;
+    string userPrefix = RoadFlow.Platform.UsersBLL.PREFIX;
     string workgroupPrefix = RoadFlow.Platform.WorkGroup.PREFIX;
     string values = Request.QueryString["values"];
     string rootid = Request.QueryString["rootid"];

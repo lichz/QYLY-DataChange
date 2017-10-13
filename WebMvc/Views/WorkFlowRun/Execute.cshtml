@@ -28,7 +28,7 @@
     RoadFlow.Platform.WorkFlowTask btask = new RoadFlow.Platform.WorkFlowTask();
     RoadFlow.Platform.WorkFlowDelegation bworkFlowDelegation = new RoadFlow.Platform.WorkFlowDelegation();
     RoadFlow.Platform.Organize borganize = new RoadFlow.Platform.Organize();
-    RoadFlow.Platform.Users busers = new RoadFlow.Platform.Users();
+    RoadFlow.Platform.UsersBLL busers = new RoadFlow.Platform.UsersBLL();
     
     var wfInstalled=bworkFlow.GetWorkFlowRunModel(flowid);
     if(wfInstalled==null)
@@ -67,7 +67,7 @@
     execute.InstanceID = instanceid;
     execute.IsSign = "1" == issign;
     execute.Note = "";
-    execute.Sender = RoadFlow.Platform.Users.CurrentUser;
+    execute.Sender = RoadFlow.Platform.UsersBLL.CurrentUser;
     execute.StepID = stepid.IsGuid() ? stepid.Convert<Guid>() : wfInstalled.FirstStepID;
     execute.TaskID = taskid.Convert<Guid>();
     execute.Title = title ?? "";
@@ -88,7 +88,7 @@
                         execute.Steps.Add(gid, borganize.GetAllUsers(member));
                         break;
                     case RoadFlow.Data.Model.WorkFlowExecute.EnumType.ExecuteType.Back:
-                        execute.Steps.Add(gid, new List<RoadFlow.Data.Model.Users>());
+                        execute.Steps.Add(gid, new List<RoadFlow.Data.Model.UsersModel>());
                         break;
                     case RoadFlow.Data.Model.WorkFlowExecute.EnumType.ExecuteType.Save:
                         break;
@@ -352,7 +352,7 @@
     if (reslut.IsSuccess)
     {
         //判断是打开任务还是关闭窗口
-        var nextTasks = reslut.NextTasks.Where(p => p.Status.In(0, 1) && p.ReceiveID == RoadFlow.Platform.Users.CurrentUserID);
+        var nextTasks = reslut.NextTasks.Where(p => p.Status.In(0, 1) && p.ReceiveID == RoadFlow.Platform.UsersBLL.CurrentUserID);
         var nextTask = nextTasks.Count() > 0 ? nextTasks.First() : null;
         if (nextTask != null)
         {

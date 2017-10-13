@@ -149,8 +149,8 @@ namespace WebMvc.Controllers
                 wff = new RoadFlow.Data.Model.WorkFlowForm();
                 wff.ID = formID;
                 wff.Type = type.Convert<Guid>();
-                wff.CreateUserID = RoadFlow.Platform.Users.CurrentUserID;
-                wff.CreateUserName = RoadFlow.Platform.Users.CurrentUserName;
+                wff.CreateUserID = RoadFlow.Platform.UsersBLL.CurrentUserID;
+                wff.CreateUserName = RoadFlow.Platform.UsersBLL.CurrentUserName;
                 wff.CreateTime = DateTime.Now;
                 wff.Status = 0;
                 isAdd = true;

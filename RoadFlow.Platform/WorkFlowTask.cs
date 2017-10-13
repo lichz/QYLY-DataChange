@@ -86,7 +86,7 @@ namespace RoadFlow.Platform {
         /// <returns></returns>
         public Guid GetFirstSnderID(Guid flowID, Guid groupID, bool isDefault = false) {
             Guid senderID = dataWorkFlowTask.GetFirstSnderID(flowID, groupID);
-            return senderID.IsEmptyGuid() && isDefault ? Users.CurrentUserID : senderID;
+            return senderID.IsEmptyGuid() && isDefault ? UsersBLL.CurrentUserID : senderID;
         }
 
         /// <summary>
@@ -97,10 +97,10 @@ namespace RoadFlow.Platform {
         /// <returns></returns>
         public Guid GetFirstSnderDeptID(Guid flowID, Guid groupID) {
             if (flowID.IsEmptyGuid() || groupID.IsEmptyGuid()) {
-                return Users.CurrentDeptID;
+                return UsersBLL.CurrentDeptID;
             }
             var senderID = dataWorkFlowTask.GetFirstSnderID(flowID, groupID);
-            var dept = new Users().GetDeptByUserID(senderID);
+            var dept = new UsersBLL().GetDeptByUserID(senderID);
             return dept == null ? Guid.Empty : dept.ID;
         }
 
@@ -126,7 +126,7 @@ namespace RoadFlow.Platform {
             var list = GetStepSnderID(flowID, stepID, groupID);
             StringBuilder sb = new StringBuilder(list.Count * 43);
             foreach (var li in list) {
-                sb.Append(RoadFlow.Platform.Users.PREFIX);
+                sb.Append(RoadFlow.Platform.UsersBLL.PREFIX);
                 sb.Append(li);
                 sb.Append(",");
             }
@@ -153,7 +153,7 @@ namespace RoadFlow.Platform {
             var list = dataWorkFlowTask.GetPrevSnderID(flowID, stepID, groupID);
             StringBuilder sb = new StringBuilder(list.Count * 43);
             foreach (var li in list) {
-                sb.Append(RoadFlow.Platform.Users.PREFIX);
+                sb.Append(RoadFlow.Platform.UsersBLL.PREFIX);
                 sb.Append(li);
                 sb.Append(",");
             }
@@ -193,7 +193,7 @@ namespace RoadFlow.Platform {
             execute.TaskID = jsondata["taskid"].ToString().Convert<Guid>();
 
             var stepsjson = jsondata["steps"];
-            Dictionary<Guid, List<RoadFlow.Data.Model.Users>> steps = new Dictionary<Guid, List<RoadFlow.Data.Model.Users>>();
+            Dictionary<Guid, List<RoadFlow.Data.Model.UsersModel>> steps = new Dictionary<Guid, List<RoadFlow.Data.Model.UsersModel>>();
             if (stepsjson.IsArray) {
                 foreach (LitJson.JsonData step in stepsjson) {
                     var id = step["id"].ToString().Convert<Guid>();
@@ -526,7 +526,7 @@ namespace RoadFlow.Platform {
                     useridList.Add("'" + nstep.ReceiveID + "'");
                 }
                 string ids = string.Join(",", useridList);
-                Users user = new Users();
+                UsersBLL user = new UsersBLL();
                 var list = user.GetUsers(ids);
                 string tells = "";
                 foreach (var model in list) {
@@ -813,7 +813,7 @@ namespace RoadFlow.Platform {
                     useridList.Add("'" + nstep.ReceiveID + "'");
                 }
                 string ids = string.Join(",", useridList);
-                Users user = new Users();
+                UsersBLL user = new UsersBLL();
                 var list = user.GetUsers(ids);
                 string tells = "";
                 foreach (var model in list) {
@@ -1107,7 +1107,7 @@ namespace RoadFlow.Platform {
         /// <param name="type">0待办 1已完成</param>
         /// <returns></returns>
         public List<RoadFlow.Data.Model.WorkFlowTask> GetTasks(Guid userID, out string pager, string query = "", string title = "", string flowid = "", string sender = "", string date1 = "", string date2 = "", int type = 0) {
-            return dataWorkFlowTask.GetTasks(userID, out pager, query, title, flowid, RoadFlow.Platform.Users.RemovePrefix(sender), date1, date2, type);
+            return dataWorkFlowTask.GetTasks(userID, out pager, query, title, flowid, RoadFlow.Platform.UsersBLL.RemovePrefix(sender), date1, date2, type);
         }
 
         /// <summary>
@@ -1417,7 +1417,7 @@ namespace RoadFlow.Platform {
         /// <param name="taskID">任务ID</param>
         /// <param name="user">要指派的人员</param>
         /// <returns></returns>
-        public string DesignateTask(Guid taskID, RoadFlow.Data.Model.Users user) {
+        public string DesignateTask(Guid taskID, RoadFlow.Data.Model.UsersModel user) {
             var task = Get(taskID);
             if (task == null) {
                 return "未找到任务";
@@ -1456,7 +1456,7 @@ namespace RoadFlow.Platform {
             executeModel.GroupID = task.GroupID;
             executeModel.InstanceID = task.InstanceID;
             executeModel.Note = "管理员退回";
-            executeModel.Sender = new Users().Get(task.ReceiveID);
+            executeModel.Sender = new UsersBLL().Get(task.ReceiveID);
             executeModel.StepID = task.StepID;
             executeModel.TaskID = task.ID;
             executeModel.Title = task.Title;
@@ -1466,10 +1466,10 @@ namespace RoadFlow.Platform {
             } else if (steps.First().Behavior.BackType == 2 && steps.First().Behavior.BackStepID == Guid.Empty) {
                 return "未设置退回步骤";
             }
-            Dictionary<Guid, List<RoadFlow.Data.Model.Users>> execSteps = new Dictionary<Guid, List<RoadFlow.Data.Model.Users>>();
+            Dictionary<Guid, List<RoadFlow.Data.Model.UsersModel>> execSteps = new Dictionary<Guid, List<RoadFlow.Data.Model.UsersModel>>();
             var backsteps = GetBackSteps(taskID, steps.First().Behavior.BackType, task.StepID, wfInstalled);
             foreach (var back in backsteps) {
-                execSteps.Add(back.Key, new List<RoadFlow.Data.Model.Users>());
+                execSteps.Add(back.Key, new List<RoadFlow.Data.Model.UsersModel>());
             }
             executeModel.Steps = execSteps;
             var result = Execute(executeModel);

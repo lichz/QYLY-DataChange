@@ -1,6 +1,6 @@
 ﻿@{
     ViewBag.Title = "Open_List";
-    RoadFlow.Platform.Users busers = new RoadFlow.Platform.Users();
+    RoadFlow.Platform.UsersBLL busers = new RoadFlow.Platform.UsersBLL();
     RoadFlow.Platform.Organize borg = new RoadFlow.Platform.Organize();
     RoadFlow.Platform.WorkFlow bwf = new RoadFlow.Platform.WorkFlow();
     string type = Request.QueryString["typeid"];
@@ -30,7 +30,7 @@
     <tbody>
     @foreach (var flow in Model.OrderBy(p => p.Name))
     {
-        if (!borg.GetAllUsers(flow.Manager).Exists(p => p.ID == RoadFlow.Platform.Users.CurrentUserID))
+        if (!borg.GetAllUsers(flow.Manager).Exists(p => p.ID == RoadFlow.Platform.UsersBLL.CurrentUserID))
         {
             continue;
         }

@@ -74,7 +74,7 @@ namespace WebMvc.Controllers
                     model.Title = title;
                     model.Contents = content;
                     model.AddTime = DateTime.Now;
-                    model.AddUserId = RoadFlow.Platform.Users.CurrentUserID;
+                    model.AddUserId = RoadFlow.Platform.UsersBLL.CurrentUserID;
                     //model.AddUserName = RoadFlow.Platform.Users.CurrentUserName;
 
                     post.AddPost(model);
@@ -103,7 +103,7 @@ namespace WebMvc.Controllers
                     model.Contents = content;
                     model.IsValid = valid.Convert<int>();
 
-                    Guid userId = RoadFlow.Platform.Users.CurrentUserID;
+                    Guid userId = RoadFlow.Platform.UsersBLL.CurrentUserID;
                     post.UpdatePost(model);
                     ViewBag.Script = "new RoadUI.Window().reloadOpener();new RoadUI.Window().close();";
                 }

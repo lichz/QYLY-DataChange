@@ -8,27 +8,27 @@ namespace RoadFlow.Data.Interface
         /// <summary>
         /// 新增
         /// </summary>
-        int Add(RoadFlow.Data.Model.Users model);
+        int Add(RoadFlow.Data.Model.UsersModel model);
 
         /// <summary>
         /// 更新
         /// </summary>
-        int Update(RoadFlow.Data.Model.Users model);
+        int Update(RoadFlow.Data.Model.UsersModel model);
 
         /// <summary>
         /// 查询所有记录
         /// </summary>
-        List<RoadFlow.Data.Model.Users> GetAll();
+        List<RoadFlow.Data.Model.UsersModel> GetAll();
 
         /// <summary>
         /// 查询部分记录
         /// </summary>
-        List<RoadFlow.Data.Model.Users> GetUsers(string ids);
+        List<RoadFlow.Data.Model.UsersModel> GetUsers(string ids);
 
         /// <summary>
         /// 查询单条记录
         /// </summary>
-        Model.Users Get(Guid id);
+        Model.UsersModel Get(Guid id);
 
         /// <summary>
         /// 删除
@@ -43,21 +43,21 @@ namespace RoadFlow.Data.Interface
         /// <summary>
         /// 根据帐号查询一条记录
         /// </summary>
-        RoadFlow.Data.Model.Users GetByAccount(string account);
+        RoadFlow.Data.Model.UsersModel GetByAccount(string account);
 
          /// <summary>
         /// 查询一个岗位下所有人员
         /// </summary>
         /// <param name="organizeID"></param>
         /// <returns></returns>
-        List<Model.Users> GetAllByOrganizeID(Guid organizeID);
+        List<Model.UsersModel> GetAllByOrganizeID(Guid organizeID);
 
         /// <summary>
         /// 查询一组岗位下所有人员
         /// </summary>
         /// <param name="organizeID"></param>
         /// <returns></returns>
-        List<Model.Users> GetAllByOrganizeIDArray(Guid[] organizeIDArray);
+        List<Model.UsersModel> GetAllByOrganizeIDArray(Guid[] organizeIDArray);
 
         /// <summary>
         /// 检查帐号是否重复
