@@ -83,9 +83,9 @@ namespace WebMvc.Controllers
                 root = BOrganize.GetRoot();
             }
 
-            List<RoadFlow.Data.Model.Users> users = new List<RoadFlow.Data.Model.Users>();
+            List<RoadFlow.Data.Model.UsersModel> users = new List<RoadFlow.Data.Model.UsersModel>();
 
-            RoadFlow.Platform.Users busers = new RoadFlow.Platform.Users();
+            RoadFlow.Platform.UsersBLL busers = new RoadFlow.Platform.UsersBLL();
             users = busers.GetAllByOrganizeID(root.ID);
 
             json.Append("{");
@@ -227,7 +227,7 @@ namespace WebMvc.Controllers
             }
 
             var userRelations = new RoadFlow.Platform.UsersRelation().GetAllByOrganizeID(orgID);
-            var users = new RoadFlow.Platform.Users().GetAllByOrganizeID(orgID);
+            var users = new RoadFlow.Platform.UsersBLL().GetAllByOrganizeID(orgID);
             int count1 = users.Count;
             if (count1 > 0 && count > 0)
             {
@@ -409,7 +409,7 @@ namespace WebMvc.Controllers
         public ActionResult UserAdd(FormCollection collection)
         {
             RoadFlow.Platform.Organize borganize = new RoadFlow.Platform.Organize();
-            RoadFlow.Platform.Users busers = new RoadFlow.Platform.Users();
+            RoadFlow.Platform.UsersBLL busers = new RoadFlow.Platform.UsersBLL();
 
             string id = Request.QueryString["id"];
 
@@ -433,7 +433,7 @@ namespace WebMvc.Controllers
                 using (System.Transactions.TransactionScope scope = new System.Transactions.TransactionScope())
                 {
                     //添加人员
-                    RoadFlow.Data.Model.Users user = new RoadFlow.Data.Model.Users();
+                    RoadFlow.Data.Model.UsersModel user = new RoadFlow.Data.Model.UsersModel();
                     user.Account = account.Trim();
                     user.Name = name.Trim();
                     user.Tell = tell.Trim();
@@ -479,9 +479,9 @@ namespace WebMvc.Controllers
         public ActionResult User(FormCollection collection)
         {
             RoadFlow.Platform.Organize borganize = new RoadFlow.Platform.Organize();
-            RoadFlow.Platform.Users busers = new RoadFlow.Platform.Users();
+            RoadFlow.Platform.UsersBLL busers = new RoadFlow.Platform.UsersBLL();
             RoadFlow.Platform.UsersRelation buserRelation = new RoadFlow.Platform.UsersRelation();
-            RoadFlow.Data.Model.Users user = null;
+            RoadFlow.Data.Model.UsersModel user = null;
             RoadFlow.Data.Model.Organize organize = null;
             string id = Request.QueryString["id"];
             string parentID = Request.QueryString["parentid"];
@@ -700,7 +700,7 @@ namespace WebMvc.Controllers
             {
                 string sort = Request.Form["sort"] ?? "";
                 string[] sortArray = sort.Split(',');
-                RoadFlow.Platform.Users busers = new RoadFlow.Platform.Users();
+                RoadFlow.Platform.UsersBLL busers = new RoadFlow.Platform.UsersBLL();
                 for (int i = 0; i < sortArray.Length; i++)
                 {
                     Guid gid;
@@ -720,14 +720,14 @@ namespace WebMvc.Controllers
         {
             string name = Request.Form["name"];
             string account = name.ToChineseSpell();
-            return account.IsNullOrEmpty() ? "" : new RoadFlow.Platform.Users().GetAccount(account.Trim());
+            return account.IsNullOrEmpty() ? "" : new RoadFlow.Platform.UsersBLL().GetAccount(account.Trim());
         }
 
         public string CheckAccount()
         {
             string account = Request.Form["value"];
             string id = Request["id"];
-            return new RoadFlow.Platform.Users().HasAccount(account, id) ? "帐号已经被使用了" : "1";
+            return new RoadFlow.Platform.UsersBLL().HasAccount(account, id) ? "帐号已经被使用了" : "1";
         }
 
         public string GetNames()
@@ -745,8 +745,8 @@ namespace WebMvc.Controllers
                 return "";
             }
             RoadFlow.Platform.Organize borg = new RoadFlow.Platform.Organize();
-            RoadFlow.Platform.Users buser = new RoadFlow.Platform.Users();
-            if (id.StartsWith(RoadFlow.Platform.Users.PREFIX))
+            RoadFlow.Platform.UsersBLL buser = new RoadFlow.Platform.UsersBLL();
+            if (id.StartsWith(RoadFlow.Platform.UsersBLL.PREFIX))
             {
                 Guid uid = buser.RemovePrefix1(id).Convert<Guid>();
                 return string.Concat(borg.GetAllParentNames(buser.GetMainStation(uid)), " / ", buser.GetName(uid));
@@ -774,8 +774,8 @@ namespace WebMvc.Controllers
             string oldpass = Request.Form["oldpass"];
             string newpass = Request.Form["newpass"];
 
-            RoadFlow.Platform.Users busers = new RoadFlow.Platform.Users();
-            var user = RoadFlow.Platform.Users.CurrentUser;
+            RoadFlow.Platform.UsersBLL busers = new RoadFlow.Platform.UsersBLL();
+            var user = RoadFlow.Platform.UsersBLL.CurrentUser;
             if (user != null)
             {
                 if (string.Compare(user.Password, busers.GetUserEncryptionPassword(user.ID.ToString(), oldpass.Trim()), false) != 0)

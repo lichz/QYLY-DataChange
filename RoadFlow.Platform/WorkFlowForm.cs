@@ -140,12 +140,12 @@ namespace RoadFlow.Platform
             StringBuilder options = new StringBuilder(1000);
             options.Append("<option value=\"\"></option>");
             options.Append("<optgroup label=\"组织机构相关选项\"></optgroup>");
-            options.AppendFormat("<option value=\"u_@RoadFlow.Platform.Users.CurrentUserID.ToString()\" {0}>当前步骤用户ID</option>", "10" == value ? "selected=\"selected\"" : "");
-            options.AppendFormat("<option value=\"@(RoadFlow.Platform.Users.CurrentUserName)\" {0}>当前步骤用户姓名</option>", "11" == value ? "selected=\"selected\"" : "");
-            options.AppendFormat("<option value=\"@(RoadFlow.Platform.Users.CurrentDeptID)\" {0}>当前步骤用户部门ID</option>", "12" == value ? "selected=\"selected\"" : "");
-            options.AppendFormat("<option value=\"@(RoadFlow.Platform.Users.CurrentDeptName)\" {0}>当前步骤用户部门名称</option>", "13" == value ? "selected=\"selected\"" : "");
+            options.AppendFormat("<option value=\"u_@RoadFlow.Platform.UsersBLL.CurrentUserID.ToString()\" {0}>当前步骤用户ID</option>", "10" == value ? "selected=\"selected\"" : "");
+            options.AppendFormat("<option value=\"@(RoadFlow.Platform.UsersBLL.CurrentUserName)\" {0}>当前步骤用户姓名</option>", "11" == value ? "selected=\"selected\"" : "");
+            options.AppendFormat("<option value=\"@(RoadFlow.Platform.UsersBLL.CurrentDeptID)\" {0}>当前步骤用户部门ID</option>", "12" == value ? "selected=\"selected\"" : "");
+            options.AppendFormat("<option value=\"@(RoadFlow.Platform.UsersBLL.CurrentDeptName)\" {0}>当前步骤用户部门名称</option>", "13" == value ? "selected=\"selected\"" : "");
             options.AppendFormat("<option value=\"u_@(new RoadFlow.Platform.WorkFlowTask().GetFirstSnderID(FlowID.Convert<Guid>(), GroupID.Convert<Guid>(), true))\" {0}>流程发起者ID</option>", "14" == value ? "selected=\"selected\"" : "");
-            options.AppendFormat("<option value=\"@(new RoadFlow.Platform.Users().GetName(new RoadFlow.Platform.WorkFlowTask().GetFirstSnderID(FlowID.Convert<Guid>(), GroupID.Convert<Guid>(), true)))\" {0}>流程发起者姓名</option>", "15" == value ? "selected=\"selected\"" : "");
+            options.AppendFormat("<option value=\"@(new RoadFlow.Platform.UsersBLL().GetName(new RoadFlow.Platform.WorkFlowTask().GetFirstSnderID(FlowID.Convert<Guid>(), GroupID.Convert<Guid>(), true)))\" {0}>流程发起者姓名</option>", "15" == value ? "selected=\"selected\"" : "");
             options.Append("<optgroup label=\"日期时间相关选项\"></optgroup>");
             options.AppendFormat("<option value=\"@(DateTime.Now.ToShortDateString())\" {0}>短日期格式(2014/4/15)</option>", "20" == value ? "selected=\"selected\"" : "");
             options.AppendFormat("<option value=\"@(DateTime.Now.ToLongDateString())\" {0}>长日期格式(2014年4月15日)</option>", "21" == value ? "selected=\"selected\"" : "");

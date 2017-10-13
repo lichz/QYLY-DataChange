@@ -76,7 +76,7 @@
     <Compile Include="QueryDesign.cs" />
     <Compile Include="Role.cs" />
     <Compile Include="RoleApp.cs" />
-    <Compile Include="Users.cs" />
+    <Compile Include="New\UsersModel.cs" />
     <Compile Include="UsersApp.cs" />
     <Compile Include="UsersInfo.cs" />
     <Compile Include="UsersRelation.cs" />

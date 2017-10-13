@@ -71,7 +71,7 @@ namespace WebMvc.Controllers
                     model.Title = title;
                     model.Contents = content;
                     model.AddTime = DateTime.Now;
-                    model.AddUserId = RoadFlow.Platform.Users.CurrentUserID;
+                    model.AddUserId = RoadFlow.Platform.UsersBLL.CurrentUserID;
                     post.AddPost(model); //增加
                     ViewBag.Script = "new RoadUI.Window().reloadOpener();new RoadUI.Window().close();";
                 }
@@ -96,7 +96,7 @@ namespace WebMvc.Controllers
                     model.Contents = content;
                     model.IsValid = valid.Convert<int>();
 
-                    Guid userId = RoadFlow.Platform.Users.CurrentUserID;
+                    Guid userId = RoadFlow.Platform.UsersBLL.CurrentUserID;
                     post.UpdatePost(model); //更新
                     ViewBag.Script = "new RoadUI.Window().reloadOpener();new RoadUI.Window().close();";
                 }

@@ -22,7 +22,7 @@ namespace WebMvc.Controllers {
             List<RoadFlow.Data.Model.SMSModel> view = new List<RoadFlow.Data.Model.SMSModel>();
             foreach(var item in list){
 
-                RoadFlow.Platform.Users user = new RoadFlow.Platform.Users();
+                RoadFlow.Platform.UsersBLL user = new RoadFlow.Platform.UsersBLL();
                 RoadFlow.Platform.Organize organize = new RoadFlow.Platform.Organize();
 
                 //把sendTo里的id取出来，然后清空sendTo
@@ -33,7 +33,7 @@ namespace WebMvc.Controllers {
                     if (id.Contains("u_")) {//个人
                         string newId = id.Remove(0, 2);
                         if (newId.IsGuid()) {
-                            RoadFlow.Data.Model.Users u = user.Get(Guid.Parse(newId));
+                            RoadFlow.Data.Model.UsersModel u = user.Get(Guid.Parse(newId));
                             if (u != null) {
                                 item.SendTo += "," + u.Name;
                             } else {
@@ -69,10 +69,10 @@ namespace WebMvc.Controllers {
         [HttpPost]
         public ActionResult Send(RoadFlow.Data.Model.SMSModel model) {
             if (ModelState.IsValid) {
-                model.SendUser = RoadFlow.Platform.Users.CurrentUserID;
-                model.SendUserName = RoadFlow.Platform.Users.CurrentUserName;
+                model.SendUser = RoadFlow.Platform.UsersBLL.CurrentUserID;
+                model.SendUserName = RoadFlow.Platform.UsersBLL.CurrentUserName;
                 if (sms.Add(model) > 0) {//保存成功,调用第三方发送短信
-                    RoadFlow.Platform.Users user = new RoadFlow.Platform.Users();
+                    RoadFlow.Platform.UsersBLL user = new RoadFlow.Platform.UsersBLL();
                     RoadFlow.Platform.Organize organize = new RoadFlow.Platform.Organize();
 
                     List<string> tels = new List<string>();
@@ -82,7 +82,7 @@ namespace WebMvc.Controllers {
                         if (item.Contains("u_")) {//个人
                             string newId = item.Remove(0, 2);
                             if (newId.IsGuid()) {
-                                RoadFlow.Data.Model.Users u = user.Get(Guid.Parse(newId));
+                                RoadFlow.Data.Model.UsersModel u = user.Get(Guid.Parse(newId));
                                 if (u != null&&!u.Tell.IsNullOrEmpty()) {
                                     tels.Add(u.Tell);
                                 }
@@ -91,7 +91,7 @@ namespace WebMvc.Controllers {
                             if (item.IsGuid()) {
                                 RoadFlow.Data.Model.Organize o = organize.Get(Guid.Parse(item));
                                 if (o != null) {
-                                    List<RoadFlow.Data.Model.Users> list = organize.GetAllUsers(Guid.Parse(item));
+                                    List<RoadFlow.Data.Model.UsersModel> list = organize.GetAllUsers(Guid.Parse(item));
                                     foreach (var u in list) {//遍历组织里所有User
                                         if(!u.Tell.IsNullOrEmpty()){
                                             tels.Add(u.Tell);

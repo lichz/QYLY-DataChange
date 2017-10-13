@@ -83,11 +83,11 @@ namespace RoadFlow.Platform
         /// 记录日志
         /// </summary>
         /// <param name="err"></param>
-        public static void Add(string title, string contents, Types type = Types.其它分类, string oldXML = "", string newXML = "", RoadFlow.Data.Model.Users user = null)
+        public static void Add(string title, string contents, Types type = Types.其它分类, string oldXML = "", string newXML = "", RoadFlow.Data.Model.UsersModel user = null)
         {
             if (user == null)
             {
-                user = Platform.Users.CurrentUser;
+                user = Platform.UsersBLL.CurrentUser;
             }
             RoadFlow.Data.Model.Log log = new RoadFlow.Data.Model.Log();
             log.Contents = contents;
@@ -145,7 +145,7 @@ namespace RoadFlow.Platform
         public System.Data.DataTable GetPagerData(out string pager, string query = "", string title = "", string type = "", string date1 = "", string date2 = "", string userID = "")
         {
             return dataLog.GetPagerData(out pager, query, RoadFlow.Utility.Tools.GetPageSize(), RoadFlow.Utility.Tools.GetPageNumber(),
-                title, type, date1, date2, Users.RemovePrefix(userID));
+                title, type, date1, date2, UsersBLL.RemovePrefix(userID));
         }
     }
 }

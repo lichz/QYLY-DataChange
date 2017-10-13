@@ -20,7 +20,7 @@ namespace WebMvc.Controllers
 
             RoadFlow.Platform.UsersRole buserRole = new RoadFlow.Platform.UsersRole();
             RoadFlow.Platform.Role brole = new RoadFlow.Platform.Role();
-            var roles = buserRole.GetByUserID(RoadFlow.Platform.Users.CurrentUserID);
+            var roles = buserRole.GetByUserID(RoadFlow.Platform.UsersBLL.CurrentUserID);
             ViewBag.RoleLength = roles.Count;
             ViewBag.DefaultRoleID = string.Empty;
             ViewBag.RolesOptions = string.Empty;
@@ -42,7 +42,7 @@ namespace WebMvc.Controllers
                 ViewBag.RolesOptions = brole.GetRoleOptions("", "", roleList);
             }
 
-            var user = RoadFlow.Platform.Users.CurrentUser;
+            var user = RoadFlow.Platform.UsersBLL.CurrentUser;
             ViewBag.UserName = user == null ? "" : user.Name;
             ViewBag.DateTime = DateTime.Now.ToDateWeekString();
 

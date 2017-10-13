@@ -64,7 +64,7 @@
     var defaultRoleID = "@ViewBag.DefaultRoleID";
     var currentDateTimeSpan = $("#CurrentDateTimeSpan");
     var rolesLength = '@ViewBag.RoleLength';
-    var userID = '@RoadFlow.Platform.Users.CurrentUserID';
+    var userID = '@RoadFlow.Platform.UsersBLL.CurrentUserID';
     var rootdir = '@Url.Content("~/")';
     var msg = '@Request.Browser.Type';
     $(function ()
@@ -198,7 +198,7 @@
                     if (child.title == "工作处理") {
                         @{
                             var pager="";
-                            var taskList =new RoadFlow.Platform.WorkFlowTask().GetTasks(RoadFlow.Platform.Users.CurrentUserID, out pager);
+                            var taskList =new RoadFlow.Platform.WorkFlowTask().GetTasks(RoadFlow.Platform.UsersBLL.CurrentUserID, out pager);
                             var cnt = @taskList.Count;
                         }
                         count = '@cnt';

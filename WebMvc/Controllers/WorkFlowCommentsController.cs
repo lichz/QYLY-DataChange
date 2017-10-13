@@ -53,7 +53,7 @@ namespace WebMvc.Controllers
             bool isOneSelf = "1" == Request.QueryString["isoneself"];
             if (isOneSelf)
             {
-                workFlowCommentList = workFlowCommentList.Where(p => p.MemberID == RoadFlow.Platform.Users.PREFIX + RoadFlow.Platform.Users.CurrentUserID.ToString());
+                workFlowCommentList = workFlowCommentList.Where(p => p.MemberID == RoadFlow.Platform.UsersBLL.PREFIX + RoadFlow.Platform.UsersBLL.CurrentUserID.ToString());
             }
             return View(workFlowCommentList);
         }
@@ -89,7 +89,7 @@ namespace WebMvc.Controllers
             string oldXML = workFlowComment.Serialize();
             if (collection != null)
             {
-                member = isOneSelf ? RoadFlow.Platform.Users.PREFIX + RoadFlow.Platform.Users.CurrentUserID.ToString() : Request.Form["Member"];
+                member = isOneSelf ? RoadFlow.Platform.UsersBLL.PREFIX + RoadFlow.Platform.UsersBLL.CurrentUserID.ToString() : Request.Form["Member"];
                 comment = Request.Form["Comment"];
                 sort = Request.Form["Sort"];
 

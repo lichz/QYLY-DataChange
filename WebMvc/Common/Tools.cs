@@ -127,7 +127,7 @@ namespace WebMvc.Common
             var app = new RoadFlow.Platform.RoleApp().GetFromCache(appid);
             if (app != null)
             {
-                var roles = RoadFlow.Platform.Users.CurrentUserRoles;
+                var roles = RoadFlow.Platform.UsersBLL.CurrentUserRoles;
                 if (roles.Contains(app["RoleID"].ToString().Convert<Guid>()))
                 {
                     return true;
@@ -139,7 +139,7 @@ namespace WebMvc.Common
             }
             else
             {
-                var userID = RoadFlow.Platform.Users.CurrentUserID;
+                var userID = RoadFlow.Platform.UsersBLL.CurrentUserID;
                 if (userID.IsEmptyGuid())
                 {
                     msg = "<script>top.login();</script>";
@@ -207,9 +207,9 @@ namespace WebMvc.Common
             foreach (var item in list) {
                 listStr.Add(item.InstanceID);
             }
-            if (listStr.Count > 0 && RoadFlow.Platform.Users.CurrentUserName != "系统管理员") {
+            if (listStr.Count > 0 && RoadFlow.Platform.UsersBLL.CurrentUserName != "系统管理员") {
                 where.Add(new KeyValuePair<string, RoadFlow.Data.Model.SQLFilterType>(key, RoadFlow.Data.Model.SQLFilterType.IN), listStr);
-            } else if (RoadFlow.Platform.Users.CurrentUserName != "系统管理员") {
+            } else if (RoadFlow.Platform.UsersBLL.CurrentUserName != "系统管理员") {
                 where.Add(new KeyValuePair<string, RoadFlow.Data.Model.SQLFilterType>(key, RoadFlow.Data.Model.SQLFilterType.EQUAL), "00000000-0000-0000-0000-000000000000");
             }
             return where;

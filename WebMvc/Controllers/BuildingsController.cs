@@ -426,7 +426,7 @@ namespace WebMvc.Controllers
         /// <returns></returns>
         public List<ColItem> GetColItemList()
         {
-            QueryDesign Display = new RoadFlow.Platform.QueryDesign().Get("楼栋综合查询", RoadFlow.Platform.Users.CurrentUserID);
+            QueryDesign Display = new RoadFlow.Platform.QueryDesign().Get("楼栋综合查询", RoadFlow.Platform.UsersBLL.CurrentUserID);
             List<ColItem> lst = Display.DisplayItem.IsNullOrEmpty() == true ? null : Display.DisplayItem.JsonConvertModel<List<ColItem>>();
             if (!lst.IsNullObj())
             {

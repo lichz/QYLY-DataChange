@@ -50,7 +50,7 @@
                     <td>@dr["Mobile"]</td>
                     <td>@(dr["IsValid"].ToString() == "0" ? "有效" : "过期")</td>
                     <td>
-                        @if (dr["AddUserId"].ToString().ToUpper() == @RoadFlow.Platform.Users.CurrentUserID.ToString().ToUpper())
+                        @if (dr["AddUserId"].ToString().ToUpper() == @RoadFlow.Platform.UsersBLL.CurrentUserID.ToString().ToUpper())
                         {
                             <a href="javascript:void(0);" onclick="Edit('@dr["ID"]');">编辑</a>
                             <a href="javascript:void(0);" onclick="del('@dr["ID"]');">删除</a>

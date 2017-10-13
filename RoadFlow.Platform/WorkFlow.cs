@@ -143,7 +143,7 @@ namespace RoadFlow.Platform
                     isAdd = true;
                     wf.ID = flowID;
                     wf.CreateDate = DateTime.Now;
-                    wf.CreateUserID = RoadFlow.Platform.Users.CurrentUserID;
+                    wf.CreateUserID = RoadFlow.Platform.UsersBLL.CurrentUserID;
                     wf.Status = 1;
                 }
                 wf.DesignJSON = jsonString;
@@ -264,7 +264,7 @@ namespace RoadFlow.Platform
                 wf.ID = Guid.NewGuid();
                 wf.Name = newName.Trim();
                 wf.CreateDate = DateTime.Now;
-                wf.CreateUserID = Platform.Users.CurrentUserID;
+                wf.CreateUserID = Platform.UsersBLL.CurrentUserID;
                 wf.InstallDate = null;
                 wf.InstallUserID = null;
                 wf.RunJSON = null;
@@ -721,7 +721,7 @@ namespace RoadFlow.Platform
                 wfInstalled.DesignJSON = wf.DesignJSON;
                 wfInstalled.FirstStepID = firstStepIDList.First();
                 wfInstalled.InstallTime = DateTime.Now;
-                wfInstalled.InstallUser = Platform.Users.CurrentUserID.ToString();
+                wfInstalled.InstallUser = Platform.UsersBLL.CurrentUserID.ToString();
                 wfInstalled.RunJSON = jsonString;
                 wfInstalled.Status = wf.Status;
             }
@@ -1066,11 +1066,11 @@ namespace RoadFlow.Platform
             if (groupID.IsGuid(out gid) || gid == Guid.Empty)
             {
                 var fqz = new WorkFlowTask().GetFirstSnderID(flowID.Convert<Guid>(), gid);
-                senderName = new Users().GetName(fqz);
+                senderName = new UsersBLL().GetName(fqz);
             }
             if (senderName.IsNullOrEmpty())
             {
-                senderName = Users.CurrentUserName;
+                senderName = UsersBLL.CurrentUserName;
             }
 
             return string.Concat(flowName, "(", senderName, ")");

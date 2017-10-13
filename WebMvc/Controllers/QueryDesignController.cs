@@ -118,8 +118,8 @@ namespace WebMvc.Controllers
                      model.ID = Guid.NewGuid();
                      model.Name = name;
                      model.TableName = tableName;
-                     model.CreateUserID = RoadFlow.Platform.Users.CurrentUserID;
-                     model.CreateUserName = RoadFlow.Platform.Users.CurrentUserName;
+                     model.CreateUserID = RoadFlow.Platform.UsersBLL.CurrentUserID;
+                     model.CreateUserName = RoadFlow.Platform.UsersBLL.CurrentUserName;
                      model.ConnectionID = connid.Convert<Guid>();
                      model.DisplayItem = eleme;
                      model.Status = 0;
@@ -200,8 +200,8 @@ namespace WebMvc.Controllers
                 else
                 {
                     model.ConnectionID = connid.Convert<Guid>();
-                    model.CreateUserID = RoadFlow.Platform.Users.CurrentUserID;
-                    model.CreateUserName = RoadFlow.Platform.Users.CurrentUserName;
+                    model.CreateUserID = RoadFlow.Platform.UsersBLL.CurrentUserID;
+                    model.CreateUserName = RoadFlow.Platform.UsersBLL.CurrentUserName;
                     model.ID = Guid.NewGuid();
                     model.TableName = tableName;
                     model.Status = 0;
@@ -223,13 +223,13 @@ namespace WebMvc.Controllers
 
         public ActionResult Search(string id)
         {
-            var model = queryDesign.Get(id,RoadFlow.Platform.Users.CurrentUserID);
+            var model = queryDesign.Get(id,RoadFlow.Platform.UsersBLL.CurrentUserID);
             return View(model);
         }
 
         public ActionResult Item(string id)
         {
-            var model = queryDesign.Get(id, RoadFlow.Platform.Users.CurrentUserID);
+            var model = queryDesign.Get(id, RoadFlow.Platform.UsersBLL.CurrentUserID);
             ViewBag.id = model.ID;
             return View(model);
         }
@@ -267,7 +267,7 @@ namespace WebMvc.Controllers
                     it.sortid = it.sortid == 0 ? ++cnt : it.sortid;
                 }
                 showItem = ll.ToJson();
-                if (model.CreateUserID == RoadFlow.Platform.Users.CurrentUserID)
+                if (model.CreateUserID == RoadFlow.Platform.UsersBLL.CurrentUserID)
                 {
                     model.DisplayItem = showItem;
                     new RoadFlow.Platform.QueryDesign().Update(model);
@@ -275,8 +275,8 @@ namespace WebMvc.Controllers
                 else
                 {
                     model.ID = Guid.NewGuid();
-                    model.CreateUserID = RoadFlow.Platform.Users.CurrentUserID;
-                    model.CreateUserName = RoadFlow.Platform.Users.CurrentUserName;
+                    model.CreateUserID = RoadFlow.Platform.UsersBLL.CurrentUserID;
+                    model.CreateUserName = RoadFlow.Platform.UsersBLL.CurrentUserName;
                     model.DisplayItem = showItem;
 
                     model.Status = 1;

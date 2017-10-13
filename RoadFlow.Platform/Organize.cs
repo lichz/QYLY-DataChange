@@ -157,7 +157,7 @@ namespace RoadFlow.Platform
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public List<RoadFlow.Data.Model.Users> GetAllUsers(Guid id)
+        public List<RoadFlow.Data.Model.UsersModel> GetAllUsers(Guid id)
         {
             var childs = GetAllChilds(id);
             List<Guid> ids = new List<Guid>();
@@ -166,7 +166,7 @@ namespace RoadFlow.Platform
             {
                 ids.Add(child.ID);
             }
-            return new Users().GetAllByOrganizeIDArray(ids.ToArray());
+            return new UsersBLL().GetAllByOrganizeIDArray(ids.ToArray());
         }
 
         /// <summary>
@@ -174,21 +174,21 @@ namespace RoadFlow.Platform
         /// </summary>
         /// <param name="idString"></param>
         /// <returns></returns>
-        public List<RoadFlow.Data.Model.Users> GetAllUsers(string idString)
+        public List<RoadFlow.Data.Model.UsersModel> GetAllUsers(string idString)
         {
             if (idString.IsNullOrEmpty())
             {
-                return new List<RoadFlow.Data.Model.Users>();
+                return new List<RoadFlow.Data.Model.UsersModel>();
             }
             string[] idArray = idString.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            List<RoadFlow.Data.Model.Users> userList = new List<RoadFlow.Data.Model.Users>();
-            Users busers = new Users();
+            List<RoadFlow.Data.Model.UsersModel> userList = new List<RoadFlow.Data.Model.UsersModel>();
+            UsersBLL busers = new UsersBLL();
             WorkGroup bwg = new WorkGroup();
             foreach (string id in idArray)
             {
-                if (id.StartsWith(Users.PREFIX))//人员
+                if (id.StartsWith(UsersBLL.PREFIX))//人员
                 {
-                    userList.Add(busers.Get(Users.RemovePrefix(id).Convert<Guid>()));
+                    userList.Add(busers.Get(UsersBLL.RemovePrefix(id).Convert<Guid>()));
                 }
                 else if (id.IsGuid())//机构
                 {
@@ -203,20 +203,20 @@ namespace RoadFlow.Platform
             return userList.Distinct(new UsersEqualityComparer()).ToList();
         }
 
-        private void addWorkGroupUsers(List<RoadFlow.Data.Model.Users> userList, RoadFlow.Data.Model.WorkGroup wg)
+        private void addWorkGroupUsers(List<RoadFlow.Data.Model.UsersModel> userList, RoadFlow.Data.Model.WorkGroup wg)
         {
             if (wg == null || wg.Members.IsNullOrEmpty())
             {
                 return;
             }
             string[] idArray = wg.Members.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            Users busers = new Users();
+            UsersBLL busers = new UsersBLL();
             WorkGroup bwg = new WorkGroup();
             foreach (var id in idArray)
             { 
-                if (id.StartsWith(Users.PREFIX))//人员
+                if (id.StartsWith(UsersBLL.PREFIX))//人员
                 {
-                    userList.Add(busers.Get(Users.RemovePrefix(id).Convert<Guid>()));
+                    userList.Add(busers.Get(UsersBLL.RemovePrefix(id).Convert<Guid>()));
                 }
                 else if (id.IsGuid())//机构
                 {
@@ -432,9 +432,9 @@ namespace RoadFlow.Platform
             {
                 return GetName(id.Convert<Guid>());
             }
-            else if (id.StartsWith(Users.PREFIX))//用户
+            else if (id.StartsWith(UsersBLL.PREFIX))//用户
             {
-                string uid = Users.RemovePrefix(id);
+                string uid = UsersBLL.RemovePrefix(id);
                 Guid userID;
                 if(!uid.IsGuid(out userID))
                 {
@@ -442,7 +442,7 @@ namespace RoadFlow.Platform
                 }
                 else
                 {
-                    return new Users().GetName(userID);
+                    return new UsersBLL().GetName(userID);
                 }
             }
             else if (id.StartsWith(WorkGroup.PREFIX))//工作组
@@ -502,7 +502,7 @@ namespace RoadFlow.Platform
             using (System.Transactions.TransactionScope scope = new System.Transactions.TransactionScope())
             {
                 UsersRelation bur = new UsersRelation();
-                Users user = new Users();
+                UsersBLL user = new UsersBLL();
                 UsersInfo userInfo = new UsersInfo();
                 var childs = GetAllChilds(orgID);
                 foreach (var child in childs)

@@ -91,7 +91,7 @@ namespace RoadFlow.Data.Model
         /// <summary>
         /// 调试人员
         /// </summary>
-        public List<RoadFlow.Data.Model.Users> DebugUsers { get; set; }
+        public List<RoadFlow.Data.Model.UsersModel> DebugUsers { get; set; }
 
         /// <summary>
         /// 数据库表以及主键信息

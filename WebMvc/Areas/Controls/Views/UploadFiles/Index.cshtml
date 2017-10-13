@@ -2,7 +2,7 @@
     string extName = Request["filetype"];
     string filesWebSite = Url.Content("~/Controls/UploadFiles/");
     string tmpID = Guid.NewGuid().ToString("N");
-    string tmpID1 = RoadFlow.Platform.Users.CurrentUserID.ToString();
+    string tmpID1 = RoadFlow.Platform.UsersBLL.CurrentUserID.ToString();
     RoadFlow.Cache.IO.Opation.Set(tmpID, tmpID1);
     Page.CheckApp = false;
 }

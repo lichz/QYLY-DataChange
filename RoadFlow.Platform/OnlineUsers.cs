@@ -31,7 +31,7 @@ namespace RoadFlow.Platform
         /// <summary>
         /// 添加一个用户到在线用户表
         /// </summary>
-        public bool Add(RoadFlow.Data.Model.Users user, Guid uniqueID)
+        public bool Add(RoadFlow.Data.Model.UsersModel user, Guid uniqueID)
         {
             if (user == null) return false;
             var onList = GetAll();

@@ -52,7 +52,7 @@ namespace RoadFlow.Platform {
         /// </summary>
         /// <returns></returns>
         public DataTable GetCurrentEnterpriseTax() {
-            return GetByTypeAndOrganizeID(RoadFlow.Data.Model.ElementOrganizeType.EnterpriseTax, RoadFlow.Platform.Users.CurrentFirstRelationID);
+            return GetByTypeAndOrganizeID(RoadFlow.Data.Model.ElementOrganizeType.EnterpriseTax, RoadFlow.Platform.UsersBLL.CurrentFirstRelationID);
         }
 
         ///// <summary>
@@ -71,7 +71,7 @@ namespace RoadFlow.Platform {
         /// </summary>
         /// <returns></returns>
         public DataTable GetCurrentBuildingModify() {
-            return GetByTypeAndOrganizeID(RoadFlow.Data.Model.ElementOrganizeType.BuildingModify, RoadFlow.Platform.Users.CurrentFirstRelationID);
+            return GetByTypeAndOrganizeID(RoadFlow.Data.Model.ElementOrganizeType.BuildingModify, RoadFlow.Platform.UsersBLL.CurrentFirstRelationID);
         }
 
         

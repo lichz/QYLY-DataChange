@@ -204,7 +204,7 @@ namespace RoadFlow.Data.Model.WorkFlowExecute
     {
         public Execute()
         {
-            Steps = new Dictionary<Guid, List<Users>>();
+            Steps = new Dictionary<Guid, List<UsersModel>>();
         }
         /// <summary>
         /// 流程ID
@@ -237,11 +237,11 @@ namespace RoadFlow.Data.Model.WorkFlowExecute
         /// <summary>
         /// 发送人员
         /// </summary>
-        public RoadFlow.Data.Model.Users Sender { get; set; }
+        public RoadFlow.Data.Model.UsersModel Sender { get; set; }
         /// <summary>
         /// 接收的步骤和人员
         /// </summary>
-        public Dictionary<Guid, List<RoadFlow.Data.Model.Users>> Steps { get; set; }
+        public Dictionary<Guid, List<RoadFlow.Data.Model.UsersModel>> Steps { get; set; }
         /// <summary>
         /// 处理意见
         /// </summary>

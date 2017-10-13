@@ -73,7 +73,7 @@
                 Response.Write("<script type='text/javascript'>alert('该任务已处理,请刷新您的待办列表!');top.mainTab.closeTab();</script>");
                 Response.End();
             }
-            else if ("1" != display && task.ReceiveID != RoadFlow.Platform.Users.CurrentUserID)
+            else if ("1" != display && task.ReceiveID != RoadFlow.Platform.UsersBLL.CurrentUserID)
             {
                 Response.Write("<script type='text/javascript'>alert('您不能处理当前任务,请刷新您的待办列表!');top.mainTab.closeTab();</script>");
                 Response.End();
@@ -91,7 +91,7 @@
 
     int debugType = wfInstalled.Debug;
     wfInstalled.DebugUsers.RemoveAll(p => p == null);
-    bool isDebug = (debugType == 1 || debugType == 2) && wfInstalled.DebugUsers.Exists(p => p.ID == RoadFlow.Platform.Users.CurrentUserID);
+    bool isDebug = (debugType == 1 || debugType == 2) && wfInstalled.DebugUsers.Exists(p => p.ID == RoadFlow.Platform.UsersBLL.CurrentUserID);
     bool isSign = currentStep.SignatureType == 1 || currentStep.SignatureType == 2;//是否有意见
 
     int signType = currentStep.SignatureType;
@@ -173,7 +173,7 @@
     <!--意见处理栏-->   
     @if (isSign && "0" == display)
     {
-        string commentsOptions = new RoadFlow.Platform.WorkFlowComment().GetOptionsStringByUserID(RoadFlow.Platform.Users.CurrentUserID);
+        string commentsOptions = new RoadFlow.Platform.WorkFlowComment().GetOptionsStringByUserID(RoadFlow.Platform.UsersBLL.CurrentUserID);
     <div style="height:12px; margin:16px 8px 8px 8px; border-bottom:1px dashed #ccc;"></div>
     <div style="height:30px; margin:15px auto 8px auto; text-align:left; width:96%;">
         处理意见：<select class="myselect" id="mycomment" style="margin-right:6px; width:100px;" onchange="$('#comment').val(this.value);"><option value=""></option>@Html.Raw(commentsOptions)</select>&nbsp;<input type="text" class="mytext" id="comment" name="comment" value="" style="width:70%; margin-right:6px;" />
@@ -181,11 +181,11 @@
         {
         <input type="hidden" value="" id="issign" name="issign" />
         <input type="button" class="mybutton" id="signbutton" onclick="sign();" value="&nbsp;&nbsp;签&nbsp;&nbsp;章&nbsp;&nbsp;"/>
-            string signFile = string.Concat(Server.MapPath(Url.Content("~/Content/UserSigns/")), RoadFlow.Platform.Users.CurrentUserID, ".gif");
-            string signSrc = string.Concat(Url.Content("~/Content/UserSigns/"), RoadFlow.Platform.Users.CurrentUserID, ".gif");
+            string signFile = string.Concat(Server.MapPath(Url.Content("~/Content/UserSigns/")), RoadFlow.Platform.UsersBLL.CurrentUserID, ".gif");
+            string signSrc = string.Concat(Url.Content("~/Content/UserSigns/"), RoadFlow.Platform.UsersBLL.CurrentUserID, ".gif");
             if (!System.IO.File.Exists(signFile))
             {
-                System.Drawing.Bitmap img = new RoadFlow.Platform.WorkFlow().CreateSignImage(RoadFlow.Platform.Users.CurrentUserName);
+                System.Drawing.Bitmap img = new RoadFlow.Platform.WorkFlow().CreateSignImage(RoadFlow.Platform.UsersBLL.CurrentUserName);
                 if (img != null)
                 {
                     img.Save(signFile, System.Drawing.Imaging.ImageFormat.Gif);
